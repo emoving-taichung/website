@@ -156,15 +156,15 @@
                     </div>
 
                     <!-- YouTube 影片 -->
-                {{ if .Params.youtube_id }}
-                    <div class="space-y-6 pt-2">
-                        <h3 class="text-[24px] font-black text-[#1C1C1C] text-left border-l-4 border-[#1155CC] pl-3 leading-none">
-                    影音介紹
-                    </h3>
-                    <div class="w-full aspect-video rounded-2xl overflow-hidden shadow-md border border-gray-200">
-                        <iframe class="w-full h-full" src="https://www.youtube.com/embed/{{ $model.youtube_id }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                </div>
-            </div>
+{{ if $model.youtube_id }}
+<div class="space-y-6 pt-2">
+    <h3 class="text-[24px] font-black text-[#1C1C1C] text-left border-l-4 border-[#1155CC] pl-3 leading-none">
+        影音介紹
+    </h3>
+    <div class="w-full aspect-video rounded-2xl overflow-hidden shadow-md border border-gray-200">
+        <iframe class="w-full h-full" src="https://www.youtube.com/embed/{{ $model.youtube_id }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+</div>
 {{ end }}
 
                     <!-- 三個 CTA 按鈕 -->
