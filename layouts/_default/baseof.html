@@ -6,8 +6,8 @@
     <title>{{ if .Title }}{{ .Title }} - {{ end }}eMOVING 精輪山西店｜台中電動機車</title>
     
     <!-- 自訂瀏覽器分頁圖示 (Favicon) -->
-    <link rel="icon" type="image/png" href="/images/favicon.png">
-    <link rel="apple-touch-icon" href="/images/favicon.png">
+    <link rel="icon" type="image/png" href='{{ "images/favicon.png" | relURL }}'>
+    <link rel="apple-touch-icon" href='{{ "images/favicon.png" | relURL }}'>
 
     <link href="https://fonts.googleapis.com/css2?family=Anybody:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -53,18 +53,18 @@
             </button>
         </div>
 
-        <!-- 側邊選單：使用 /# 確保在分頁點擊也能順利回到首頁對應區塊 -->
+        <!-- 側邊選單：使用 relURL 確保在分頁點擊也能順利回到首頁對應區塊 -->
         <nav class="flex flex-col gap-6 items-end text-right w-full my-auto">
-            <a href="/#hero" class="group block text-subtitle tracking-wider text-blue-100 hover:text-white transition-all font-semibold">
+            <a href='{{ "/#hero" | relURL }}' class="group block text-subtitle tracking-wider text-blue-100 hover:text-white transition-all font-semibold">
                 <span class="inline-block border-b border-transparent group-hover:border-white pb-1">首頁</span>
             </a>
-            <a href="/#features" class="group block text-subtitle tracking-wider text-blue-100 hover:text-white transition-all font-semibold">
+            <a href='{{ "/#features" | relURL }}' class="group block text-subtitle tracking-wider text-blue-100 hover:text-white transition-all font-semibold">
                 <span class="inline-block border-b border-transparent group-hover:border-white pb-1">專業、貼心、完善</span>
             </a>
-            <a href="/#models" class="group block text-subtitle tracking-wider text-blue-100 hover:text-white transition-all font-semibold">
+            <a href='{{ "/#models" | relURL }}' class="group block text-subtitle tracking-wider text-blue-100 hover:text-white transition-all font-semibold">
                 <span class="inline-block border-b border-transparent group-hover:border-white pb-1">車款介紹</span>
             </a>
-            <a href="/#contact" class="group block text-subtitle tracking-wider text-blue-100 hover:text-white transition-all font-semibold">
+            <a href='{{ "/#contact" | relURL }}' class="group block text-subtitle tracking-wider text-blue-100 hover:text-white transition-all font-semibold">
                 <span class="inline-block border-b border-transparent group-hover:border-white pb-1">聯絡我們</span>
             </a>
         </nav>
@@ -98,9 +98,9 @@
                     </svg>
                 </button>
                 
-                <a href="/" class="flex items-center gap-2.5 md:gap-3 group">
-                    <!-- eMOVING Logo 圖檔（建議放置於 static/images/logo.png） -->
-                    <img src="/images/logo.png" alt="eMOVING Logo" class="h-6 md:h-7 w-auto object-contain">
+                <a href='{{ "/" | relURL }}' class="flex items-center gap-2.5 md:gap-3 group">
+                    <!-- eMOVING Logo 圖檔（動態補齊路徑） -->
+                    <img src='{{ "images/logo.png" | relURL }}' alt="eMOVING Logo" class="h-6 md:h-7 w-auto object-contain">
                     
                     <span class="text-xs md:text-regular font-semibold tracking-wide border-l border-white/30 pl-2.5 md:pl-3 py-0.5 group-hover:text-blue-200 transition-colors">
                         山西店｜台中電動機車專賣｜精輪車業
@@ -118,12 +118,12 @@
         
         <div id="menu-content-card" class="max-h-[90vh] overflow-y-auto w-full max-w-sm text-center py-8 px-6 cursor-default bg-[#454555] rounded-2xl shadow-2xl flex flex-col justify-between">
             
-            <!-- 主要選單：全面連結至實體網頁路徑 -->
+            <!-- 主要選單：全面使用 relURL 動態帶入 baseURL -->
             <nav class="flex flex-col gap-4 text-subtitle text-white font-bold">
-                <a href="/#hero" class="menu-close-trigger hover:opacity-70 transition-opacity">首頁</a>
-                <a href="/promotions/" class="menu-close-trigger hover:opacity-70 transition-opacity">主打優惠</a>
-                <a href="/news/" class="menu-close-trigger hover:opacity-70 transition-opacity">最新消息</a>
-                <a href="/customer-service/" class="menu-close-trigger hover:opacity-70 transition-opacity">智慧客服</a>
+                <a href='{{ "/#hero" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">首頁</a>
+                <a href='{{ "promotions/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">主打優惠</a>
+                <a href='{{ "news/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">最新消息</a>
+                <a href='{{ "customer-service/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">智慧客服</a>
                 
                 <div class="relative px-2">
                     <button id="menu-dropdown-btn" class="w-full flex justify-center items-center gap-2 hover:opacity-70 transition-opacity focus:outline-none py-1">
@@ -132,28 +132,28 @@
                     </button>
                     <!-- 下拉選單內部車款：精準連結至 models 底下的子分頁 -->
                     <div id="menu-dropdown-content" class="hidden my-2 py-2 bg-white/10 rounded-xl flex flex-col gap-2 text-regular text-white/90 border border-white/5">
-                        <a href="/models/shine-bobe/" class="menu-close-trigger hover:opacity-70 py-1 block px-4">免駕照 Shine / Bobe</a>
-                        <a href="/models/ez1/" class="menu-close-trigger hover:opacity-70 py-1 block px-4">汽車駕照可騎 EZ1</a>
-                        <a href="/models/ezr/" class="menu-close-trigger hover:opacity-70 py-1 block px-4">換電重型白牌 EZR</a>
-                        <a href="/models/fun/" class="menu-close-trigger hover:opacity-70 py-1 block px-4">換電重型白牌 fun</a>
-                        <a href="/models/jinxuan125/" class="menu-close-trigger hover:opacity-70 py-1 block px-4">充電重型白牌 勁炫125</a>
+                        <a href='{{ "models/shine-bobe/" | relURL }}' class="menu-close-trigger hover:opacity-70 py-1 block px-4">免駕照 Shine / Bobe</a>
+                        <a href='{{ "models/ez1/" | relURL }}' class="menu-close-trigger hover:opacity-70 py-1 block px-4">汽車駕照可騎 EZ1</a>
+                        <a href='{{ "models/ezr/" | relURL }}' class="menu-close-trigger hover:opacity-70 py-1 block px-4">換電重型白牌 EZR</a>
+                        <a href='{{ "models/fun/" | relURL }}' class="menu-close-trigger hover:opacity-70 py-1 block px-4">換電重型白牌 fun</a>
+                        <a href='{{ "models/jinxuan125/" | relURL }}' class="menu-close-trigger hover:opacity-70 py-1 block px-4">充電重型白牌 勁炫125</a>
                     </div>
                 </div>
 
-                <a href="/subsidies/" class="menu-close-trigger hover:opacity-70 transition-opacity">補助查詢</a>
-                <a href="/booking/" class="menu-close-trigger hover:opacity-70 transition-opacity">預約試乘</a>
-                <a href="/stores/" class="menu-close-trigger hover:opacity-70 transition-opacity">門市據點</a>
-                <a href="/service/" class="menu-close-trigger hover:opacity-70 transition-opacity">維修據點</a>
-                <a href="/contact/" class="menu-close-trigger hover:opacity-70 transition-opacity">聯絡我們</a>
+                <a href='{{ "subsidies/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">補助查詢</a>
+                <a href='{{ "booking/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">預約試乘</a>
+                <a href='{{ "stores/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">門市據點</a>
+                <a href='{{ "service/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">維修據點</a>
+                <a href='{{ "contact/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">聯絡我們</a>
             </nav>
             
             <div class="h-px bg-white/10 my-4 mx-8"></div>
             
             <!-- 底部輔助選單：連結至隱私權、Q&A、網站地圖 -->
             <div class="flex flex-wrap justify-center gap-4 text-small text-[#999999] font-medium">
-                <a href="/privacy/" class="menu-close-trigger hover:text-white transition-colors">隱私權</a>
-                <a href="/faq/" class="menu-close-trigger hover:text-white transition-colors">車輛相關Q&A</a>
-                <a href="/sitemap/" class="menu-close-trigger hover:text-white transition-colors">網站地圖</a>
+                <a href='{{ "privacy/" | relURL }}' class="menu-close-trigger hover:text-white transition-colors">隱私權</a>
+                <a href='{{ "faq/" | relURL }}' class="menu-close-trigger hover:text-white transition-colors">車輛相關Q&A</a>
+                <a href='{{ "sitemap/" | relURL }}' class="menu-close-trigger hover:text-white transition-colors">網站地圖</a>
             </div>
         </div>
     </div>
