@@ -160,9 +160,9 @@ faq:
     answer: "A. EZ1 的三大實用機能在同級綠牌換電車中表現非常亮眼：同級最大前置物空間： 前方的開放式置物深槽很大，能同時穩穩放下兩瓶保溫杯與智慧型手機，並附有 USB 前置充電座。21.6 公升大容量車廂： 雖然是單電池設定，但車廂空間被最大化利用，放入一頂 3/4 罩安全帽後，旁邊還留有格位能收納雨衣、抹布與隨身小物。優化騎乘三角： 擁有 565mm 加長加寬舒適平整座墊，腳踏空間也經過平整化改良（改善了 Gogoro 原始車系容易腳滑的缺點），更標配了省力中柱與好抓握的加粗後扶手。"
 
 # 電子型錄 (對應 static/catalog/ez1.pdf)
-catalog_url: "/catalog/ez1.pdf"
+catalog_url: "catalog/ez1.pdf"
 
 # 車主手冊 (假設 PDF 放在 static/manual/ 資料夾內)
-manual_url: "/manual/ez1.pdf"
+manual_url: "manual/ez1.pdf"
 
 ---
