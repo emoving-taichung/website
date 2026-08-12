@@ -69,7 +69,7 @@ models:
     cover_image: "fun-cover.png"
     description: "由台鈴工業打造的 eReady Fun，結合日系造車工藝與 Gogoro Network 換電系統。擁有獨特俐落的外觀設計、輕量化靈巧車身，以及寬敞舒適的踏板空間，為您帶來流暢愜意的都會通勤體驗。"
     highlights:
-      - '本月限定：加碼送 <span class="highlight-num">$10,000</span> 購車金'
+      - '本月限定：送 <span class="highlight-num">$10,000</span> 購車金'
       - '分期購車享 <span class="highlight-num">24</span> 期 <span class="highlight-num">0</span> 利率'
     car_page_link: "/models/fun/"
     line_link: "https://lihi1.me/8LpPy?ref=line_join"
