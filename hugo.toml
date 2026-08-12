@@ -1,4 +1,4 @@
-baseURL =  'https://emoving-taichung.github.io/website/'
+baseURL = 'https://emoving-taichung.github.io/website/'
 locale = "zh-TW"
 title = 'eMOVING 精輪山西店｜台中電動機車'
 theme = []
@@ -11,46 +11,45 @@ theme = []
 # --- 記住：Hugo 設定檔中必須是單數的 menu.main ---
 [[menu.main]]
   name = "首頁"
-  url = "/"
+  url = "/website/"
   weight = 1
 
 [[menu.main]]
   name = "主打優惠"
-  url = "/promotions/"
+  url = "/website/promotions/"
   weight = 2
 
 [[menu.main]]
   name = "最新消息"
-  url = "/news/"
+  url = "/website/news/"
   weight = 3
 
-  [[menu.main]]
+[[menu.main]]
   name = "車款介紹"
-  url = "/models/"
+  url = "/website/models/"
   weight = 4
 
 [[menu.main]]
   name = "補助查詢"
-  url = "/subsidy/"
+  url = "/website/subsidy/"
   weight = 5
 
 [[menu.main]]
   name = "門市據點"
-  url = "/stores/"
+  url = "/website/stores/"
   weight = 6
 
 [[menu.main]]
   name = "維修據點"
-  url = "/maintenance/"
+  url = "/website/maintenance/"
   weight = 7
 
 [[menu.main]]
   name = "預約試乘"
-  url = "/book-a-ride/"
+  url = "/website/book-a-ride/"
   weight = 8
 
 [markup]
   [markup.goldmark]
     [markup.goldmark.renderer]
       unsafe = true
-
