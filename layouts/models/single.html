@@ -66,20 +66,16 @@
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important;
   }
 
-  /* 滑動提示：填滿首頁剩餘寬度，強制推開後續選單 */
+  /* 滑動提示：使用 viewport width (vw) 強制推開後續選單，保證完全遮擋 */
   #scroll-hint {
-    flex: 1 0 auto;
-    text-align: right;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-right: 45vw; 
+    transition: all 0.3s ease-out;
   }
   #scroll-hint.is-hidden {
     opacity: 0 !important;
-    flex: 0 0 0px !important;
     max-width: 0px !important;
-    width: 0px !important;
-    min-width: 0px !important;
+    margin-right: 0px !important;
     padding: 0px !important;
-    margin: 0px !important;
     overflow: hidden !important;
     pointer-events: none !important;
   }
@@ -140,15 +136,15 @@
 </section>
 
 <!-- ========================================== -->
-<!-- 2. 橫式懸浮錨點選單 (精準呈現前 3 個項目，自動滿版推開) -->
+<!-- 2. 橫式懸浮錨點選單 (精準呈現前 3 個項目，絕對滿版推開) -->
 <!-- ========================================== -->
 <nav id="sticky-nav" class="sticky top-[var(--header-h,50px)] z-40 bg-white border-b border-gray-200 shadow-sm transition-all duration-300">
     <div id="scroll-menu" class="max-w-6xl mx-auto flex overflow-x-auto no-scrollbar items-center py-2 px-3 space-x-1 md:space-x-3">
         <a href="#features-gallery" class="promo-tab-btn active px-3 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">車款特色</a>
         <a href="#reviews" class="promo-tab-btn px-3 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">好騎推推</a>
         
-        <!-- 手機版專屬提示：使用 flex: 1 0 auto 填滿剩餘寬度，完全推開第四個選項 -->
-        <span id="scroll-hint" class="md:hidden text-sm font-bold text-[#1155CC] animate-pulse whitespace-nowrap pr-3 select-none">
+        <!-- 手機版專屬提示：帶有巨大的右邊界，強制讓詳細規格表掉到螢幕外 -->
+        <span id="scroll-hint" class="md:hidden text-sm font-bold text-[#1155CC] animate-pulse whitespace-nowrap select-none inline-block">
             &gt;&gt;滑動看更多
         </span>
 
