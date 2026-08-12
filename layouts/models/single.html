@@ -120,15 +120,38 @@ class="absolute right-4 md:right-12 top-1/2 -translate-y-1/2 bg-black/50 hover:b
 <!-- ========================================== -->
 <!-- 2. 橫式懸浮錨點選單 -->
 <!-- ========================================== -->
-<nav id="sticky-nav" class="sticky top-[var(--header-h,50px)] z-40 bg-white border-b border-gray-200 shadow-sm transition-all duration-300">
-    <div class="max-w-6xl mx-auto flex overflow-x-auto no-scrollbar justify-start md:justify-center py-1.5 px-2">
-        <a href="#features-gallery" class="promo-tab-btn active px-6 py-3 text-sm font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap">車款特色與細節</a>
-        <a href="#reviews" class="promo-tab-btn px-6 py-3 text-sm font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap">好騎推推</a>
-        <a href="#specs" class="promo-tab-btn px-6 py-3 text-sm font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap">詳細規格表</a>
-        <a href="#accessories" class="promo-tab-btn px-6 py-3 text-sm font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap">原廠配件</a>
-        <a href="#faq" class="promo-tab-btn px-6 py-3 text-sm font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap">常見 QA</a>
+<!-- 懸浮選單外層容器：加入 relative 與右側漸層提示 -->
+<div class="sticky top-[56px] md:top-[60px] z-40 w-full bg-white shadow-md border-b border-gray-100">
+    <div class="relative max-w-7xl mx-auto flex items-center">
+        
+        <!-- 手機版右側漸層淡出遮罩 + 右箭頭提示 (當內容過長時提示滑動) -->
+        <div class="pointer-events-none absolute right-0 top-0 bottom-0 w-10 bg-gradient-to-l from-white via-white/80 to-transparent z-10 flex items-center justify-end pr-1 text-gray-400 md:hidden">
+            <svg class="w-4 h-4 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+            </svg>
+        </div>
+
+        <!-- 水平滾動選單本體 -->
+        <nav class="w-full flex items-center justify-start md:justify-center overflow-x-auto no-scrollbar px-3 py-2 space-x-2 md:space-x-4">
+            <a href="#features" class="shrink-0 px-4 py-2 rounded-lg text-small md:text-regular font-bold text-gray-700 hover:text-brandBlue hover:bg-blue-50 transition-colors whitespace-nowrap">
+                車款特色
+            </a>
+            <a href="#highlights" class="shrink-0 px-4 py-2 rounded-lg text-small md:text-regular font-bold text-gray-700 hover:text-brandBlue hover:bg-blue-50 transition-colors whitespace-nowrap">
+                好騎推推
+            </a>
+            <a href="#specs" class="shrink-0 px-4 py-2 rounded-lg text-small md:text-regular font-bold text-gray-700 hover:text-brandBlue hover:bg-blue-50 transition-colors whitespace-nowrap">
+                規格表
+            </a>
+            <a href="#accessories" class="shrink-0 px-4 py-2 rounded-lg text-small md:text-regular font-bold text-gray-700 hover:text-brandBlue hover:bg-blue-50 transition-colors whitespace-nowrap">
+                原廠配件
+            </a>
+            <a href="#faq" class="shrink-0 px-4 py-2 rounded-lg text-small md:text-regular font-bold text-gray-700 hover:text-brandBlue hover:bg-blue-50 transition-colors whitespace-nowrap">
+                常見 QA
+            </a>
+        </nav>
+
     </div>
-</nav>
+</div>
 
 <!-- ========================================== -->
 <!-- 3. 車款特色與圖庫細節 -->
