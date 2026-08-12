@@ -9,12 +9,12 @@
   {{ $baseName = $page.Slug }}
 {{ end }}
 
-{{ $catalogPdf := (printf "catalog/%s.pdf" $baseName) | relURL }}
-{{ with $page.Params.catalog_url }}{{ $catalogPdf = . | relURL }}{{ end }}
+{{ $catalogPdf := (printf "/catalog/%s.pdf" $baseName) | absURL }}
+{{ with $page.Params.catalog_url }}{{ $catalogPdf = . | absURL }}{{ end }}
 
 {{/* 若您的靜態資料夾名稱為 manaul，請將下方 "manual/%s.pdf" 改為 "manaul/%s.pdf" */}}
-{{ $manualPdf := (printf "manual/%s.pdf" $baseName) | relURL }}
-{{ with $page.Params.manual_url }}{{ $manualPdf = . | relURL }}{{ end }}
+{{ $manualPdf := (printf "/manual/%s.pdf" $baseName) | absURL }}
+{{ with $page.Params.manual_url }}{{ $manualPdf = . | absURL }}{{ end }}
 
 <style>
   /* 全局高度 CSS 變數 (預設 Header 50px, 錨點選單 50px) */
