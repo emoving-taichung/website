@@ -66,16 +66,20 @@
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important;
   }
 
-  /* 滑動提示消失與平滑縮小動畫 */
+  /* 滑動提示：填滿首頁剩餘寬度，強制推開後續選單 */
   #scroll-hint {
-    transition: opacity 0.3s ease, max-width 0.3s ease, margin 0.3s ease, padding 0.3s ease;
-    max-width: 160px;
+    flex: 1 0 auto;
+    text-align: right;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   #scroll-hint.is-hidden {
     opacity: 0 !important;
+    flex: 0 0 0px !important;
     max-width: 0px !important;
-    margin-right: 0px !important;
+    width: 0px !important;
+    min-width: 0px !important;
     padding: 0px !important;
+    margin: 0px !important;
     overflow: hidden !important;
     pointer-events: none !important;
   }
@@ -136,15 +140,15 @@
 </section>
 
 <!-- ========================================== -->
-<!-- 2. 橫式懸浮錨點選單 (精準呈現 3 個項目，滑動即隱藏提示) -->
+<!-- 2. 橫式懸浮錨點選單 (精準呈現前 3 個項目，自動滿版推開) -->
 <!-- ========================================== -->
 <nav id="sticky-nav" class="sticky top-[var(--header-h,50px)] z-40 bg-white border-b border-gray-200 shadow-sm transition-all duration-300">
-    <div id="scroll-menu" class="max-w-6xl mx-auto flex overflow-x-auto no-scrollbar justify-start md:justify-center items-center py-2 px-3 space-x-2 md:space-x-3">
+    <div id="scroll-menu" class="max-w-6xl mx-auto flex overflow-x-auto no-scrollbar items-center py-2 px-3 space-x-1 md:space-x-3">
         <a href="#features-gallery" class="promo-tab-btn active px-3 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">車款特色</a>
         <a href="#reviews" class="promo-tab-btn px-3 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">好騎推推</a>
         
-        <!-- 手機版專屬提示：右側邊距 mr-12 確保第四個項目完全被推至螢幕外，滑動時會淡出並縮小 -->
-        <span id="scroll-hint" class="md:hidden text-sm font-bold text-[#1155CC] animate-pulse whitespace-nowrap shrink-0 mr-12 select-none inline-block">
+        <!-- 手機版專屬提示：使用 flex: 1 0 auto 填滿剩餘寬度，完全推開第四個選項 -->
+        <span id="scroll-hint" class="md:hidden text-sm font-bold text-[#1155CC] animate-pulse whitespace-nowrap pr-3 select-none">
             &gt;&gt;滑動看更多
         </span>
 
@@ -450,9 +454,9 @@
 {{ end }}
 
 <!-- ========================================== -->
-<!-- 8. 回到頂端懸浮按鈕 -->
+<!-- 8. 回到頂端懸浮按鈕 (預設隱藏，滾動時才出現，避免擋住選單) -->
 <!-- ========================================== -->
-<button id="back-to-top-btn" class="fixed bottom-6 right-6 z-50 w-11 h-11 md:w-12 md:h-12 rounded-full border-2 border-blue-600 bg-white text-blue-600 shadow-lg flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all transform hover:scale-110 focus:outline-none" title="回到頂端">
+<button id="back-to-top-btn" class="fixed bottom-6 right-6 z-50 w-11 h-11 md:w-12 md:h-12 rounded-full border-2 border-blue-600 bg-white text-blue-600 shadow-lg flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-110 focus:outline-none opacity-0 pointer-events-none" title="回到頂端">
     <svg class="w-6 h-6 stroke-current" fill="none" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"/>
     </svg>
@@ -617,9 +621,19 @@
             window.instgrm.Embeds.process();
         }
 
-        // 7. 回到頂端按鈕邏輯
+        // 7. 回到頂端按鈕邏輯：滾動過頭才顯示，避免在頂部遮擋選單
         const backToTopBtn = document.getElementById('back-to-top-btn');
         if (backToTopBtn) {
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 300) {
+                    backToTopBtn.classList.remove('opacity-0', 'pointer-events-none');
+                    backToTopBtn.classList.add('opacity-100', 'pointer-events-auto');
+                } else {
+                    backToTopBtn.classList.add('opacity-0', 'pointer-events-none');
+                    backToTopBtn.classList.remove('opacity-100', 'pointer-events-auto');
+                }
+            }, { passive: true });
+
             backToTopBtn.addEventListener('click', function() {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
