@@ -99,18 +99,18 @@
     </div>
 
     {{ if gt (len $heroPhotos) 1 }}
-<!-- 左右切換箭頭 -->
-<button type="button" 
-onclick="prevHeroSlide()" 
-class="absolute left-8 md:left-32 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white w-12 h-12 rounded-full backdrop-blur-md flex items-center justify-center text-xl z-20 opacity-70 hover:opacity-100 transition-all shadow-md">❮</button>
+    <!-- 左右切換箭頭 -->
+    <button type="button" 
+    onclick="prevHeroSlide()" 
+    class="absolute left-8 md:left-32 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white w-12 h-12 rounded-full backdrop-blur-md flex items-center justify-center text-xl z-20 opacity-70 hover:opacity-100 transition-all shadow-md">❮</button>
 
-<!-- 右側按鈕：手機版純箭頭 / 桌面版（>=768px）顯示「點擊看更多車色」 -->
-<button type="button" 
-onclick="nextHeroSlide()" 
-class="absolute right-4 md:right-12 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white w-10 h-10 md:w-auto md:h-auto md:py-2.5 md:px-4 rounded-full backdrop-blur-md flex items-center justify-center md:gap-2 z-20 opacity-85 hover:opacity-100 transition-all shadow-md group">
-    <span class="hidden md:inline text-sm font-bold tracking-wider">點擊看更多車色</span>
-    <span class="text-base md:text-lg transition-transform group-hover:translate-x-0.5">❯</span>
-</button>
+    <!-- 右側按鈕：手機版純箭頭 / 桌面版（>=768px）顯示「點擊看更多車色」 -->
+    <button type="button" 
+    onclick="nextHeroSlide()" 
+    class="absolute right-4 md:right-12 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white w-10 h-10 md:w-auto md:h-auto md:py-2.5 md:px-4 rounded-full backdrop-blur-md flex items-center justify-center md:gap-2 z-20 opacity-85 hover:opacity-100 transition-all shadow-md group">
+        <span class="hidden md:inline text-sm font-bold tracking-wider">點擊看更多車色</span>
+        <span class="text-base md:text-lg transition-transform group-hover:translate-x-0.5">❯</span>
+    </button>
 
     <!-- 底部切換小圓點 -->
     <div id="hero-dots" class="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-20"></div>
@@ -118,15 +118,21 @@ class="absolute right-4 md:right-12 top-1/2 -translate-y-1/2 bg-black/50 hover:b
 </section>
 
 <!-- ========================================== -->
-<!-- 2. 橫式懸浮錨點選單 -->
+<!-- 2. 橫式懸浮錨點選單 (手機版專屬優化) -->
 <!-- ========================================== -->
 <nav id="sticky-nav" class="sticky top-[var(--header-h,50px)] z-40 bg-white border-b border-gray-200 shadow-sm transition-all duration-300">
-    <div class="max-w-6xl mx-auto flex overflow-x-auto no-scrollbar justify-start md:justify-center py-1.5 px-2">
-        <a href="#features-gallery" class="promo-tab-btn active px-6 py-3 text-sm font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap">車款特色</a>
-        <a href="#reviews" class="promo-tab-btn px-6 py-3 text-sm font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap">好騎推推</a>
-        <a href="#specs" class="promo-tab-btn px-6 py-3 text-sm font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap">詳細規格表</a>
-        <a href="#accessories" class="promo-tab-btn px-6 py-3 text-sm font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap">原廠配件</a>
-        <a href="#faq" class="promo-tab-btn px-6 py-3 text-sm font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap">常見 QA</a>
+    <div class="max-w-6xl mx-auto flex overflow-x-auto no-scrollbar justify-start md:justify-center items-center py-2 px-3 space-x-1.5 md:space-x-3">
+        <a href="#features-gallery" class="promo-tab-btn active px-3 md:px-6 py-2 md:py-3 text-xs md:text-sm font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">車款特色</a>
+        <a href="#reviews" class="promo-tab-btn px-3 md:px-6 py-2 md:py-3 text-xs md:text-sm font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">好騎推推</a>
+        
+        <!-- 手機版專屬引導提示（只在手機版顯示，桌面版隱藏） -->
+        <span class="md:hidden text-xs font-bold text-[#1155CC] animate-pulse whitespace-nowrap shrink-0 px-1 flex items-center gap-0.5 select-none">
+            &gt;&gt; 滑動看更多
+        </span>
+
+        <a href="#specs" class="promo-tab-btn px-3 md:px-6 py-2 md:py-3 text-xs md:text-sm font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">詳細規格表</a>
+        <a href="#accessories" class="promo-tab-btn px-3 md:px-6 py-2 md:py-3 text-xs md:text-sm font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">原廠配件</a>
+        <a href="#faq" class="promo-tab-btn px-3 md:px-6 py-2 md:py-3 text-xs md:text-sm font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">常見 QA</a>
     </div>
 </nav>
 
@@ -237,27 +243,26 @@ class="absolute right-4 md:right-12 top-1/2 -translate-y-1/2 bg-black/50 hover:b
         </div>
         {{ end }}
 
-<!-- 網紅推薦 IG 貼文區塊 (已移除 data-instgrm-captioned 隱藏內文) -->
-{{ with $page.Params.ig_posts }}
-<div class="space-y-6">
-    <h3 class="text-xl md:text-2xl font-bold text-blue-800 flex items-center gap-2">
-        <span>📸</span> 網紅推薦
-    </h3>
-    
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center">
-        {{ range . }}
-        <div class="w-full flex justify-center">
-            <!-- 移除 data-instgrm-captioned 即可隱藏貼文文字 -->
-            <blockquote class="instagram-media" 
-                        data-instgrm-permalink="{{ .url }}" 
-                        data-instgrm-version="14" 
-                        style="background:#FFF; border:0; border-radius:12px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%;">
-            </blockquote>
+        <!-- 網紅推薦 IG 貼文區塊 -->
+        {{ with $page.Params.ig_posts }}
+        <div class="space-y-6">
+            <h3 class="text-xl md:text-2xl font-bold text-blue-800 flex items-center gap-2">
+                <span>📸</span> 網紅推薦
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center">
+                {{ range . }}
+                <div class="w-full flex justify-center">
+                    <blockquote class="instagram-media" 
+                                data-instgrm-permalink="{{ .url }}" 
+                                data-instgrm-version="14" 
+                                style="background:#FFF; border:0; border-radius:12px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%;">
+                    </blockquote>
+                </div>
+                {{ end }}
+            </div>
         </div>
         {{ end }}
-    </div>
-</div>
-{{ end }}
 
         <!-- 媒體報導觀點 -->
         {{ with $page.Params.reports }}
@@ -344,8 +349,8 @@ class="absolute right-4 md:right-12 top-1/2 -translate-y-1/2 bg-black/50 hover:b
 {{ end }}
 
 <!-- ========================================== -->
-<!-- 專屬原廠精選配件區塊 (已更正變數為 .title) -->
- <!-- ========================================== -->
+<!-- 6. 專屬原廠精選配件區塊 -->
+<!-- ========================================== -->
 {{ with $page.Params.accessories }}
 <section id="accessories" class="anchor-section py-12 bg-white px-6">
     <div class="max-w-6xl mx-auto space-y-8">
@@ -361,12 +366,10 @@ class="absolute right-4 md:right-12 top-1/2 -translate-y-1/2 bg-black/50 hover:b
             {{ end }}
             
             <div class="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow flex flex-col items-center">
-                <!-- 配件圖片 -->
                 <div class="w-full aspect-square rounded-xl overflow-hidden bg-gray-50 mb-3">
                     <img src="{{ $accImgSrc }}" alt="{{ .title }}" class="w-full h-full object-cover">
                 </div>
                 
-                <!-- 配件名稱：使用 Front Matter 設定的 .title，字體為 text-lg md:text-xl -->
                 <h3 class="text-lg md:text-xl font-bold text-gray-900 text-center tracking-wide mt-1">
                     {{ .title }}
                 </h3>
@@ -378,40 +381,35 @@ class="absolute right-4 md:right-12 top-1/2 -translate-y-1/2 bg-black/50 hover:b
 {{ end }}
 
 <!-- ========================================== -->
-<!-- CTA 按鈕區塊 (已新增 target="_blank" 與動態連結) -->
+<!-- CTA 按鈕區塊 -->
 <!-- ========================================== -->
 <section class="py-10 bg-gray-900 text-white px-6">
     <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
-<!-- 電子型錄下載 -->
-<a href="{{ $page.Params.catalog_url | relURL }}" 
-   target="_blank" 
-   rel="noopener noreferrer" 
-   class="py-4 px-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap">
-    <span>📄</span> <span>電子型錄</span>
-</a>
-
-<!-- 車主使用手冊 -->
-<a href="{{ $page.Params.manual_url | relURL }}" 
-   target="_blank" 
-   rel="noopener noreferrer" 
-   class="py-4 px-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap">
-    <span>📘</span> <span>使用手冊</span>
-</a>
-
-        <!-- 立即預約試乘 -->
-        <a href="/booking/" 
-           class="py-4 px-3 bg-blue-600 hover:bg-blue-500 text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap">
-            <span>🛵</span> <span>立即預約試乘</span>
+        <a href="{{ $page.Params.catalog_url | relURL }}" 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           class="py-4 px-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap">
+            <span>📄</span> <span>電子型錄</span>
         </a>
 
-        <!-- 獲取本月優惠 -->
+        <a href="{{ $page.Params.manual_url | relURL }}" 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           class="py-4 px-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap">
+            <span>📘</span> <span>使用手冊</span>
+        </a>
+
+        <a href="/booking/" 
+           class="py-4 px-3 bg-blue-600 hover:bg-blue-500 text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap">
+            <span>🛵</span> <span>預約試乘</span>
+        </a>
+
         <a href="/promotions/" 
            class="py-4 px-3 bg-yellow-400 hover:bg-yellow-300 text-black text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap">
-            <span>🎁</span> <span>獲取本月優惠</span>
+            <span>🎁</span> <span>獲取優惠</span>
         </a>
     </div>
 </section>
-
 
 <!-- ========================================== -->
 <!-- 7. 常見 Q&A -->
@@ -452,7 +450,7 @@ class="absolute right-4 md:right-12 top-1/2 -translate-y-1/2 bg-black/50 hover:b
 <!-- JavaScript 邏輯控制區 -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // 自動動態偵測藍色 Header 與 Nav 高度，設定 CSS 變數
+        // 自動動態偵測 Header 與 Nav 高度，設定 CSS 變數
         function updateLayoutHeights() {
             const topHeader = Array.from(document.querySelectorAll('header, nav, div')).find(el => {
                 if (el.id === 'sticky-nav' || el.closest('#sticky-nav')) return false;
