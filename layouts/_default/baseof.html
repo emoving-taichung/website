@@ -75,13 +75,13 @@
     </aside>
     {{ end }}
 
-    <!-- ========================================== -->
+<!-- ========================================== -->
     <!-- 2. 頂部列 Header -->
     <!-- ========================================== -->
     {{ if .IsHome }}
-        <!-- 首頁【手機版】頂部列：網站標題改為可點擊超連結 -->
+        <!-- 首頁【手機版】頂部列 -->
         <header class="lg:hidden fixed top-0 left-0 w-full bg-brandBlue text-white p-4 flex justify-between items-center z-40 shadow-md">
-            <a href="{{ site.Home.RelPermalink }}" class="font-black tracking-wider text-regular hover:text-blue-200 transition-colors">
+            <a href='{{ "" | relURL }}' class="font-black tracking-wider text-regular hover:text-blue-200 transition-colors">
                 eMOVING 精輪山西店
             </a>
             <button class="menu-open-btn w-10 h-10 flex items-center justify-center bg-white/10 rounded-lg text-white focus:outline-none hover:bg-white/20 transition-colors">
@@ -91,7 +91,7 @@
             </button>
         </header>
     {{ else }}
-        <!-- 非首頁【全尺寸通用】頂部列：使用 site.Home.RelPermalink 精準返回首頁 -->
+        <!-- 非首頁【全尺寸通用】頂部列：點擊 Logo 及文字即可精準跳轉回首頁 -->
         <header class="fixed top-0 left-0 w-full bg-brandBlue text-white p-3 md:p-3 flex justify-between items-center z-40 shadow-md">
             <div class="flex items-center gap-3 md:gap-3">
                 <button class="menu-open-btn w-10 h-10 flex items-center justify-center bg-white/10 rounded-lg text-white focus:outline-none hover:bg-white/20 transition-colors">
@@ -100,7 +100,7 @@
                     </svg>
                 </button>
                 
-                <a href='{{ site.Home.RelPermalink }}' class="flex items-center gap-2.5 md:gap-3 group">
+                <a href='{{ "" | relURL }}' class="flex items-center gap-2.5 md:gap-3 group">
                     <img src='{{ "images/logo.png" | relURL }}' alt="eMOVING Logo" class="h-6 md:h-7 w-auto object-contain">
                     <span class="text-xs md:text-regular font-semibold tracking-wide border-l border-white/30 pl-2.5 md:pl-3 py-0.5 group-hover:text-blue-200 transition-colors">
                         山西店｜台中電動機車專賣｜精輪車業
@@ -119,7 +119,7 @@
         <div id="menu-content-card" class="max-h-[90vh] overflow-y-auto w-full max-w-sm text-center py-8 px-6 cursor-default bg-[#454555] rounded-2xl shadow-2xl flex flex-col justify-between">
             
             <nav class="flex flex-col gap-4 text-subtitle text-white font-bold">
-                <a href='{{ site.Home.RelPermalink }}#hero' class="menu-close-trigger hover:opacity-70 transition-opacity">首頁</a>
+                <a href='{{ "" | relURL }}#hero' class="menu-close-trigger hover:opacity-70 transition-opacity">首頁</a>
                 <a href='{{ "promotions/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">主打優惠</a>
                 <a href='{{ "news/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">最新消息</a>
                 <a href='{{ "customer-service/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">智慧客服</a>
@@ -142,7 +142,7 @@
                 <a href='{{ "booking/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">預約試乘</a>
                 <a href='{{ "stores/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">門市據點</a>
                 <a href='{{ "service/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">維修據點</a>
-                <a href='{{ site.Home.RelPermalink }}#contact' class="menu-close-trigger hover:opacity-70 transition-opacity">聯絡我們</a>
+                <a href='{{ "" | relURL }}#hero' class="menu-close-trigger hover:opacity-70 transition-opacity">首頁</a>
             </nav>
             
             <div class="h-px bg-white/10 my-4 mx-8"></div>
