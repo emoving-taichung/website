@@ -1,12 +1,20 @@
 {{ define "main" }}
 {{ $page := . }}
 
-{{/* 自動對應 static 目錄下的 catalog 與 manual PDF 檔案名稱 */}}
-{{ $catalogPdf := print "/catalog/" $page.File.BaseFileName ".pdf" }}
-{{ with $page.Params.catalog_url }}{{ $catalogPdf = . }}{{ end }}
+{{/* 取得檔名並自動拼接 static/catalog/ 與 static/manual/ 的 PDF 路徑 */}}
+{{ $baseName := "" }}
+{{ with $page.File }}
+  {{ $baseName = .BaseFileName }}
+{{ else }}
+  {{ $baseName = $page.Slug }}
+{{ end }}
 
-{{ $manualPdf := print "/manual/" $page.File.BaseFileName ".pdf" }}
-{{ with $page.Params.manual_url }}{{ $manualPdf = . }}{{ end }}
+{{ $catalogPdf := (printf "catalog/%s.pdf" $baseName) | relURL }}
+{{ with $page.Params.catalog_url }}{{ $catalogPdf = . | relURL }}{{ end }}
+
+{{/* 若您的靜態資料夾名稱為 manaul，請將下方 "manual/%s.pdf" 改為 "manaul/%s.pdf" */}}
+{{ $manualPdf := (printf "manual/%s.pdf" $baseName) | relURL }}
+{{ with $page.Params.manual_url }}{{ $manualPdf = . | relURL }}{{ end }}
 
 <style>
   /* 全局高度 CSS 變數 (預設 Header 50px, 錨點選單 50px) */
@@ -111,7 +119,7 @@
     {{ if $res }}
       {{ $imgUrl = $res.RelPermalink }}
     {{ else }}
-      {{ $imgUrl = (path.Join $page.RelPermalink $fileName) | absURL }}
+      {{ $imgUrl = (path.Join $page.RelPermalink $fileName) | relURL }}
     {{ end }}
 
     {{ $heroPhotos = $heroPhotos | append $imgUrl }}
@@ -148,14 +156,13 @@
 </section>
 
 <!-- ========================================== -->
-<!-- 2. 橫式懸浮錨點選單 (手機版置中前三項並隱藏後續) -->
+<!-- 2. 橫式懸浮錨點選單 -->
 <!-- ========================================== -->
 <nav id="sticky-nav" class="sticky top-[var(--header-h,50px)] z-40 bg-white border-b border-gray-200 shadow-sm transition-all duration-300">
     <div id="scroll-menu" class="max-w-6xl mx-auto flex overflow-x-auto no-scrollbar items-center py-2 px-3 space-x-1 md:space-x-3 md:justify-center">
         <a href="#features-gallery" class="promo-tab-btn active px-3 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">車款特色</a>
         <a href="#reviews" class="promo-tab-btn px-3 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">好騎推推</a>
         
-        <!-- 手機版專屬提示：帶有巨大右邊界，推開後續項目 -->
         <span id="scroll-hint" class="md:hidden text-sm font-bold text-[#1155CC] animate-pulse whitespace-nowrap select-none inline-block">
             &gt;&gt;滑動看更多
         </span>
@@ -221,8 +228,8 @@
       {{ $lastIndex := math.Sub $total 1 }}
       {{ $lastIsEven := eq (math.Mod $lastIndex 2) 0 }}
       <div class="pt-4 pb-20 px-6 transition-all relative z-10 flex flex-col sm:flex-row justify-center gap-4 {{ if $lastIsEven }}bg-[#dde1e8]{{ else }}bg-[#f9fcff]{{ end }} text-gray-900">
-          <a href="{{ "/promotions/" | relURL }}" class="px-8 py-3.5 bg-yellow-400 hover:bg-yellow-500 text-black font-extrabold text-center rounded-xl transition-all shadow-xl hover:scale-105">前往主打優惠 ➔</a>
-          <a href="{{ "/booking/" | relURL }}" class="px-8 py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-center rounded-xl transition-all shadow-xl hover:scale-105">預約現場試乘 ➔</a>
+          <a href="{{ "promotions/" | relURL }}" class="px-8 py-3.5 bg-yellow-400 hover:bg-yellow-500 text-black font-extrabold text-center rounded-xl transition-all shadow-xl hover:scale-105">前往主打優惠 ➔</a>
+          <a href="{{ "booking/" | relURL }}" class="px-8 py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-center rounded-xl transition-all shadow-xl hover:scale-105">預約現場試乘 ➔</a>
       </div>
   </section>
 {{ end }}
@@ -411,26 +418,26 @@
 <!-- ========================================== -->
 <section class="py-10 bg-gray-900 text-white px-6">
     <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
-        <a href="{{ $catalogPdf | relURL }}" 
+        <a href="{{ $catalogPdf }}" 
            target="_blank" 
            rel="noopener noreferrer" 
            class="py-4 px-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap">
             <span>📄</span> <span>電子型錄</span>
         </a>
 
-        <a href="{{ $manualPdf | relURL }}" 
+        <a href="{{ $manualPdf }}" 
            target="_blank" 
            rel="noopener noreferrer" 
            class="py-4 px-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap">
             <span>📘</span> <span>使用手冊</span>
         </a>
 
-        <a href="{{ "/booking/" | relURL }}" 
+        <a href="{{ "booking/" | relURL }}" 
            class="py-4 px-3 bg-blue-600 hover:bg-blue-500 text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap">
             <span>🛵</span> <span>預約試乘</span>
         </a>
 
-        <a href="{{ "/promotions/" | relURL }}" 
+        <a href="{{ "promotions/" | relURL }}" 
            class="py-4 px-3 bg-yellow-400 hover:bg-yellow-300 text-black text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap">
             <span>🎁</span> <span>獲取優惠</span>
         </a>
@@ -474,7 +481,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // 1. 自動動態偵測 Header 與 Nav 高度，設定 CSS 變數
         function updateLayoutHeights() {
             const topHeader = Array.from(document.querySelectorAll('header, nav, div')).find(el => {
                 if (el.id === 'sticky-nav' || el.closest('#sticky-nav')) return false;
@@ -494,7 +500,6 @@
         window.addEventListener('resize', updateLayoutHeights);
         window.addEventListener('load', updateLayoutHeights);
 
-        // 2. 手機版選單水平滑動時，隱藏並完全收合「>>滑動看更多」
         const scrollMenu = document.getElementById('scroll-menu');
         const scrollHint = document.getElementById('scroll-hint');
         if (scrollMenu && scrollHint) {
@@ -507,7 +512,6 @@
             }, { passive: true });
         }
 
-        // 3. 頁首圖片切換邏輯
         const slides = document.querySelectorAll('.hero-slide-img');
         const totalSlides = slides.length;
         let heroIdx = 0;
@@ -554,7 +558,6 @@
 
         initHeroDots();
 
-        // 4. 懸浮錨點選單 Active 狀態與滾動監聽
         const nav = document.getElementById('sticky-nav');
         if (nav) {
             window.addEventListener('scroll', function() {
@@ -574,7 +577,6 @@
             });
         });
 
-        // 5. 影片切換與播放邏輯
         window.playMainVideo = function(videoId) {
             if (!videoId) return;
             const target = document.getElementById('iframe-target');
@@ -624,12 +626,10 @@
             });
         };
 
-        // 6. 觸發 Instagram 貼文重新渲染
         if (window.instgrm) {
             window.instgrm.Embeds.process();
         }
 
-        // 7. 回到頂端按鈕邏輯：滾動過頭才顯示
         const backToTopBtn = document.getElementById('back-to-top-btn');
         if (backToTopBtn) {
             window.addEventListener('scroll', function() {

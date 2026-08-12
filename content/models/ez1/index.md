@@ -119,8 +119,8 @@ specs:
 
 # 4. 媒體報導觀點 (已改為 .png)
 reports:
-  - source: "小七車觀點"
-    author: "徐立軒"
+  - source: "2gamesome"
+    author: "葉毓中"
     image: "report_1.png"
     summary: "作為第一款加入 PBGN 換電聯盟的代表，eMoving 仍走過去擅長的輕巧、女性路線，外型設計面，EZ1 與 VIVA 最大不同處，在於車頭前半部的設計，考量 VIVA 正負兩極的車頭設計評價，加上對於著裙裝女性不甚友善（易曝光）的缺點，EZ1 換上了與傳統油車較相近的前車體造型，且為了呼應品牌特色，. . . . . . "
     link: "https://2gamesome.com.tw/article/view/2335"
