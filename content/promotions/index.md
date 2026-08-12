@@ -1,5 +1,7 @@
 ---
 title: "本月獨家主打優惠"
+type: "promotions"  # 👈 新增：指定類型為 promotions
+layout: "single"    # 👈 新增：指定套用 single.html 版型
 # 1. 雙版廣宣 Banner 圖檔設定 (請將圖檔放在同一資料夾下)
 hero_image_desktop: "banner_desktop.png"  # 電腦裝置：橫式 Banner
 hero_image_mobile: "banner_mobile.png"    # 手機裝置：直式 Banner
