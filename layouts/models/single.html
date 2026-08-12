@@ -2,13 +2,13 @@
 {{ $page := . }}
 
 <style>
-  /* 1. 全局高度 CSS 變數 (預設 Header 50px, 錨點選單 50px) */
+  /* 全局高度 CSS 變數 (預設 Header 50px, 錨點選單 50px) */
   :root {
     --header-h: 50px;
     --nav-h: 50px;
   }
 
-  /* 精準計算首屏 Hero 高度：使用 100dvh 自動扣除手機瀏覽器網址列與底部列 */
+  /* 精準計算首屏 Hero 高度：100dvh 自動扣除手機瀏覽器網址列與底部列 */
   .hero-viewport-height {
     height: calc(100dvh - var(--header-h, 50px) - var(--nav-h, 50px));
     min-height: 380px;
@@ -19,7 +19,7 @@
     }
   }
 
-  /* 2. 錨點區塊自動補償 (選單高度 + Header高度，防止遮擋與縫隙) */
+  /* 錨點區塊自動補償 */
   .anchor-section {
     scroll-margin-top: calc(var(--header-h) + var(--nav-h));
   }
@@ -65,10 +65,24 @@
     background-color: #ffffff !important;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important;
   }
+
+  /* 滑動提示消失與平滑縮小動畫 */
+  #scroll-hint {
+    transition: opacity 0.3s ease, max-width 0.3s ease, margin 0.3s ease, padding 0.3s ease;
+    max-width: 160px;
+  }
+  #scroll-hint.is-hidden {
+    opacity: 0 !important;
+    max-width: 0px !important;
+    margin-right: 0px !important;
+    padding: 0px !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+  }
 </style>
 
 <!-- ========================================== -->
-<!-- 1. 車色圖片輪播 (動態計算 100dvh - Header - Nav) -->
+<!-- 1. 車色圖片輪播 -->
 <!-- ========================================== -->
 {{ $heroPhotos := slice }}
 
@@ -109,7 +123,6 @@
     onclick="prevHeroSlide()" 
     class="absolute left-4 md:left-32 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white w-10 h-10 md:w-12 md:h-12 rounded-full backdrop-blur-md flex items-center justify-center text-lg md:text-xl z-20 opacity-70 hover:opacity-100 transition-all shadow-md">❮</button>
 
-    <!-- 右側按鈕：手機版純箭頭 / 桌面版（>=768px）顯示「點擊看更多車色」 -->
     <button type="button" 
     onclick="nextHeroSlide()" 
     class="absolute right-4 md:right-12 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white w-10 h-10 md:w-auto md:h-auto md:py-2.5 md:px-4 rounded-full backdrop-blur-md flex items-center justify-center md:gap-2 z-20 opacity-85 hover:opacity-100 transition-all shadow-md group">
@@ -123,26 +136,26 @@
 </section>
 
 <!-- ========================================== -->
-<!-- 2. 橫式懸浮錨點選單 (手機字體放大與動態滑動隱藏提示) -->
+<!-- 2. 橫式懸浮錨點選單 (精準呈現 3 個項目，滑動即隱藏提示) -->
 <!-- ========================================== -->
 <nav id="sticky-nav" class="sticky top-[var(--header-h,50px)] z-40 bg-white border-b border-gray-200 shadow-sm transition-all duration-300">
-    <div id="scroll-menu" class="max-w-6xl mx-auto flex overflow-x-auto no-scrollbar justify-start md:justify-center items-center py-2 px-2 space-x-1 md:space-x-3">
-        <a href="#features-gallery" class="promo-tab-btn active px-2.5 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">車款特色</a>
-        <a href="#reviews" class="promo-tab-btn px-2.5 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">好騎推推</a>
+    <div id="scroll-menu" class="max-w-6xl mx-auto flex overflow-x-auto no-scrollbar justify-start md:justify-center items-center py-2 px-3 space-x-2 md:space-x-3">
+        <a href="#features-gallery" class="promo-tab-btn active px-3 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">車款特色</a>
+        <a href="#reviews" class="promo-tab-btn px-3 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">好騎推推</a>
         
-        <!-- 手機版專屬提示：字體同步放大為 text-sm，滑動時會自動淡出隱藏 -->
-        <span id="scroll-hint" class="md:hidden text-sm font-bold text-[#1155CC] animate-pulse whitespace-nowrap shrink-0 px-1 transition-opacity duration-300 select-none">
+        <!-- 手機版專屬提示：右側邊距 mr-12 確保第四個項目完全被推至螢幕外，滑動時會淡出並縮小 -->
+        <span id="scroll-hint" class="md:hidden text-sm font-bold text-[#1155CC] animate-pulse whitespace-nowrap shrink-0 mr-12 select-none inline-block">
             &gt;&gt;滑動看更多
         </span>
 
-        <a href="#specs" class="promo-tab-btn px-2.5 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">詳細規格表</a>
-        <a href="#accessories" class="promo-tab-btn px-2.5 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">原廠配件</a>
-        <a href="#faq" class="promo-tab-btn px-2.5 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">常見 QA</a>
+        <a href="#specs" class="promo-tab-btn px-3 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">詳細規格表</a>
+        <a href="#accessories" class="promo-tab-btn px-3 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">原廠配件</a>
+        <a href="#faq" class="promo-tab-btn px-3 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">常見 QA</a>
     </div>
 </nav>
 
 <!-- ========================================== -->
-<!-- 3. 車款特色與圖庫細節 -->
+<!-- 3. 車款特色區塊 -->
 <!-- ========================================== -->
 {{ with $page.Params.features }}
   <section id="features-gallery" class="anchor-section w-full overflow-hidden bg-[#dde1e8]">
@@ -213,7 +226,6 @@
             <p class="text-sm md:text-base text-gray-600 font-medium">試乘體驗、專業媒體報導與車主評價推薦</p>
         </div>
 
-        <!-- 試乘影片區塊 -->
         {{ with $page.Params.videos }}
         {{ $videos := . }}
         {{ $firstVid := index $videos 0 }}
@@ -248,7 +260,6 @@
         </div>
         {{ end }}
 
-        <!-- 網紅推薦 IG 貼文區塊 -->
         {{ with $page.Params.ig_posts }}
         <div class="space-y-6">
             <h3 class="text-xl md:text-2xl font-bold text-blue-800 flex items-center gap-2">
@@ -269,7 +280,6 @@
         </div>
         {{ end }}
 
-        <!-- 媒體報導觀點 -->
         {{ with $page.Params.reports }}
         <div class="space-y-6">
             <h3 class="text-xl md:text-2xl font-bold text-blue-800 flex items-center gap-2">
@@ -339,7 +349,6 @@
             </table>
         </div>
 
-        <!-- 規格表下方注意事項 -->
         <div class="space-y-1 text-xs text-gray-400 text-left font-light [&_a]:text-blue-600 [&_a]:underline [&_a]:hover:text-blue-800">
             {{ with $page.Params.specs_notes }}
                 {{ range . }}
@@ -449,10 +458,8 @@
     </svg>
 </button>
 
-<!-- 載入 Instagram 官方嵌入解析腳本 -->
 <script async src="//www.instagram.com/embed.js"></script>
 
-<!-- JavaScript 邏輯控制區 -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // 1. 自動動態偵測 Header 與 Nav 高度，設定 CSS 變數
@@ -475,15 +482,15 @@
         window.addEventListener('resize', updateLayoutHeights);
         window.addEventListener('load', updateLayoutHeights);
 
-        // 2. 手機版選單水平滑動時，自動淡出隱藏「>>滑動看更多」
+        // 2. 手機版選單水平滑動時，隱藏並完全收合「>>滑動看更多」
         const scrollMenu = document.getElementById('scroll-menu');
         const scrollHint = document.getElementById('scroll-hint');
         if (scrollMenu && scrollHint) {
             scrollMenu.addEventListener('scroll', function() {
-                if (scrollMenu.scrollLeft > 10) {
-                    scrollHint.classList.add('opacity-0', 'pointer-events-none');
+                if (scrollMenu.scrollLeft > 5) {
+                    scrollHint.classList.add('is-hidden');
                 } else {
-                    scrollHint.classList.remove('opacity-0', 'pointer-events-none');
+                    scrollHint.classList.remove('is-hidden');
                 }
             }, { passive: true });
         }
