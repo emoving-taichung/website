@@ -1,6 +1,13 @@
 {{ define "main" }}
 {{ $page := . }}
 
+{{/* 自動對應 static 目錄下的 catalog 與 manual PDF 檔案名稱 */}}
+{{ $catalogPdf := print "/catalog/" $page.File.BaseFileName ".pdf" }}
+{{ with $page.Params.catalog_url }}{{ $catalogPdf = . }}{{ end }}
+
+{{ $manualPdf := print "/manual/" $page.File.BaseFileName ".pdf" }}
+{{ with $page.Params.manual_url }}{{ $manualPdf = . }}{{ end }}
+
 <style>
   /* 全局高度 CSS 變數 (預設 Header 50px, 錨點選單 50px) */
   :root {
@@ -400,18 +407,18 @@
 {{ end }}
 
 <!-- ========================================== -->
-<!-- CTA 按鈕區塊 -->
+<!-- CTA 按鈕區塊 (型錄、手冊、預約、優惠) -->
 <!-- ========================================== -->
 <section class="py-10 bg-gray-900 text-white px-6">
     <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
-        <a href="{{ $page.Params.catalog_url | relURL }}" 
+        <a href="{{ $catalogPdf | relURL }}" 
            target="_blank" 
            rel="noopener noreferrer" 
            class="py-4 px-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap">
             <span>📄</span> <span>電子型錄</span>
         </a>
 
-        <a href="{{ $page.Params.manual_url | relURL }}" 
+        <a href="{{ $manualPdf | relURL }}" 
            target="_blank" 
            rel="noopener noreferrer" 
            class="py-4 px-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap">
