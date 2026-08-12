@@ -66,7 +66,12 @@
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important;
   }
 
-  /* 滑動提示：使用 viewport width (vw) 強制推開後續選單，保證完全遮擋 */
+  /* 手機版選單：利用動態計算將前三項置中，並用巨大右邊界把後續選項推至螢幕外 */
+  @media (max-width: 767px) {
+    #scroll-menu {
+      padding-left: calc(50vw - 140px);
+    }
+  }
   #scroll-hint {
     margin-right: 45vw; 
     transition: all 0.3s ease-out;
@@ -136,14 +141,14 @@
 </section>
 
 <!-- ========================================== -->
-<!-- 2. 橫式懸浮錨點選單 (精準呈現前 3 個項目，絕對滿版推開) -->
+<!-- 2. 橫式懸浮錨點選單 (手機版置中前三項並隱藏後續) -->
 <!-- ========================================== -->
 <nav id="sticky-nav" class="sticky top-[var(--header-h,50px)] z-40 bg-white border-b border-gray-200 shadow-sm transition-all duration-300">
-    <div id="scroll-menu" class="max-w-6xl mx-auto flex overflow-x-auto no-scrollbar items-center py-2 px-3 space-x-1 md:space-x-3">
+    <div id="scroll-menu" class="max-w-6xl mx-auto flex overflow-x-auto no-scrollbar items-center py-2 px-3 space-x-1 md:space-x-3 md:justify-center">
         <a href="#features-gallery" class="promo-tab-btn active px-3 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">車款特色</a>
         <a href="#reviews" class="promo-tab-btn px-3 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">好騎推推</a>
         
-        <!-- 手機版專屬提示：帶有巨大的右邊界，強制讓詳細規格表掉到螢幕外 -->
+        <!-- 手機版專屬提示：帶有巨大右邊界，推開後續項目 -->
         <span id="scroll-hint" class="md:hidden text-sm font-bold text-[#1155CC] animate-pulse whitespace-nowrap select-none inline-block">
             &gt;&gt;滑動看更多
         </span>
@@ -209,8 +214,8 @@
       {{ $lastIndex := math.Sub $total 1 }}
       {{ $lastIsEven := eq (math.Mod $lastIndex 2) 0 }}
       <div class="pt-4 pb-20 px-6 transition-all relative z-10 flex flex-col sm:flex-row justify-center gap-4 {{ if $lastIsEven }}bg-[#dde1e8]{{ else }}bg-[#f9fcff]{{ end }} text-gray-900">
-          <a href="/promotions/" class="px-8 py-3.5 bg-yellow-400 hover:bg-yellow-500 text-black font-extrabold text-center rounded-xl transition-all shadow-xl hover:scale-105">前往主打優惠 ➔</a>
-          <a href="/booking/" class="px-8 py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-center rounded-xl transition-all shadow-xl hover:scale-105">預約現場試乘 ➔</a>
+          <a href="{{ "/promotions/" | relURL }}" class="px-8 py-3.5 bg-yellow-400 hover:bg-yellow-500 text-black font-extrabold text-center rounded-xl transition-all shadow-xl hover:scale-105">前往主打優惠 ➔</a>
+          <a href="{{ "/booking/" | relURL }}" class="px-8 py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-center rounded-xl transition-all shadow-xl hover:scale-105">預約現場試乘 ➔</a>
       </div>
   </section>
 {{ end }}
@@ -413,12 +418,12 @@
             <span>📘</span> <span>使用手冊</span>
         </a>
 
-        <a href="/booking/" 
+        <a href="{{ "/booking/" | relURL }}" 
            class="py-4 px-3 bg-blue-600 hover:bg-blue-500 text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap">
             <span>🛵</span> <span>預約試乘</span>
         </a>
 
-        <a href="/promotions/" 
+        <a href="{{ "/promotions/" | relURL }}" 
            class="py-4 px-3 bg-yellow-400 hover:bg-yellow-300 text-black text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap">
             <span>🎁</span> <span>獲取優惠</span>
         </a>
@@ -450,7 +455,7 @@
 {{ end }}
 
 <!-- ========================================== -->
-<!-- 8. 回到頂端懸浮按鈕 (預設隱藏，滾動時才出現，避免擋住選單) -->
+<!-- 8. 回到頂端懸浮按鈕 -->
 <!-- ========================================== -->
 <button id="back-to-top-btn" class="fixed bottom-6 right-6 z-50 w-11 h-11 md:w-12 md:h-12 rounded-full border-2 border-blue-600 bg-white text-blue-600 shadow-lg flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-110 focus:outline-none opacity-0 pointer-events-none" title="回到頂端">
     <svg class="w-6 h-6 stroke-current" fill="none" viewBox="0 0 24 24">
@@ -617,7 +622,7 @@
             window.instgrm.Embeds.process();
         }
 
-        // 7. 回到頂端按鈕邏輯：滾動過頭才顯示，避免在頂部遮擋選單
+        // 7. 回到頂端按鈕邏輯：滾動過頭才顯示
         const backToTopBtn = document.getElementById('back-to-top-btn');
         if (backToTopBtn) {
             window.addEventListener('scroll', function() {
