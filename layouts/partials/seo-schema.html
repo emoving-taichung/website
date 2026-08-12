@@ -1,0 +1,57 @@
+<!-- layouts/partials/seo-schema.html -->
+
+<!-- 1. 全站通用：在地商家與品牌資訊 -->
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": ["MotorcycleDealer", "AutoRepair"],
+    "name": "eMOVING 精輪山西店｜台中電動機車專賣｜精輪車業",
+    "url": "{{ .Site.BaseURL }}",
+    "telephone": "+886-4-2297-8816",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "山西路二段220號",
+      "addressLocality": "北區",
+      "addressRegion": "台中市",
+      "addressCountry": "TW"
+    }
+  }
+  </script>
+  
+  <!-- 2. 如果是車款介紹頁，自動追加 Product 結構 -->
+  {{ if eq .Section "models" }}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "{{ .Title }}",
+    "image": "{{ .Params.image | absURL }}",
+    "description": "{{ .Description }}",
+    "brand": {
+      "@type": "Brand",
+      "name": "eMOVING"
+    }
+  }
+  </script>
+  {{ end }}
+  
+  <!-- 3. 如果不是首頁，自動產生麵包屑 BreadcrumbList -->
+  {{ if not .IsHome }}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首頁",
+      "item": "{{ .Site.BaseURL }}"
+    },{
+      "@type": "ListItem",
+      "position": 2,
+      "name": "{{ .Title }}",
+      "item": "{{ .Permalink }}"
+    }]
+  }
+  </script>
+  {{ end }}

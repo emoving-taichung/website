@@ -1,0 +1,283 @@
+{{ define "main" }}
+
+<div class="w-full bg-[#f7f9fb] text-[#1a202c] min-h-screen py-10 px-4 md:px-8">
+    
+    <!-- 載入中動畫 -->
+    <div id="booking-loading" class="text-center py-20 text-gray-400 font-medium text-sm">
+        <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-[#0085d9] border-t-transparent mb-3"></div>
+        <p>正在初始化門市試乘資料...</p>
+    </div>
+
+    <!-- 表單容器 -->
+    <div id="booking-container" class="max-w-2xl mx-auto bg-white rounded-2xl border border-gray-200 p-6 md:p-10 shadow-sm hidden space-y-8">
+        
+        <!-- Header -->
+        <div class="text-center space-y-2">
+            <h1 class="text-2xl md:text-3xl font-bold text-[#0085d9]">預約試乘 / 諮詢</h1>
+            <p class="text-gray-500 text-xs md:text-sm leading-relaxed">
+                eMOVING 全車系在台中精輪均可試乘。<br>
+                我們將陪伴您選擇適合的車款，並協助試算電動機車補助方案。
+            </p>
+        </div>
+
+        <form id="booking-form" class="space-y-6" novalidate>
+            
+            <!-- 選擇車款 (支援滑鼠拖曳 + 橫向滑動) -->
+            <div>
+                <label class="block text-xs font-semibold text-gray-500 mb-2">選擇車款 <span class="text-[#0085d9]">*</span></label>
+                
+                <div id="vehicle-scroll" class="flex gap-3 overflow-x-auto pb-6 pt-1 select-none cursor-grab active:cursor-grabbing scrollbar-thin">
+                    <!-- JS 自動渲染車款卡片 -->
+                </div>
+                <input type="hidden" id="vehicle" name="vehicle" required>
+                <p class="text-xs text-red-500 hidden mt-1" id="err-vehicle">請選擇車款</p>
+            </div>
+
+            <!-- 行政區 & 門市 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 mb-1">行政區 <span class="text-[#0085d9]">*</span></label>
+                    <select id="district" name="district" disabled class="w-full p-3 border border-gray-200 rounded-xl text-sm focus:border-[#0085d9] focus:outline-none bg-white disabled:bg-gray-50 disabled:text-gray-400">
+                        <option value="">請先選擇車款</option>
+                    </select>
+                    <p class="text-xs text-red-500 hidden mt-1" id="err-district">請選擇行政區</p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 mb-1">門市 <span class="text-[#0085d9]">*</span></label>
+                    <select id="store_name" name="store_name" disabled class="w-full p-3 border border-gray-200 rounded-xl text-sm focus:border-[#0085d9] focus:outline-none bg-white disabled:bg-gray-50 disabled:text-gray-400">
+                        <option value="">請先選擇行政區</option>
+                    </select>
+                    <input type="hidden" id="store_address" name="store_address">
+                    <p class="text-xs text-red-500 hidden mt-1" id="err-store_name">請選擇門市</p>
+                </div>
+            </div>
+
+            <!-- 日期 & 時段 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 mb-1">試乘日期 (週日公休) <span class="text-[#0085d9]">*</span></label>
+                    <input type="date" id="booking_date" name="booking_date" disabled class="w-full p-3 border border-gray-200 rounded-xl text-sm focus:border-[#0085d9] focus:outline-none bg-white disabled:bg-gray-50 disabled:text-gray-400">
+                    <p class="text-xs text-red-500 hidden mt-1" id="err-booking_date">請選擇試乘日期</p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 mb-1">試乘時段 <span class="text-[#0085d9]">*</span></label>
+                    <select id="booking_time" name="booking_time" disabled class="w-full p-3 border border-gray-200 rounded-xl text-sm focus:border-[#0085d9] focus:outline-none bg-white disabled:bg-gray-50 disabled:text-gray-400">
+                        <option value="">請先選擇日期</option>
+                    </select>
+                    <p class="text-xs text-red-500 hidden mt-1" id="err-booking_time">請選擇試乘時段</p>
+                </div>
+            </div>
+
+            <!-- 姓名 & 電話 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 mb-1">姓名 <span class="text-[#0085d9]">*</span></label>
+                    <input type="text" id="name" name="name" placeholder="請輸入姓名" class="w-full p-3 border border-gray-200 rounded-xl text-sm focus:border-[#0085d9] focus:outline-none">
+                    <p class="text-xs text-red-500 hidden mt-1" id="err-name">請輸入姓名</p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-500 mb-1">聯絡電話 <span class="text-[#0085d9]">*</span></label>
+                    <input type="tel" id="phone" name="phone" placeholder="09xx-xxx-xxx" maxlength="10" class="w-full p-3 border border-gray-200 rounded-xl text-sm focus:border-[#0085d9] focus:outline-none">
+                    <p class="text-xs text-red-500 hidden mt-1" id="err-phone">請輸入正確的 10 位數手機號碼</p>
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div>
+                <label class="block text-xs font-semibold text-gray-500 mb-1">Email</label>
+                <input type="email" id="email" name="email" placeholder="example@email.com" class="w-full p-3 border border-gray-200 rounded-xl text-sm focus:border-[#0085d9] focus:outline-none">
+                <p class="text-xs text-red-500 hidden mt-1" id="err-email">Email 格式不正確</p>
+            </div>
+
+            <!-- 送出按鈕 -->
+            <button type="submit" id="submit-btn" class="w-full py-4 bg-[#0085d9] hover:bg-[#0073bd] text-white font-bold rounded-xl text-sm tracking-widest transition-colors shadow-md">
+                送出預約
+            </button>
+        </form>
+
+        <!-- 成功訊息 -->
+        <div id="success-msg" class="hidden text-center py-12 space-y-3">
+            <div class="text-5xl">🎉</div>
+            <h2 class="text-2xl font-bold text-[#0085d9]">預約成功！我們到時候見。</h2>
+            <p class="text-sm text-gray-500">門市專人將會儘速與您聯繫確認時間。</p>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbyjLSjB8OI3aSzS5H0FIE2kL3Ihqx9_uAyvFBCcKnrQctcgi8td5NLzozb9bixZrYAb/exec";
+    
+    let globalConfig = null;
+    const vehicles = [
+      { value: "Shine", name: "免駕照｜Shine", image: "https://i.pinimg.com/474x/aa/9b/eb/aa9beb030bc9ffd0f5708a8d2dc61054.jpg" },
+      { value: "EZ1", name: "綠牌｜EZ1", image: "https://i.pinimg.com/736x/9b/60/07/9b6007d77ab79891df2777452a296f01.jpg" },
+      { value: "EZR", name: "白牌｜EZR", image: "https://i.pinimg.com/736x/e8/f5/e9/e8f5e967e03a5542e1709b47697acd13.jpg" },
+      { value: "IE", name: "白牌｜勁炫125", image: "https://i.pinimg.com/736x/b4/8c/4f/b48c4ff38a881c095b46746fd68dda71.jpg" },
+      { value: "FUN", name: "白牌｜FUN", image: "https://i.pinimg.com/736x/d9/3b/8f/d93b8fb47ae3ac278ad33c482e1935a1.jpg"}
+    ];
+
+    document.addEventListener('DOMContentLoaded', function() {
+        initVehicleScrollDrag();
+        initUI();
+        fetchInitialData();
+    });
+
+    // 🖱️ 滑鼠拖曳橫向滑動車款卡片腳本
+    function initVehicleScrollDrag() {
+        const slider = document.getElementById('vehicle-scroll');
+        let isDown = false, startX, scrollLeft;
+
+        slider.addEventListener('mousedown', (e) => {
+            isDown = true;
+            startX = e.pageX - slider.offsetLeft;
+            scrollLeft = slider.scrollLeft;
+        });
+        slider.addEventListener('mouseleave', () => isDown = false);
+        slider.addEventListener('mouseup', () => isDown = false);
+        slider.addEventListener('mousemove', (e) => {
+            if(!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - slider.offsetLeft;
+            const walk = (x - startX) * 2;
+            slider.scrollLeft = scrollLeft - walk;
+        });
+    }
+
+    function initUI() {
+        const scrollBox = document.getElementById('vehicle-scroll');
+        vehicles.forEach(v => {
+            const card = document.createElement('div');
+            card.className = "vehicle-card flex-shrink-0 w-32 border border-gray-200 rounded-xl cursor-pointer hover:border-gray-400 transition-all overflow-hidden relative bg-white";
+            card.innerHTML = `
+                <div class="check-icon absolute top-2 right-2 w-5 h-5 bg-[#0085d9] rounded-full hidden items-center justify-center text-white text-xs">✓</div>
+                <div class="w-full aspect-square bg-gray-50 p-2 flex items-center justify-center">
+                    <img src="${v.image}" class="w-full h-full object-contain pointer-events-none" alt="${v.name}">
+                </div>
+                <div class="p-2.5 text-center text-xs font-medium text-gray-700 card-title">${v.name}</div>
+            `;
+            card.onclick = () => onVehicleSelect(v.value, card);
+            scrollBox.appendChild(card);
+        });
+
+        document.getElementById('booking_date').min = new Date().toISOString().split('T')[0];
+
+        // 電話限定數字
+        document.getElementById('phone').addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '').slice(0, 10);
+        });
+    }
+
+    function fetchInitialData() {
+        fetch(GAS_URL + "?action=getData")
+            .then(res => res.json())
+            .then(res => {
+                document.getElementById('booking-loading').classList.add('hidden');
+                document.getElementById('booking-container').classList.remove('hidden');
+                if (res.success) globalConfig = res;
+            })
+            .catch(err => {
+                document.getElementById('booking-loading').innerHTML = '<p class="text-red-500">連線失敗，請重新整理頁面試試。</p>';
+            });
+    }
+
+    function onVehicleSelect(val, el) {
+        document.getElementById('vehicle').value = val;
+        document.querySelectorAll('.vehicle-card').forEach(c => {
+            c.classList.remove('border-[#0085d9]', 'border-2');
+            c.querySelector('.check-icon').classList.add('hidden');
+            c.querySelector('.card-title').classList.remove('text-[#0085d9]', 'font-bold');
+        });
+        el.classList.add('border-[#0085d9]', 'border-2');
+        el.querySelector('.check-icon').classList.remove('hidden');
+        el.querySelector('.card-title').classList.add('text-[#0085d9]', 'font-bold');
+
+        document.getElementById('err-vehicle').classList.add('hidden');
+
+        const distSelect = document.getElementById('district');
+        distSelect.innerHTML = '<option value="">請選擇行政區</option>';
+        if (globalConfig && globalConfig.vehicleMap) {
+            (globalConfig.vehicleMap[val] || []).forEach(d => distSelect.insertAdjacentHTML('beforeend', `<option value="${d}">${d}</option>`));
+        }
+        distSelect.disabled = false;
+        document.getElementById('store_name').disabled = true;
+        document.getElementById('store_name').innerHTML = '<option value="">請先選擇行政區</option>';
+        document.getElementById('booking_date').disabled = true;
+    }
+
+    document.getElementById('district').onchange = function() {
+        const storeSelect = document.getElementById('store_name');
+        storeSelect.innerHTML = '<option value="">請選擇門市</option>';
+        if (this.value && globalConfig) {
+            (globalConfig.storeMap[this.value] || []).forEach(s => storeSelect.insertAdjacentHTML('beforeend', `<option value="${s.name}" data-addr="${s.address}">${s.name}</option>`));
+            storeSelect.disabled = false;
+            document.getElementById('booking_date').disabled = false;
+        }
+    };
+
+    document.getElementById('store_name').onchange = function() {
+        const opt = this.options[this.selectedIndex];
+        document.getElementById('store_address').value = opt ? (opt.dataset.addr || '') : '';
+    };
+
+    document.getElementById('booking_date').onchange = function() {
+        const timeSelect = document.getElementById('booking_time');
+        const d = new Date(this.value);
+        if (d.getDay() === 0) {
+            alert('週日為門市公休日，請選擇其他試乘日期');
+            this.value = '';
+            return;
+        }
+        timeSelect.innerHTML = '<option value="">請選擇時段</option>';
+        const dist = document.getElementById('district').value;
+        const slots = (globalConfig && globalConfig.timeSlotMap && globalConfig.timeSlotMap[dist]) || ["10:00", "14:00", "16:00", "19:00"];
+        slots.forEach(t => timeSelect.insertAdjacentHTML('beforeend', `<option value="${t}">${t}</option>`));
+        timeSelect.disabled = false;
+    };
+
+    document.getElementById('booking-form').onsubmit = function(e) {
+        e.preventDefault();
+        
+        // 簡單驗證
+        const formObj = {
+            vehicle: document.getElementById('vehicle').value,
+            district: document.getElementById('district').value,
+            store_name: document.getElementById('store_name').value,
+            store_address: document.getElementById('store_address').value,
+            booking_date: document.getElementById('booking_date').value,
+            booking_time: document.getElementById('booking_time').value,
+            name: document.getElementById('name').value.trim(),
+            phone: document.getElementById('phone').value.trim(),
+            email: document.getElementById('email').value.trim()
+        };
+
+        if(!formObj.vehicle || !formObj.district || !formObj.store_name || !formObj.booking_date || !formObj.booking_time || !formObj.name || formObj.phone.length !== 10) {
+            alert('請完整填寫必填欄位與正確的 10 位數手機號碼。');
+            return;
+        }
+
+        const btn = document.getElementById('submit-btn');
+        btn.disabled = true;
+        btn.innerText = '傳送中...';
+
+        fetch(GAS_URL, {
+            method: 'POST',
+            body: JSON.stringify(formObj),
+            mode: 'no-cors'
+        })
+        .then(() => {
+            document.getElementById('booking-form').classList.add('hidden');
+            document.getElementById('success-msg').classList.remove('hidden');
+        })
+        .catch(err => {
+            alert('傳送失敗，請稍後再試。');
+            btn.disabled = false;
+            btn.innerText = '送出預約';
+        });
+    };
+</script>
+
+{{ end }}

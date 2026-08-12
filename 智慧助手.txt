@@ -1,0 +1,222 @@
+<!doctype html>
+<html>
+<head>
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; padding: 0; background: transparent; font-family: "Microsoft JhengHei", sans-serif; }
+        
+        /* 容器設定 */
+        .chat-container { 
+            position: relative; 
+            width: 95%; 
+            max-width: 600px; 
+            height: 500px; /* 增加高度讓閱讀更順手 */
+            margin: 20px auto; 
+            background: #f4f7f9; 
+            display: flex; 
+            flex-direction: column; 
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .chat-header { 
+            background: #0085D9; 
+            color: white; 
+            padding: 15px; 
+            text-align: center; 
+            font-weight: bold; 
+            font-size: 16px; 
+            flex-shrink: 0;
+        }
+
+        .chat-box { 
+            flex: 1; 
+            overflow-y: auto; 
+            padding: 15px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            scroll-behavior: smooth; 
+        }
+
+        .msg { max-width: 85%; padding: 12px; border-radius: 15px; font-size: 14px; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; }
+        .bot { background: white; align-self: flex-start; border-bottom-left-radius: 2px; color: #333; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .user { background: #0085D9; color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .msg a { color: #0085D9; font-weight: bold; }
+
+        .inner-line-btn { display: block; background: #00b900; color: white !important; text-decoration: none; text-align: center; padding: 12px; border-radius: 8px; margin-top: 10px; font-weight: bold; }
+
+        /* 選單樣式 */
+        .menu-wrapper { position: absolute; bottom: 20px; right: 20px; display: flex; flex-direction: column; align-items: flex-end; z-index: 100; }
+        .options-list { 
+            display: none; 
+            background: white; 
+            border-radius: 12px; 
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2); 
+            padding: 8px; 
+            margin-bottom: 12px; 
+            width: 250px; 
+            border: 1.5px solid #0085D9; 
+        }
+        .opt-btn { width: 100%; background: white; border: none; color: #333; padding: 12px; text-align: left; border-radius: 8px; cursor: pointer; font-size: 14px; border-bottom: 1px solid #eee; }
+        .opt-btn:hover { background: #f0f8ff; color: #0085D9; }
+
+        .menu-toggle { 
+            width: 65px; height: 65px; 
+            background: #0085D9; color: white; 
+            border-radius: 50%; border: none;
+            cursor: pointer; font-weight: bold;font-size: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="chat-header">eMOVING 線上智慧客服</div>
+    <div class="chat-box" id="chatBox">
+        <div class="msg bot">您好！歡迎詢問 ✨<br />點擊右下角「選單」查看最新優惠資訊！</div>
+    </div>
+
+    <div class="menu-wrapper">
+        <div class="options-list" id="optionsList">
+            <button class="opt-btn" onclick="handleSelect(1)">🔰 免駕照微電 | Shine、Bobe</button>
+            <button class="opt-btn" onclick="handleSelect(2)">🎀 綠牌輕型機車 | ez1</button>
+            <button class="opt-btn" onclick="handleSelect(3)">🛵 白牌125機車 | 勁炫</button>
+            <button class="opt-btn" onclick="handleSelect(4)">🛡️ 白牌125機車 | EZR</button>
+            <button class="opt-btn" onclick="handleSelect(5)">🍀 白牌125機車 | FUN</button>
+            <button class="opt-btn" onclick="handleSelect(6)">❓ 其他問題 / 聯繫客服</button>
+        </div>
+        <button class="menu-toggle" onclick="toggleMenu()">車款<br>選單</button>
+    </div>
+</div>
+
+<script>
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbycFrOC0I8-pE5mAOjCmb6EY8E5svs4AuYhqTk0pVZpdd4jMlQpCxNAGFobuqMqN9QVAg/exec";
+    const LINE_URL = "https://lihi1.me/FIEed";
+
+    // 💡 使用 ` ` (反引號) 讓您以後可以直接在程式碼裡換行修改，不會出錯！
+    const carData = {
+        1: { 
+            name: "🔰 免駕照微電 | Shine、Bobe", 
+            reply: `感謝詢問⚡微型電動二輪⚡
+☑️免駕照
+☑️鋰電池保固業界最長
+☑️重量只有40kg
+☑️附近代步或是上學代步都相當適合
+
+💎目前完售💎
+
+
+預計七月會有車，
+價格到時會同步公告！
+
+
+立即加LINE，獲得最新消息⤵️
+
+查看車色：<a href='https://lihi1.me/FkGEJ' target='_blank'>點我查看</a>
+來電詢問：<a href='https://lihi1.me/HPmPr' target='_blank'>點我撥打</a>
+尋找門市：<a href='https://lihi1.me/YMQvM' target='_blank'>點我找據點</a>` 
+        },
+        2: { 
+            name: "🎀 綠牌輕型機車 | ez1", 
+            reply: `感謝詢問✨ez1✨的資訊
+ez1使用gogoro network的系統
+一換就GO，超方便！
+
+EZ1獨家特色→
+🌻坐墊軟Q、空間寬敞
+🌻大容量置物箱、USB充電孔
+
+✨本月優惠✨
+✅ 送 $５０００購車金
+✅ 首年享月租費$１６９
+🎀 另可分24期0利率
+
+來電詢問：<a href='https://lihi1.me/Rnv1F' target='_blank'>點我撥打</a>
+查看車色：<a href='https://lihi1.me/Az2EC' target='_blank'>點我查看</a>
+尋找門市：<a href=’https://lihi1.me/FH7dL' target='_blank'>點我找據點</a>` 
+        },
+        3: { 
+            name: "🛵 白牌125機車 | 勁炫", 
+            reply: `感謝詢問🌟勁炫125🌟
+
+獨家特色→
+☄快充/家充任你選
+☄獨家專利電動中柱
+☄直線加速最快 3.9 秒
+☄免月租費，電池保固業界最長
+
+目前暫無庫存，請留下姓名、電話，以便阿編通知您～
+
+來電詢問：<a href='https://lihi1.me/OGYCj' target='_blank'>點我撥打</a>
+查看車色：<a href='https://lihi1.me/aOBz7' target='_blank'>點我查看</a>
+尋找門市：<a href=’https://lihi1.me/0dzYm' target='_blank'>點我找據點</a>`  
+        },
+        4: { 
+            name: "🛡️ 白牌125機車 | EZR", 
+            reply: `感謝詢問💥EZR💥！
+
+獨家特色→
+⚡全新自研馬達/定速巡航
+⚡TCS 煞車系統/雲端鑰匙
+
+＼＼可享優惠／／
+💎現金折扣 $１９９００💎
+💖$８８８騎到飽(指定時段)
+
+來電詢問：<a href='https://lihi1.me/wRMsZ' target='_blank'>點我撥打</a>
+查看車色：<a href='https://lihi1.me/KFohq' target='_blank'>點我查看</a>
+尋找門市：<a href=’https://lihi1.me/y5UCf' target='_blank'>點我找據點</a>` 
+        },
+                5: { 
+            name: "🍀 白牌125機車 | FUN", 
+            reply: `感謝詢問🍪FUN🍪！
+
+獨家特色→
+🌰可放入全罩式安全帽置物箱
+🌰低車身，嬌小也能輕易操控重型機車
+
+＼＼可享優惠／／
+💎現金折扣 $１００００💎
+💖$８８８騎到飽(指定時段)
+
+來電詢問：<a href='https://lihi1.me/5WXVV' target='_blank'>點我撥打</a>
+查看車色：<a href='https://lihi1.me/3HNXQ' target='_blank'>點我查看</a>
+尋找門市：<a href=’https://lihi1.me/zDLdLf' target='_blank'>點我找據點</a>` 
+        },
+6: { 
+            name: "❓ 其他問題", 
+            reply: `沒問題！如果您有其他個人化需求或細節想了解，歡迎點擊下方按鈕加入我們的官方 Line，將有專人為您服務。` 
+        }
+    };
+
+    function toggleMenu() {
+        const list = document.getElementById('optionsList');
+        list.style.display = (list.style.display === 'block') ? 'none' : 'block';
+    }
+
+    function handleSelect(id) {
+        const chatBox = document.getElementById('chatBox');
+        const selected = carData[id];
+        document.getElementById('optionsList').style.display = 'none';
+
+        chatBox.innerHTML += '<div class="msg user">' + selected.name + '</div>';
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        // 傳送記錄到 Google Sheets (不影響頁面運作)
+        fetch(WEB_APP_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ option: selected.name }) });
+
+        setTimeout(() => {
+            const botReplyHtml = '<div class="msg bot">' + selected.reply + '<a href="' + LINE_URL + '" target="_blank" class="inner-line-btn">💬 點此加入官方LINE諮詢</a></div>';
+            chatBox.innerHTML += botReplyHtml;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }, 500);
+    }
+</script>
+</body>
+</html>
+
+

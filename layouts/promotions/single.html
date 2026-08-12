@@ -1,0 +1,364 @@
+{{ define "main" }}
+
+<!-- 全頁背景 #f9fcff -->
+<div class="w-full bg-[#f9fcff] text-[#1C1C1C] min-h-screen flex flex-col justify-between relative">
+
+    <div>
+        <!-- ========================================== -->
+        <!-- 1. 廣宣圖 Banner (扣除 Header 與 Nav 高度，確保 Nav 底部貼齊螢幕) -->
+        <!-- ========================================== -->
+        <section class="w-full min-h-[calc(100vh-112px)] md:min-h-[calc(100vh-120px)] bg-gradient-to-b from-[#6eade3] to-[#81baf0] py-6 px-4 flex flex-col justify-center items-center relative shrink-0">
+            <div class="max-w-6xl w-full flex justify-center items-center my-auto">
+                <!-- 預設值與變數讀取 -->
+                {{ $imgMobile := .Resources.GetMatch (default "banner_mobile.png" .Params.hero_image_mobile) }}
+                {{ $imgDesktop := .Resources.GetMatch (default "banner_desktop.png" .Params.hero_image_desktop) }}
+                
+                {{ if or $imgMobile $imgDesktop }}
+                    <picture class="w-full block text-center">
+                        <!-- 電腦版 (>= 768px)：顯示橫圖 -->
+                        {{ if $imgDesktop }}
+                            <source media="(min-width: 768px)" srcset="{{ $imgDesktop.RelPermalink }}">
+                        {{ end }}
+                        
+                        <!-- 手機版 (預設)：顯示直圖 -->
+                        {{ if $imgMobile }}
+                            <img src="{{ $imgMobile.RelPermalink }}" alt="{{ $.Title }}" class="w-full h-auto max-h-[75vh] object-contain rounded-2xl shadow-xl mx-auto block">
+                        {{ else if $imgDesktop }}
+                            <img src="{{ $imgDesktop.RelPermalink }}" alt="{{ $.Title }}" class="w-full h-auto max-h-[75vh] object-contain rounded-2xl shadow-xl mx-auto block">
+                        {{ end }}
+                    </picture>
+                {{ else }}
+                    <div class="w-full py-24 flex flex-col justify-center items-center text-white text-center">
+                        <span class="text-xs bg-white/20 px-3 py-1 rounded-full mb-3 uppercase tracking-widest">eMOVING 主打專案</span>
+                        <h1 class="text-3xl md:text-5xl font-black tracking-wider">{{ .Title }}</h1>
+                    </div>
+                {{ end }}
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 2. 各車款橫式錨點選單 (手機與電腦版皆平均分配寬度 + 置中對齊) -->
+        <!-- ========================================== -->
+        {{ if gt (len .Params.models) 1 }}
+        <nav id="promo-nav" class="sticky top-[56px] md:top-[60px] z-40 w-full bg-[#f9fcff] shadow-md transition-all duration-300 shrink-0">
+            <div class="max-w-7xl mx-auto flex items-center justify-center w-full">
+                {{ range $mIndex, $model := .Params.models }}
+                    {{ if ne $model.enable false }}
+                    <a href="#model-{{ $model.id }}" 
+                       class="promo-tab-btn flex-1 text-center py-3.5 md:py-4 px-2 font-bold text-[18px] uppercase tracking-wider transition-all text-gray-700 hover:text-white hover:bg-white/10"
+                       data-target="model-{{ $model.id }}">
+                        {{ $model.name }}
+                    </a>
+                    {{ end }}
+                {{ end }}
+            </div>
+        </nav>
+        {{ end }}
+
+        <!-- ========================================== -->
+        <!-- 3. 車款詳細內容區塊 -->
+        <!-- ========================================== -->
+        <div class="max-w-6xl mx-auto px-4 md:px-8 py-16 md:py-24 space-y-32 md:space-y-40">
+            {{ range $mIndex, $model := .Params.models }}
+                {{ if ne $model.enable false }}
+                <article id="model-{{ $model.id }}" class="scroll-mt-[120px] md:scroll-mt-[135px] space-y-16 border-b border-gray-200 pb-24 last:border-b-0">
+                    
+                    <!-- 車款名稱與 eMOVING 標籤 -->
+                    <div class="text-center space-y-3">
+                        <span class="text-small font-bold uppercase tracking-widest text-[#1155CC] bg-blue-100/80 px-4 py-1.5 rounded-full border border-blue-200">
+                            eMOVING
+                        </span>
+                        <h2 class="text-main-title md:text-4xl font-black text-[#1C1C1C] tracking-wide">
+                            {{ $model.name }}
+                        </h2>
+                        {{ if $model.subtitle }}
+                        <p class="text-[18px] md:text-subtitle text-gray-600 font-medium">
+                            {{ $model.subtitle }}
+                        </p>
+                        {{ end }}
+                    </div>
+
+                    <!-- 兩欄式優惠簡介 (背景色 #F1FAFF) -->
+                    <div class="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center bg-[#F1FAFF] p-6 md:p-10 rounded-2xl border border-blue-100 shadow-sm">
+                        <!-- 左欄：40% 封面圖 -->
+                        <div class="w-full lg:w-[40%] aspect-[4/3] rounded-xl overflow-hidden bg-white border border-blue-100 shrink-0 shadow-inner">
+                            {{ with $.Resources.GetMatch (default "cover.png" $model.cover_image) }}
+                                <img src="{{ .RelPermalink }}" alt="{{ $model.name }}" class="w-full h-full object-cover">
+                            {{ else }}
+                                <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">【封面圖：{{ $model.cover_image | default "cover.png" }}】</div>
+                            {{ end }}
+                        </div>
+
+                        <!-- 右欄：60% 文字與亮點 -->
+                        <div class="w-full lg:w-[60%] flex flex-col justify-between space-y-6 text-left">
+                            <div class="space-y-4">
+                                <p class="text-regular text-gray-700 leading-relaxed">
+                                    {{ $model.description }}
+                                </p>
+
+                                {{ if $model.highlights }}
+                                <div class="bg-white border-l-4 border-[#1155CC] p-4 rounded-r-lg shadow-sm space-y-2">
+                                    <h4 class="text-[18px] font-bold text-[#1155CC]">本月優惠亮點：</h4>
+                                    <ul class="list-disc list-inside text-regular text-gray-700 space-y-2">
+                                        {{ range $model.highlights }}
+                                        <li class="leading-relaxed">{{ . | safeHTML }}</li>
+                                        {{ end }}
+                                    </ul>
+                                </div>
+                                {{ end }}
+                            </div>
+
+                            <div>
+                                <a href="{{ $model.store_cta_link | default "/stores/" }}" 
+                                   class="inline-flex items-center gap-2 bg-[#1155CC] hover:bg-blue-700 text-white font-semibold text-[18px] py-3.5 px-6 rounded-xl shadow-md transition-all">
+                                    {{ $model.store_cta_text | default "📍 查詢附近門市與換電據點" }}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 車款特色（圖片尺寸 1280 * 800） -->
+                    <div class="space-y-6">
+                        <h3 class="text-[24px] font-black text-[#1C1C1C] text-left border-l-4 border-[#1155CC] pl-3 leading-none">
+                            車款特色
+                        </h3>
+                        
+                        <div class="carousel-container relative w-full bg-white rounded-2xl border border-gray-200 shadow-md p-4 group">
+                            <!-- 1280 * 800 比例容器 -->
+                            <div class="w-full aspect-[1280/800] relative overflow-hidden rounded-xl bg-gray-50">
+                                {{ range $sIndex, $feat := $model.features }}
+                                <div class="slide-item absolute inset-0 w-full h-full transition-opacity duration-500 opacity-0 pointer-events-none flex flex-col" data-slide-index="{{ $sIndex }}">
+                                    <div class="w-full h-full relative">
+                                        {{ with $.Resources.GetMatch $feat.image }}
+                                            <img src="{{ .RelPermalink }}" alt="{{ $feat.title }}" class="w-full h-full object-cover">
+                                        {{ else }}
+                                            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">【特色圖檔：{{ $feat.image }}】</div>
+                                        {{ end }}
+                                    </div>
+                                    
+                                    <div class="absolute bottom-0 inset-x-0 bg-white/90 backdrop-blur-sm py-3 px-4 text-center border-t border-gray-100">
+                                        <span class="inline-flex items-center justify-center gap-2 text-[18px] font-bold text-[#1C1C1C]">
+                                            <span class="text-green-600">✅</span>
+                                            <span>{{ $feat.title }}</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                {{ end }}
+                            </div>
+
+                            <button type="button" class="btn-prev absolute left-6 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 rounded-full bg-black/50 hover:bg-[#1155CC] text-white text-xl md:text-2xl flex items-center justify-center transition-colors z-20 focus:outline-none shadow-lg">
+                                ❮
+                            </button>
+                            <button type="button" class="btn-next absolute right-6 top-1/2 -translate-y-1/2 w-10 h-10 md:w-12 md:h-12 rounded-full bg-black/50 hover:bg-[#1155CC] text-white text-xl md:text-2xl flex items-center justify-center transition-colors z-20 focus:outline-none shadow-lg">
+                                ❯
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- YouTube 影片 -->
+                    {{ if $model.youtube_id }}
+                    <div class="space-y-4 pt-2">
+                        <h4 class="text-[18px] font-bold text-[#1C1C1C]">影音介紹：</h4>
+                        <div class="w-full aspect-video rounded-2xl overflow-hidden shadow-md border border-gray-200">
+                            <iframe class="w-full h-full" src="https://www.youtube.com/embed/{{ $model.youtube_id }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                    {{ end }}
+
+                    <!-- 三個 CTA 按鈕 -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 pt-6">
+                        <a href="{{ $model.car_page_link }}" 
+                           class="flex items-center justify-center gap-2 bg-[#f9fcff] hover:bg-blue-50 text-[#1C1C1C] font-bold text-[18px] py-4 px-6 rounded-xl border-2 border-[#1155CC] shadow-sm transition-all text-center">
+                            🏍️ 車款介紹主頁
+                        </a>
+
+                        <a href="{{ $model.line_link | default "https://lihi1.me/8LpPy?ref=line_join" }}" target="_blank" 
+                           class="flex items-center justify-center gap-2 bg-[#f9fcff] hover:bg-blue-50 text-[#1C1C1C] font-bold text-[18px] py-4 px-6 rounded-xl border-2 border-[#1155CC] shadow-sm transition-all text-center">
+                            💬 加入官方 LINE 諮詢
+                        </a>
+
+                        <a href="{{ $model.store_cta_link | default "/stores/" }}"
+                           class="flex items-center justify-center gap-2 bg-[#FFFE4F] hover:bg-yellow-300 text-[#1C1C1C] font-black text-[18px] py-4 px-6 rounded-xl border-2 border-[#FFFE4F] shadow-md transition-all text-center">
+                            🏢 前往門市據點
+                        </a>
+                    </div>
+
+                </article>
+                {{ end }}
+            {{ end }}
+
+            <!-- 主打優惠頁面最下方雙按鈕（預約試乘 / 其他車款優惠） -->
+            <div class="pt-10 flex flex-col sm:flex-row gap-5 justify-center items-center max-w-2xl mx-auto">
+                <a href="/book-test-ride/" 
+                   class="w-full sm:w-1/2 flex items-center justify-center gap-2 bg-[#1155CC] hover:bg-blue-700 text-white font-semibold text-[18px] py-4 px-6 rounded-2xl shadow-lg border-2 border-[#1155CC] transition-all text-center transform hover:-translate-y-0.5">
+                    🛵 預約試乘
+                </a>
+                <a href="/customer-service/" 
+                   class="w-full sm:w-1/2 flex items-center justify-center gap-2 bg-[#1155CC] hover:bg-blue-700 text-white font-semibold text-[18px] py-4 px-6 rounded-2xl shadow-lg border-2 border-[#1155CC] transition-all text-center transform hover:-translate-y-0.5">
+                    🤖 其他車款優惠
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 正圓形「回頂端」圖示 -->
+    <button id="back-to-top-btn" class="fixed bottom-6 right-6 z-50 w-11 h-11 md:w-12 md:h-12 rounded-full border-2 border-[#1155CC] bg-white text-[#1155CC] shadow-lg flex items-center justify-center hover:bg-[#1155CC] hover:text-white transition-all transform hover:scale-110 focus:outline-none" title="回到頂端">
+        <svg class="w-6 h-6 stroke-current" fill="none" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"/>
+        </svg>
+    </button>
+
+    <!-- 頁尾區塊 -->
+    <footer class="w-full bg-[#1155CC] text-white shrink-0 mt-20 py-10 px-4 md:px-8 shadow-inner">
+        <div class="max-w-5xl mx-auto flex flex-col items-center text-center space-y-6">
+            
+            <div class="text-[18px] md:text-xl font-bold tracking-wider text-white">
+                eMOVING 電動二輪 台中山西店 &nbsp;|&nbsp; 精輪車業有限公司
+            </div>
+
+            <div class="flex items-center justify-center gap-5">
+                <a href="https://lihi1.me/8LpPy?ref=line_join" target="_blank" rel="noopener noreferrer" 
+                   class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all hover:scale-110" title="官方 LINE 諮詢">
+                    <svg class="w-5 h-5 fill-current text-white" viewBox="0 0 24 24">
+                        <path d="M19.365 9.863c.349 0 .63.285.63.631 0 .345-.281.63-.63.63H17.61v1.125h1.755c.349 0 .63.283.63.63 0 .344-.281.629-.63.629h-2.386c-.345 0-.627-.285-.627-.629V8.108c0-.345.282-.63.627-.63h2.386c.349 0 .63.285.63.63 0 .349-.281.63-.63.63H17.61v1.125h1.755zm-3.855 3.016c0 .27-.174.51-.432.596-.064.021-.133.031-.199.031-.211 0-.412-.105-.531-.284l-1.896-2.731v2.388c0 .344-.282.629-.628.629-.347 0-.629-.285-.629-.629V8.108c0-.27.173-.51.43-.595.063-.023.132-.033.201-.033.21 0 .411.105.53.284l1.895 2.73V8.108c0-.345.282-.63.629-.63.346 0 .628.285.628.63v4.771zm-5.741 0c0 .344-.282.629-.629.629-.346 0-.628-.285-.628-.629V8.108c0-.345.282-.63.628-.63.347 0 .629.285.629.63v4.771zm-2.481 0c0 .344-.283.629-.629.629h-1.802c-.347 0-.629-.285-.629-.629V8.108c0-.345.282-.63.629-.63.346 0 .629.285.629.63v4.141h1.173c.346 0 .629.285.629.63zM24 10.314C24 4.943 18.615.572 12 .572S0 4.943 0 10.314c0 4.811 4.27 8.842 10.035 9.608.391.082.923.258 1.058.59.12.301.079.766.038 1.08-.085.643-.388 2.518-.423 3.05-.043.68.314.671.662.433.347-.238 5.518-3.249 7.532-5.556 2.87-3.003 5.098-6.195 5.098-9.205z"/>
+                    </svg>
+                </a>
+
+                <a href="https://www.facebook.com/rjt5411f" target="_blank" rel="noopener noreferrer" 
+                   class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all hover:scale-110" title="Facebook 粉絲專頁">
+                    <svg class="w-5 h-5 fill-current text-white" viewBox="0 0 24 24">
+                        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                    </svg>
+                </a>
+
+                <a href="mailto:o422978816@gmail.com" 
+                   class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-all hover:scale-110" title="Email 聯絡我們">
+                    <svg class="w-5 h-5 fill-current text-white" viewBox="0 0 24 24">
+                        <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                    </svg>
+                </a>
+            </div>
+
+            <div class="w-16 h-px bg-white/20 my-1"></div>
+
+            <div class="text-xs md:text-small text-blue-100/90 leading-relaxed max-w-3xl space-y-1.5 font-normal">
+                <p class="font-bold text-white text-small md:text-regular">eMOVING台中電動機車專賣店</p>
+                <p>販售免駕照微型二輪、綠牌輕型機車、白牌重型機車，提供全台最新2026汰換補助查詢與補助金額試算。</p>
+                <p>精輪車業是台中在地店家，歡迎來店詢問！</p>
+            </div>
+
+        </div>
+    </footer>
+
+</div>
+
+<style>
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    .highlight-num {
+        color: #ff8623 !important;
+        font-size: 1.5em !important;
+        font-weight: 900 !important;
+        display: inline-block;
+        margin: 0 2px;
+        text-shadow: 0px 1px 2px rgba(185, 185, 185, 0.336);
+    }
+
+    .promo-tab-btn.active {
+        background-color: #1155CC !important;
+        color: #ffffff !important;
+        border-bottom: none !important;
+    }
+
+    #promo-nav.is-scrolled {
+        background-color: #f9fcff !important;
+        border-bottom: none !important;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important;
+    }
+    #promo-nav.is-scrolled .promo-tab-btn {
+        color: #1C1C1C !important;
+        border-bottom: none !important;
+    }
+    #promo-nav.is-scrolled .promo-tab-btn:hover {
+        background-color: rgba(17, 85, 204, 0.08) !important;
+    }
+    #promo-nav.is-scrolled .promo-tab-btn.active {
+        background-color: #1155CC !important;
+        color: #ffffff !important;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var promoNav = document.getElementById('promo-nav');
+        if (promoNav) {
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 200) {
+                    promoNav.classList.add('is-scrolled');
+                } else {
+                    promoNav.classList.remove('is-scrolled');
+                }
+            });
+        }
+
+        var carousels = document.querySelectorAll('.carousel-container');
+        carousels.forEach(function(carousel) {
+            var slides = carousel.querySelectorAll('.slide-item');
+            if (slides.length === 0) return;
+
+            var currentIndex = 0;
+            function showSlide(index) {
+                slides.forEach(function(slide, idx) {
+                    if (idx === index) {
+                        slide.classList.remove('opacity-0', 'pointer-events-none');
+                        slide.classList.add('opacity-100', 'pointer-events-auto');
+                    } else {
+                        slide.classList.remove('opacity-100', 'pointer-events-auto');
+                        slide.classList.add('opacity-0', 'pointer-events-none');
+                    }
+                });
+            }
+
+            showSlide(currentIndex);
+
+            var btnPrev = carousel.querySelector('.btn-prev');
+            var btnNext = carousel.querySelector('.btn-next');
+
+            if (btnPrev) {
+                btnPrev.addEventListener('click', function() {
+                    currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+                    showSlide(currentIndex);
+                });
+            }
+
+            if (btnNext) {
+                btnNext.addEventListener('click', function() {
+                    currentIndex = (currentIndex + 1) % slides.length;
+                    showSlide(currentIndex);
+                });
+            }
+        });
+
+        var tabs = document.querySelectorAll('.promo-tab-btn');
+        if (tabs.length > 0) {
+            tabs[0].classList.add('active');
+            tabs.forEach(function(tab) {
+                tab.addEventListener('click', function() {
+                    tabs.forEach(function(t) { t.classList.remove('active'); });
+                    this.classList.add('active');
+                });
+            });
+        }
+
+        var backToTopBtn = document.getElementById('back-to-top-btn');
+        if (backToTopBtn) {
+            backToTopBtn.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+    });
+</script>
+
+{{ end }}

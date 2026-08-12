@@ -1,0 +1,165 @@
+{{ define "main" }}
+
+<div class="w-full bg-[#f9fcff] text-[#1C1C1C] min-h-screen py-12 px-4 md:px-8">
+    <div class="max-w-6xl mx-auto space-y-8">
+        
+        <!-- 頁面標題區塊 -->
+        <div class="text-center space-y-3">
+            <h1 class="text-3xl md:text-4xl font-black text-[#1C1C1C]">
+                {{ .Title | default "最新消息" }}
+            </h1>
+            <p class="text-gray-600 text-sm md:text-base">
+                掌握 eMOVING 台中山西店最新活動與優惠資訊
+            </p>
+        </div>
+
+        <!-- 🔍 搜尋 Bar 區塊 -->
+        <div class="max-w-md mx-auto pt-2">
+            <div class="relative flex items-center">
+                <input type="text" id="news-search-input" 
+                       placeholder="搜尋最新消息或關鍵字..." 
+                       class="w-full pl-11 pr-4 py-3 bg-white border border-gray-300 rounded-full shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-[#1155CC] focus:border-transparent transition-all">
+                
+                <!-- 搜尋圖示 -->
+                <svg class="w-5 h-5 text-gray-400 absolute left-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </div>
+        </div>
+
+        <!-- 抓取 Blogger 專欄文章（加上 max-results=500 抓取最多 500 篇文章） -->
+        {{ $url := "https://emoving-taichung.blogspot.com/feeds/posts/default?alt=json&max-results=500" }}
+        {{ with try (resources.GetRemote $url) }}
+            {{ with .Err }}
+                <div class="text-center py-12 text-gray-500">
+                    <p>目前暫時無法載入最新消息，請稍後再試。</p>
+                </div>
+            {{ else with .Value }}
+                {{ $data := . | transform.Unmarshal }}
+                
+                <!-- 查無結果提示隱藏區塊 -->
+                <div id="no-search-results" class="hidden text-center py-12 text-gray-500">
+                    <p class="text-lg font-medium">找不到符合關鍵字的文章 🔍</p>
+                    <p class="text-sm mt-1">請嘗試輸入其他關鍵字搜尋</p>
+                </div>
+
+                <div id="news-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
+                    {{ range $entry := $data.feed.entry }}
+                        
+                        <!-- 解析標題與發布時間 -->
+                        {{ $title := index $entry.title "$t" }}
+                        {{ $publishedRaw := index $entry.published "$t" }}
+                        {{ $published := $publishedRaw | time.Format "2006-01-02" }}
+
+                        <!-- 取得 Blogger 原文章連結 -->
+                        {{ $link := "" }}
+                        {{ range $entry.link }}
+                            {{ if eq .rel "alternate" }}
+                                {{ $link = .href }}
+                            {{ end }}
+                        {{ end }}
+
+                        <!-- 高清圖片解析 (s1600) -->
+                        {{ $imgSrc := "" }}
+                        {{ if index $entry "media$thumbnail" }}
+                            {{ $thumb := index $entry "media$thumbnail" }}
+                            {{ $rawUrl := $thumb.url }}
+                            {{ $imgSrc = replaceRE `/s\d+[^/]*/` "/s1600/" $rawUrl }}
+                            {{ $imgSrc = replaceRE `=w\d+-h\d+[^$]*` "=s1600" $imgSrc }}
+                        {{ end }}
+
+                        {{ if and (eq $imgSrc "") $entry.content }}
+                            {{ $content := index $entry.content "$t" }}
+                            {{ $matches := findRE `<img[^>]+src="([^">]+)"` $content }}
+                            {{ if gt (len $matches) 0 }}
+                                {{ $rawImg := index $matches 0 | replaceRE `<img[^>]+src="([^">]+)"` "$1" }}
+                                {{ $imgSrc = replaceRE `/s\d+[^/]*/` "/s1600/" $rawImg }}
+                                {{ $imgSrc = replaceRE `=w\d+-h\d+[^$]*` "=s1600" $imgSrc }}
+                            {{ end }}
+                        {{ end }}
+
+                        <!-- 取得摘要 -->
+                        {{ $summary := "" }}
+                        {{ if $entry.summary }}
+                            {{ $summary = index $entry.summary "$t" }}
+                        {{ else if $entry.content }}
+                            {{ $summary = index $entry.content "$t" }}
+                        {{ end }}
+                        {{ $cleanSummary := $summary | plainify | truncate 90 "..." }}
+
+                        <!-- 文章卡片 (加入 news-card class 與搜尋 data 屬性) -->
+                        <a href="{{ $link }}" target="_blank" rel="noopener noreferrer" 
+                           data-title="{{ $title }}" data-summary="{{ $cleanSummary }}"
+                           class="news-card group flex flex-col justify-between bg-white p-5 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[#1155CC] transition-all transform hover:-translate-y-1">
+                            
+                            <div class="space-y-4">
+                                <!-- 主要圖片（4:5 比例滿版框） -->
+                                {{ if $imgSrc }}
+                                <div class="w-full aspect-[4/5] overflow-hidden rounded-xl bg-gray-100">
+                                    <img src="{{ $imgSrc }}" alt="{{ $title }}" loading="lazy" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
+                                </div>
+                                {{ end }}
+
+                                <!-- 發布日期 -->
+                                <div class="flex items-center justify-between text-xs text-gray-400">
+                                    <time class="font-medium">{{ $published }}</time>
+                                </div>
+
+                                <h2 class="text-lg font-bold text-gray-800 group-hover:text-[#1155CC] line-clamp-2 transition-colors">
+                                    {{ $title }}
+                                </h2>
+                                <p class="text-sm text-gray-600 line-clamp-3 leading-relaxed">
+                                    {{ $cleanSummary }}
+                                </p>
+                            </div>
+
+                            <div class="pt-4 mt-4 border-t border-gray-100 flex items-center justify-between text-sm font-semibold text-[#1155CC]">
+                                <span>閱讀完整文章</span>
+                                <span class="transform group-hover:translate-x-1 transition-transform">➔</span>
+                            </div>
+                        </a>
+                    {{ end }}
+                </div>
+            {{ end }}
+        {{ end }}
+
+    </div>
+</div>
+
+<!-- ⚡ 即時搜尋 JavaScript -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('news-search-input');
+        const newsCards = document.querySelectorAll('.news-card');
+        const noResultsMsg = document.getElementById('no-search-results');
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function (e) {
+                const query = e.target.value.toLowerCase().trim();
+                let matchCount = 0;
+
+                newsCards.forEach(function (card) {
+                    const title = (card.getAttribute('data-title') || '').toLowerCase();
+                    const summary = (card.getAttribute('data-summary') || '').toLowerCase();
+
+                    if (title.includes(query) || summary.includes(query)) {
+                        card.classList.remove('hidden');
+                        matchCount++;
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+
+                if (noResultsMsg) {
+                    if (matchCount === 0) {
+                        noResultsMsg.classList.remove('hidden');
+                    } else {
+                        noResultsMsg.classList.add('hidden');
+                    }
+                }
+            });
+        }
+    });
+</script>
+
+{{ end }}

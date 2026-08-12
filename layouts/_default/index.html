@@ -1,0 +1,213 @@
+{{ define "main" }}
+
+<!-- ========================================== -->
+<!-- 區塊 1：首頁主視覺 -->
+<!-- ========================================== -->
+<section id="hero" class="w-full min-h-screen flex items-center bg-gradient-to-br from-brandBlue to-brandDarkBlue text-white p-8 md:p-16 relative overflow-hidden box-border">
+    <div class="absolute inset-0 opacity-15 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+    
+    <div class="max-w-3xl w-full relative z-10 text-left space-y-8 my-auto">
+        <div>
+            <span class="text-small font-bold tracking-widest text-blue-200 uppercase bg-white/10 px-3 py-1 rounded-full">EMOVING 精輪山西店</span>
+            <h1 class="text-main-title font-bold mt-6 leading-tight tracking-wide md:text-[32px]">
+                電 動 機 車 怎 麼 選？<br>精 輪 幫 你 想 清 楚。
+            </h1>
+            <p class="text-regular text-blue-100 max-w-xl mt-6 leading-relaxed opacity-90">
+                買電動機車不該碰運氣。我們提供台中最專業的補助試算與在地維修服務，依據你的騎乘習慣，為你量身推薦最完美的車款！
+            </p>
+        </div>
+
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 max-w-2xl mr-auto ml-0 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div class="space-y-2 flex-1">
+                <div class="flex items-center gap-2 text-yellow-300 font-extrabold text-subtitle uppercase tracking-wider">
+                    <span class="w-2 h-2 rounded-full bg-yellow-300 animate-ping"></span>
+                    7 月主打限定優惠
+                </div>
+                <p class="text-regular text-white/90 leading-relaxed">
+                    有汽車駕照就能騎！美型時尚 ez1 現正優惠中！
+                    本月現金購車除了高額購車金，再享首年資費 $169 /月起！
+                    限時優惠錯過不再有！
+                </p>
+            </div>
+            
+            <div class="shrink-0">
+                <a href="/promotions/" class="inline-block bg-white text-brandBlue hover:bg-blue-50 font-normal text-[16px] py-3 px-6 rounded-lg shadow transition-all whitespace-nowrap">
+                    獲取優惠資訊 ➔
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ========================================== -->
+<!-- 區塊 2：專業、貼心、完善 -->
+<!-- ========================================== -->
+<section id="features" class="w-full min-h-screen bg-white flex flex-col justify-center px-6 py-16 md:p-16 box-border">
+    <div class="max-w-7xl mx-auto w-full">
+        
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-12">
+            <!-- 卡片 1 -->
+            <div class="text-center flex flex-col items-center group">
+                <div class="w-full aspect-square max-w-[240px] rounded-xl mb-4 overflow-hidden group-hover:shadow-md transition-shadow">
+                    {{ with .Resources.GetMatch "feat-1.png" }}
+                        <img src="{{ .RelPermalink }}" alt="補助諮詢" class="w-full h-full object-cover">
+                    {{ else }}
+                        <span class="text-xs text-gray-400">找不到 feat-1.png</span>
+                    {{ end }}
+                </div>
+                <h4 class="text-subtitle font-bold text-gray-800 tracking-wider">全台電動機車補助諮詢</h4>
+            </div>
+            <!-- 卡片 2 -->
+            <div class="text-center flex flex-col items-center group">
+                <div class="w-full aspect-square max-w-[240px] rounded-xl mb-4 overflow-hidden group-hover:shadow-md transition-shadow">
+                    {{ with .Resources.GetMatch "feat-2.png" }}
+                        <img src="{{ .RelPermalink }}" alt="需求媒合" class="w-full h-full object-cover">
+                    {{ else }}
+                        <span class="text-xs text-gray-400">找不到 feat-2.png</span>
+                    {{ end }}
+                </div>
+                <h4 class="text-subtitle font-bold text-gray-800 tracking-wider">一對一需求媒合</h4>
+            </div>
+            <!-- 卡片 3 -->
+            <div class="text-center flex flex-col items-center group">
+                <div class="w-full aspect-square max-w-[240px] rounded-xl mb-4 overflow-hidden group-hover:shadow-md transition-shadow">
+                    {{ with .Resources.GetMatch "feat-3.png" }}
+                        <img src="{{ .RelPermalink }}" alt="現場試乘" class="w-full h-full object-cover">
+                    {{ else }}
+                        <span class="text-xs text-gray-400">找不到 feat-3.png</span>
+                    {{ end }}
+                </div>
+                <h4 class="text-subtitle font-bold text-gray-800 tracking-wider">現場試乘再決定</h4>
+            </div>
+            <!-- 卡片 4 -->
+            <div class="text-center flex flex-col items-center group">
+                <div class="w-full aspect-square max-w-[240px] rounded-xl mb-4 overflow-hidden group-hover:shadow-md transition-shadow">
+                    {{ with .Resources.GetMatch "feat-4.png" }}
+                        <img src="{{ .RelPermalink }}" alt="後勤體系" class="w-full h-full object-cover">
+                    {{ else }}
+                        <span class="text-xs text-gray-400">找不到 feat-4.png</span>
+                    {{ end }}
+                </div>
+                <h4 class="text-subtitle font-bold text-gray-800 tracking-wider">認證後勤體系</h4>
+            </div>
+        </div>
+
+        <div class="text-center mt-24">
+            <a href="https://lihi1.me/8LpPy?ref=line_join" target="_blank" class="inline-block bg-[#FFFF00] text-black hover:bg-[#E6E600] font-normal text-regular px-10 py-3.5 rounded shadow-md tracking-wider transition-colors">
+                💁‍♀️ LINE 線上真人為您服務解答！
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ========================================== -->
+<!-- 區塊 3：車款介紹 -->
+<!-- ========================================== -->
+<section id="models" class="w-full flex flex-col bg-gray-50">
+    
+    <!-- 車款 1：免駕照 Shine / Bobe -->
+    <div id="model-shine-bobe" class="w-full flex flex-col md:flex-row min-h-[450px] border-b border-gray-200">
+        <div class="w-full md:w-1/2 relative bg-blue-950 min-h-[250px] md:min-h-auto overflow-hidden">
+            {{ with .Resources.GetMatch "shine-bobe.png" }}
+                <img src="{{ .RelPermalink }}" alt="免駕照 Shine / Bobe" class="absolute inset-0 w-full h-full object-cover opacity-90">
+            {{ else }}
+                <div class="absolute inset-0 flex items-center justify-center text-small text-white/30 font-bold">【找不到 shine-bobe.png】</div>
+            {{ end }}
+        </div>
+        <div class="w-full md:w-1/2 bg-white text-[#1C1C1C] p-8 md:p-16 flex flex-col justify-center items-start">
+            <h2 class="text-main-title font-black tracking-wide mb-4 text-[#1155CC]">免駕照 Shine / Bobe</h2>
+            <p class="text-regular text-[#1C1C1C] leading-relaxed mb-8 max-w-md opacity-90">
+                免照微型電動二輪車。買菜、接送小孩的最佳首選！車身輕巧好操控，免考照、免燃料稅，在家即可輕鬆插座充電。
+            </p>
+            <a href="/models/shine-bobe/" class="border border-[#1155CC] text-[#1155CC] hover:bg-[#1155CC] hover:text-white font-bold text-regular py-2.5 px-6 rounded-full uppercase tracking-wider transition-all">
+                查看更多
+            </a>
+        </div>
+    </div>
+
+    <!-- 車款 2：汽車駕照可騎 EZ1 -->
+    <div id="model-ez1" class="w-full flex flex-col md:flex-row min-h-[450px] border-b border-gray-200">
+        <div class="w-full md:w-1/2 relative bg-blue-950 min-h-[250px] md:min-h-auto overflow-hidden">
+            {{ with .Resources.GetMatch "ez1.png" }}
+                <img src="{{ .RelPermalink }}" alt="汽車駕照可騎 EZ1" class="absolute inset-0 w-full h-full object-cover opacity-90">
+            {{ else }}
+                <div class="absolute inset-0 flex items-center justify-center text-small text-white/30 font-bold">【找不到 ez1.png】</div>
+            {{ end }}
+        </div>
+        <div class="w-full md:w-1/2 bg-white text-[#1C1C1C] p-8 md:p-16 flex flex-col justify-center items-start">
+            <h2 class="text-main-title font-black tracking-wide mb-4 text-[#1155CC]">汽車駕照可騎 EZ1</h2>
+            <p class="text-regular text-[#1C1C1C] leading-relaxed mb-8 max-w-md opacity-90">
+                Gogoro 換電系統輕型機車。專為優雅騎乘設計！超輕量化車身與超低座高，結合智慧鑰匙卡與前置大置物空間，城市通勤超省力。
+            </p>
+            <a href="/models/ez1/" class="border border-[#1155CC] text-[#1155CC] hover:bg-[#1155CC] hover:text-white font-bold text-regular py-2.5 px-6 rounded-full uppercase tracking-wider transition-all">
+                查看更多
+            </a>
+        </div>
+    </div>
+
+    <!-- 車款 3：換電重型白牌 EZR -->
+    <div id="model-ezr" class="w-full flex flex-col md:flex-row min-h-[450px] border-b border-gray-200">
+        <div class="w-full md:w-1/2 relative bg-blue-950 min-h-[250px] md:min-h-auto overflow-hidden">
+            {{ with .Resources.GetMatch "ezr.png" }}
+                <img src="{{ .RelPermalink }}" alt="換電重型白牌 EZR" class="absolute inset-0 w-full h-full object-cover opacity-90">
+            {{ else }}
+                <div class="absolute inset-0 flex items-center justify-center text-small text-white/30 font-bold">【找不到 ezr.png】</div>
+            {{ end }}
+        </div>
+        <div class="w-full md:w-1/2 bg-white text-[#1C1C1C] p-8 md:p-16 flex flex-col justify-center items-start">
+            <h2 class="text-main-title font-black tracking-wide mb-4 text-[#1155CC]">換電重型白牌 EZR</h2>
+            <p class="text-regular text-[#1C1C1C] leading-relaxed mb-8 max-w-md opacity-90">
+                旗艦級重型智慧電車。極致性能與雙載舒適度的完美結合！搭載最新智慧動力晶片，加速凌厲，配備超大緩衝坐墊。
+            </p>
+            <a href="/models/ezr/" class="border border-[#1155CC] text-[#1155CC] hover:bg-[#1155CC] hover:text-white font-bold text-regular py-2.5 px-6 rounded-full uppercase tracking-wider transition-all">
+                查看更多
+            </a>
+        </div>
+    </div>
+
+    <!-- 車款 4：換電重型白牌 fun -->
+    <div id="model-fun" class="w-full flex flex-col md:flex-row min-h-[450px] border-b border-gray-200">
+        <div class="w-full md:w-1/2 relative bg-blue-950 min-h-[250px] md:min-h-auto overflow-hidden">
+            {{ with .Resources.GetMatch "fun.png" }}
+                <img src="{{ .RelPermalink }}" alt="換電重型白牌 fun" class="absolute inset-0 w-full h-full object-cover opacity-90">
+            {{ else }}
+                <div class="absolute inset-0 flex items-center justify-center text-small text-white/30 font-bold">【找不到 fun.png】</div>
+            {{ end }}
+        </div>
+        <div class="w-full md:w-1/2 bg-white text-[#1C1C1C] p-8 md:p-16 flex flex-col justify-center items-start">
+            <h2 class="text-main-title font-black tracking-wide mb-4 text-[#1155CC]">換電重型白牌 fun</h2>
+            <p class="text-regular text-[#1C1C1C] leading-relaxed mb-8 max-w-md opacity-90">
+                兼具潮流時尚外型與日常實用機能！靈活的操控感與豐富配備，讓每一次出行都充滿騎乘樂趣，輕鬆展現獨具一格的生活美學。
+            </p>
+            <a href="/models/fun/" class="border border-[#1155CC] text-[#1155CC] hover:bg-[#1155CC] hover:text-white font-bold text-regular py-2.5 px-6 rounded-full uppercase tracking-wider transition-all">
+                查看更多
+            </a>
+        </div>
+    </div>
+
+    <!-- 車款 5：充電重型白牌 勁炫125 -->
+    <div id="model-jinxuan" class="w-full flex flex-col md:flex-row min-h-[450px]">
+        <div class="w-full md:w-1/2 relative bg-blue-950 min-h-[250px] md:min-h-auto overflow-hidden">
+            {{ with .Resources.GetMatch "jinxuan.png" }}
+                <img src="{{ .RelPermalink }}" alt="充電重型白牌 勁炫125" class="absolute inset-0 w-full h-full object-cover opacity-90">
+            {{ else }}
+                <div class="absolute inset-0 flex items-center justify-center text-small text-white/30 font-bold">【找不到 jinxuan.png】</div>
+            {{ end }}
+        </div>
+        <div class="w-full md:w-1/2 bg-white text-[#1C1C1C] p-8 md:p-16 flex flex-col justify-center items-start">
+            <h2 class="text-main-title font-black tracking-wide mb-4 text-[#1155CC]">充電重型白牌 勁炫125</h2>
+            <p class="text-regular text-[#1C1C1C] leading-relaxed mb-8 max-w-md opacity-90">
+                搭載高效充電科技的重型白牌機車。超強續航表現與充沛扭力，不論是在地每日通勤或是中長途跨區行駛，皆能隨心所欲游刃有餘。
+            </p>
+            <a href="/models/jinxuan125/" class="border border-[#1155CC] text-[#1155CC] hover:bg-[#1155CC] hover:text-white font-bold text-regular py-2.5 px-6 rounded-full uppercase tracking-wider transition-all">
+                查看更多
+            </a>
+        </div>
+    </div>
+</section>
+
+<div id="news" class="scroll-mt-24"></div>
+
+{{ partial "contact.html" . }}
+
+{{ end }}

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-tw" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ if .Title }}{{ .Title }} - {{ end }}eMOVING 精輪山西店｜台中電動機車</title>
+    
+    <!-- 自訂瀏覽器分頁圖示 (Favicon) -->
+    <link rel="icon" type="image/png" href="/images/favicon.png">
+    <link rel="apple-touch-icon" href="/images/favicon.png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Anybody:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandBlue: '#1155CC',
+                        brandDarkBlue: '#0b3887',
+                        brandLightBg: '#ffffff'
+                    },
+                    fontFamily: {
+                        sans: ['Anybody', 'sans-serif']
+                    },
+                    fontSize: {
+                        'small': '10px',
+                        'regular': '15px',
+                        'subtitle': '18px',
+                        'main-title': '24px'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-brandLightBg text-[#1C1C1C] min-h-screen antialiased flex flex-col lg:flex-row m-0 p-0 overflow-x-hidden">
+
+<!-- 載入在地商家 Google SEO 結構化資料 -->
+{{ partial "seo-schema.html" . }}
+
+    <!-- ========================================== -->
+    <!-- 1. 【電腦版】左側固定導覽欄（限定首頁才會出現） -->
+    <!-- ========================================== -->
+    {{ if .IsHome }}
+    <aside class="hidden lg:flex fixed left-0 top-0 h-screen w-[260px] bg-gradient-to-b from-brandBlue to-brandDarkBlue text-white flex-col justify-between items-end p-8 z-40 border-r border-white/10">
+        <div class="w-full flex justify-end">
+            <button class="menu-open-btn w-10 h-10 flex items-center justify-center bg-white/10 rounded-lg text-white focus:outline-none hover:bg-white/20 transition-colors">
+                <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- 側邊選單：使用 /# 確保在分頁點擊也能順利回到首頁對應區塊 -->
+        <nav class="flex flex-col gap-6 items-end text-right w-full my-auto">
+            <a href="/#hero" class="group block text-subtitle tracking-wider text-blue-100 hover:text-white transition-all font-semibold">
+                <span class="inline-block border-b border-transparent group-hover:border-white pb-1">首頁</span>
+            </a>
+            <a href="/#features" class="group block text-subtitle tracking-wider text-blue-100 hover:text-white transition-all font-semibold">
+                <span class="inline-block border-b border-transparent group-hover:border-white pb-1">專業、貼心、完善</span>
+            </a>
+            <a href="/#models" class="group block text-subtitle tracking-wider text-blue-100 hover:text-white transition-all font-semibold">
+                <span class="inline-block border-b border-transparent group-hover:border-white pb-1">車款介紹</span>
+            </a>
+            <a href="/#contact" class="group block text-subtitle tracking-wider text-blue-100 hover:text-white transition-all font-semibold">
+                <span class="inline-block border-b border-transparent group-hover:border-white pb-1">聯絡我們</span>
+            </a>
+        </nav>
+
+        <div class="text-small text-blue-200/40 text-right w-full">
+            © 2026 eMOVING 精輪
+        </div>
+    </aside>
+    {{ end }}
+
+    <!-- ========================================== -->
+    <!-- 2. 頂部列 Header -->
+    <!-- ========================================== -->
+    {{ if .IsHome }}
+        <!-- 首頁【手機版】頂部列 -->
+        <header class="lg:hidden fixed top-0 left-0 w-full bg-brandBlue text-white p-4 flex justify-between items-center z-40 shadow-md">
+            <div class="font-black tracking-wider text-regular">eMOVING</div>
+            <button class="menu-open-btn w-10 h-10 flex items-center justify-center bg-white/10 rounded-lg text-white focus:outline-none hover:bg-white/20 transition-colors">
+                <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </header>
+    {{ else }}
+        <!-- 非首頁【全尺寸通用】頂部列：漢堡選單 + Logo + 店家文字 -->
+        <header class="fixed top-0 left-0 w-full bg-brandBlue text-white p-3 md:p-3 flex justify-between items-center z-40 shadow-md">
+            <div class="flex items-center gap-3 md:gap-3">
+                <button class="menu-open-btn w-10 h-10 flex items-center justify-center bg-white/10 rounded-lg text-white focus:outline-none hover:bg-white/20 transition-colors">
+                    <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                
+                <a href="/" class="flex items-center gap-2.5 md:gap-3 group">
+                    <!-- eMOVING Logo 圖檔（建議放置於 static/images/logo.png） -->
+                    <img src="/images/logo.png" alt="eMOVING Logo" class="h-6 md:h-7 w-auto object-contain">
+                    
+                    <span class="text-xs md:text-regular font-semibold tracking-wide border-l border-white/30 pl-2.5 md:pl-3 py-0.5 group-hover:text-blue-200 transition-colors">
+                        山西店｜台中電動機車專賣｜精輪車業
+                    </span>
+                </a>
+            </div>
+        </header>
+    {{ end }}
+
+    <!-- ========================================== -->
+    <!-- 3. 【全站通用】全螢幕大選單（#454555 圓角框） -->
+    <!-- ========================================== -->
+    <div id="global-menu-overlay" class="hidden fixed inset-0 bg-white/70 z-[100] flex items-center justify-center p-4 md:p-6 backdrop-blur-md cursor-pointer">
+        <button id="close-menu-btn" class="absolute top-6 right-6 text-[#454555] hover:opacity-70 text-3xl focus:outline-none transition-colors">✕</button>
+        
+        <div id="menu-content-card" class="max-h-[90vh] overflow-y-auto w-full max-w-sm text-center py-8 px-6 cursor-default bg-[#454555] rounded-2xl shadow-2xl flex flex-col justify-between">
+            
+            <!-- 主要選單：全面連結至實體網頁路徑 -->
+            <nav class="flex flex-col gap-4 text-subtitle text-white font-bold">
+                <a href="/#hero" class="menu-close-trigger hover:opacity-70 transition-opacity">首頁</a>
+                <a href="/promotions/" class="menu-close-trigger hover:opacity-70 transition-opacity">主打優惠</a>
+                <a href="/news/" class="menu-close-trigger hover:opacity-70 transition-opacity">最新消息</a>
+                <a href="/customer-service/" class="menu-close-trigger hover:opacity-70 transition-opacity">智慧客服</a>
+                
+                <div class="relative px-2">
+                    <button id="menu-dropdown-btn" class="w-full flex justify-center items-center gap-2 hover:opacity-70 transition-opacity focus:outline-none py-1">
+                        <span>車款介紹</span>
+                        <span id="dropdown-arrow" class="text-xs transition-transform duration-200">▼</span>
+                    </button>
+                    <!-- 下拉選單內部車款：精準連結至 models 底下的子分頁 -->
+                    <div id="menu-dropdown-content" class="hidden my-2 py-2 bg-white/10 rounded-xl flex flex-col gap-2 text-regular text-white/90 border border-white/5">
+                        <a href="/models/shine-bobe/" class="menu-close-trigger hover:opacity-70 py-1 block px-4">免駕照 Shine / Bobe</a>
+                        <a href="/models/ez1/" class="menu-close-trigger hover:opacity-70 py-1 block px-4">汽車駕照可騎 EZ1</a>
+                        <a href="/models/ezr/" class="menu-close-trigger hover:opacity-70 py-1 block px-4">換電重型白牌 EZR</a>
+                        <a href="/models/fun/" class="menu-close-trigger hover:opacity-70 py-1 block px-4">換電重型白牌 fun</a>
+                        <a href="/models/jinxuan125/" class="menu-close-trigger hover:opacity-70 py-1 block px-4">充電重型白牌 勁炫125</a>
+                    </div>
+                </div>
+
+                <a href="/subsidies/" class="menu-close-trigger hover:opacity-70 transition-opacity">補助查詢</a>
+                <a href="/booking/" class="menu-close-trigger hover:opacity-70 transition-opacity">預約試乘</a>
+                <a href="/stores/" class="menu-close-trigger hover:opacity-70 transition-opacity">門市據點</a>
+                <a href="/service/" class="menu-close-trigger hover:opacity-70 transition-opacity">維修據點</a>
+                <a href="/contact/" class="menu-close-trigger hover:opacity-70 transition-opacity">聯絡我們</a>
+            </nav>
+            
+            <div class="h-px bg-white/10 my-4 mx-8"></div>
+            
+            <!-- 底部輔助選單：連結至隱私權、Q&A、網站地圖 -->
+            <div class="flex flex-wrap justify-center gap-4 text-small text-[#999999] font-medium">
+                <a href="/privacy/" class="menu-close-trigger hover:text-white transition-colors">隱私權</a>
+                <a href="/faq/" class="menu-close-trigger hover:text-white transition-colors">車輛相關Q&A</a>
+                <a href="/sitemap/" class="menu-close-trigger hover:text-white transition-colors">網站地圖</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主內容區塊：首頁保留 lg:ml-[260px]，非首頁自動取消邊距並維持頂部間距 -->
+    <div class="flex-1 flex flex-col min-h-screen {{ if .IsHome }}lg:ml-[260px] pt-[56px] lg:pt-0{{ else }}pt-[56px] md:pt-[60px]{{ end }}">
+        {{ block "main" . }}{{ end }}
+    </div>
+
+    <script>
+        const openBtns = document.querySelectorAll('.menu-open-btn');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const menuOverlay = document.getElementById('global-menu-overlay');
+        const menuContentCard = document.getElementById('menu-content-card');
+        const dropdownBtn = document.getElementById('menu-dropdown-btn');
+        const dropdownContent = document.getElementById('menu-dropdown-content');
+        const dropdownArrow = document.getElementById('dropdown-arrow');
+        const closeTriggers = document.querySelectorAll('.menu-close-trigger');
+
+        // 為所有開啟選單的按鈕綁定點擊事件
+        openBtns.forEach(btn => {
+            btn.addEventListener('click', () => menuOverlay.classList.remove('hidden'));
+        });
+
+        closeMenuBtn.addEventListener('click', () => menuOverlay.classList.add('hidden'));
+
+        menuOverlay.addEventListener('click', (e) => {
+            if (e.target === menuOverlay) {
+                menuOverlay.classList.add('hidden');
+            }
+        });
+        menuContentCard.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        dropdownBtn.addEventListener('click', () => {
+            dropdownContent.classList.toggle('hidden');
+            dropdownArrow.classList.toggle('rotate-180');
+        });
+
+        closeTriggers.forEach(trigger => {
+            trigger.addEventListener('click', () => menuOverlay.classList.add('hidden'));
+        });
+    </script>
+</body>
+</html>
