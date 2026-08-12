@@ -8,10 +8,15 @@
     --nav-h: 50px;
   }
 
-  /* 精準計算首屏 Hero 高度：100vh 扣除 Header 與 Nav，使 Nav 剛好貼齊視窗底部 */
+  /* 精準計算首屏 Hero 高度：使用 100dvh 自動扣除手機瀏覽器網址列與底部列 */
   .hero-viewport-height {
-    height: calc(100vh - var(--header-h, 50px) - var(--nav-h, 50px));
-    min-height: 420px;
+    height: calc(100dvh - var(--header-h, 50px) - var(--nav-h, 50px));
+    min-height: 380px;
+  }
+  @supports not (height: 100dvh) {
+    .hero-viewport-height {
+      height: calc(100vh - var(--header-h, 50px) - var(--nav-h, 50px));
+    }
   }
 
   /* 2. 錨點區塊自動補償 (選單高度 + Header高度，防止遮擋與縫隙) */
@@ -63,7 +68,7 @@
 </style>
 
 <!-- ========================================== -->
-<!-- 1. 車色圖片輪播 (動態計算 100vh - Header - Nav) -->
+<!-- 1. 車色圖片輪播 (動態計算 100dvh - Header - Nav) -->
 <!-- ========================================== -->
 {{ $heroPhotos := slice }}
 
@@ -102,7 +107,7 @@
     <!-- 左右切換箭頭 -->
     <button type="button" 
     onclick="prevHeroSlide()" 
-    class="absolute left-8 md:left-32 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white w-12 h-12 rounded-full backdrop-blur-md flex items-center justify-center text-xl z-20 opacity-70 hover:opacity-100 transition-all shadow-md">❮</button>
+    class="absolute left-4 md:left-32 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white w-10 h-10 md:w-12 md:h-12 rounded-full backdrop-blur-md flex items-center justify-center text-lg md:text-xl z-20 opacity-70 hover:opacity-100 transition-all shadow-md">❮</button>
 
     <!-- 右側按鈕：手機版純箭頭 / 桌面版（>=768px）顯示「點擊看更多車色」 -->
     <button type="button" 
@@ -113,26 +118,26 @@
     </button>
 
     <!-- 底部切換小圓點 -->
-    <div id="hero-dots" class="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-20"></div>
+    <div id="hero-dots" class="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-20"></div>
     {{ end }}
 </section>
 
 <!-- ========================================== -->
-<!-- 2. 橫式懸浮錨點選單 (手機版專屬優化) -->
+<!-- 2. 橫式懸浮錨點選單 (手機字體放大與動態滑動隱藏提示) -->
 <!-- ========================================== -->
 <nav id="sticky-nav" class="sticky top-[var(--header-h,50px)] z-40 bg-white border-b border-gray-200 shadow-sm transition-all duration-300">
-    <div class="max-w-6xl mx-auto flex overflow-x-auto no-scrollbar justify-start md:justify-center items-center py-2 px-3 space-x-1.5 md:space-x-3">
-        <a href="#features-gallery" class="promo-tab-btn active px-3 md:px-6 py-2 md:py-3 text-xs md:text-sm font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">車款特色</a>
-        <a href="#reviews" class="promo-tab-btn px-3 md:px-6 py-2 md:py-3 text-xs md:text-sm font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">好騎推推</a>
+    <div id="scroll-menu" class="max-w-6xl mx-auto flex overflow-x-auto no-scrollbar justify-start md:justify-center items-center py-2 px-2 space-x-1 md:space-x-3">
+        <a href="#features-gallery" class="promo-tab-btn active px-2.5 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">車款特色</a>
+        <a href="#reviews" class="promo-tab-btn px-2.5 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">好騎推推</a>
         
-        <!-- 手機版專屬引導提示（只在手機版顯示，桌面版隱藏） -->
-        <span class="md:hidden text-xs font-bold text-[#1155CC] animate-pulse whitespace-nowrap shrink-0 px-1 flex items-center gap-0.5 select-none">
-            &gt;&gt; 滑動看更多
+        <!-- 手機版專屬提示：字體同步放大為 text-sm，滑動時會自動淡出隱藏 -->
+        <span id="scroll-hint" class="md:hidden text-sm font-bold text-[#1155CC] animate-pulse whitespace-nowrap shrink-0 px-1 transition-opacity duration-300 select-none">
+            &gt;&gt;滑動看更多
         </span>
 
-        <a href="#specs" class="promo-tab-btn px-3 md:px-6 py-2 md:py-3 text-xs md:text-sm font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">詳細規格表</a>
-        <a href="#accessories" class="promo-tab-btn px-3 md:px-6 py-2 md:py-3 text-xs md:text-sm font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">原廠配件</a>
-        <a href="#faq" class="promo-tab-btn px-3 md:px-6 py-2 md:py-3 text-xs md:text-sm font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">常見 QA</a>
+        <a href="#specs" class="promo-tab-btn px-2.5 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">詳細規格表</a>
+        <a href="#accessories" class="promo-tab-btn px-2.5 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">原廠配件</a>
+        <a href="#faq" class="promo-tab-btn px-2.5 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">常見 QA</a>
     </div>
 </nav>
 
@@ -450,7 +455,7 @@
 <!-- JavaScript 邏輯控制區 -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // 自動動態偵測 Header 與 Nav 高度，設定 CSS 變數
+        // 1. 自動動態偵測 Header 與 Nav 高度，設定 CSS 變數
         function updateLayoutHeights() {
             const topHeader = Array.from(document.querySelectorAll('header, nav, div')).find(el => {
                 if (el.id === 'sticky-nav' || el.closest('#sticky-nav')) return false;
@@ -470,7 +475,20 @@
         window.addEventListener('resize', updateLayoutHeights);
         window.addEventListener('load', updateLayoutHeights);
 
-        // 頁首圖片切換邏輯
+        // 2. 手機版選單水平滑動時，自動淡出隱藏「>>滑動看更多」
+        const scrollMenu = document.getElementById('scroll-menu');
+        const scrollHint = document.getElementById('scroll-hint');
+        if (scrollMenu && scrollHint) {
+            scrollMenu.addEventListener('scroll', function() {
+                if (scrollMenu.scrollLeft > 10) {
+                    scrollHint.classList.add('opacity-0', 'pointer-events-none');
+                } else {
+                    scrollHint.classList.remove('opacity-0', 'pointer-events-none');
+                }
+            }, { passive: true });
+        }
+
+        // 3. 頁首圖片切換邏輯
         const slides = document.querySelectorAll('.hero-slide-img');
         const totalSlides = slides.length;
         let heroIdx = 0;
@@ -517,7 +535,7 @@
 
         initHeroDots();
 
-        // 懸浮錨點選單 Active 狀態與滾動監聽
+        // 4. 懸浮錨點選單 Active 狀態與滾動監聽
         const nav = document.getElementById('sticky-nav');
         if (nav) {
             window.addEventListener('scroll', function() {
@@ -537,7 +555,7 @@
             });
         });
 
-        // 影片切換與播放邏輯
+        // 5. 影片切換與播放邏輯
         window.playMainVideo = function(videoId) {
             if (!videoId) return;
             const target = document.getElementById('iframe-target');
@@ -587,12 +605,12 @@
             });
         };
 
-        // 觸發 Instagram 貼文重新渲染
+        // 6. 觸發 Instagram 貼文重新渲染
         if (window.instgrm) {
             window.instgrm.Embeds.process();
         }
 
-        // 回到頂端按鈕邏輯
+        // 7. 回到頂端按鈕邏輯
         const backToTopBtn = document.getElementById('back-to-top-btn');
         if (backToTopBtn) {
             backToTopBtn.addEventListener('click', function() {
