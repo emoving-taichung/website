@@ -1,5 +1,5 @@
 ---
 title: "預約試乘"
-url: "/booking/"
+url: "/website/booking/"
 layout: "booking"
 ---
