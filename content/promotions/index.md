@@ -22,9 +22,9 @@ models:
       - '本月限定：加碼送 <span class="highlight-num">$5,000</span> 購車金'
       - '首年原廠月租資費優惠 <span class="highlight-num">$169</span> /月起'
       - '分期購車享 <span class="highlight-num">24</span> 期 <span class="highlight-num">0</span> 利率'
-    car_page_link: "/models/ez1/"
+    car_page_link: "models/ez1/"
     line_link: "https://lihi1.me/8LpPy?ref=line_join"
-    store_cta_link: "/pbgn-store/"  # 👈 新增：EZ1 專屬據點網址
+    store_cta_link: "pbgn-store/"  # 👈 新增：EZ1 專屬據點網址
     features:
       - image: "ez1-feat-1.png"
         title: "超大置物空間"
@@ -48,8 +48,8 @@ models:
       - '本月限定：加碼送 <span class="highlight-num">$5,000</span> 購車金'
       - '首年原廠月租資費優惠 <span class="highlight-num">$169/月</span> 起'
       - '分期購車享 <span class="highlight-num">24</span> 期 <span class="highlight-num">0</span> 利率'
-    car_page_link: "/models/ezr/"
-    store_cta_link: "/pbgn-store/"
+    car_page_link: "models/ezr/"
+    store_cta_link: "pbgn-store/"
     line_link: "https://lihi1.me/8LpPy?ref=line_join"
     features:
       - image: "ezr-feat-1.png"
@@ -72,8 +72,8 @@ models:
     highlights:
       - '本月限定：送 <span class="highlight-num">$10,000</span> 購車金'
       - '分期購車享 <span class="highlight-num">24</span> 期 <span class="highlight-num">0</span> 利率'
-    car_page_link: "/models/fun/"
-    store_cta_link: "/pbgn-store/"
+    car_page_link: "models/fun/"
+    store_cta_link: "pbgn-store/"
     line_link: "https://lihi1.me/8LpPy?ref=line_join"
     features:
       - image: "fun-feat-1.png"
@@ -97,7 +97,7 @@ models:
       - '本月限定：加碼送 <span class="highlight-num">$5,000</span> 購車金'
       - '首年原廠月租資費優惠 <span class="highlight-num">$169/月</span> 起'
       - '分期購車享 <span class="highlight-num">24</span> 期 <span class="highlight-num">0</span> 利率'
-    car_page_link: "/models/kg/"
+    car_page_link: "models/kg/"
     line_link: "https://lihi1.me/8LpPy?ref=line_join"
     features:
       - image: "fun-feat-1.png"
@@ -121,7 +121,7 @@ models:
       - '本月限定：加碼送 <span class="highlight-num">$5,000</span> 購車金'
       - '首年原廠月租資費優惠 <span class="highlight-num">$169/月</span> 起'
       - '分期購車享 <span class="highlight-num">24</span> 期 <span class="highlight-num">0</span> 利率'
-    car_page_link: "/models/em25/"
+    car_page_link: "models/em25/"
     line_link: "https://lihi1.me/8LpPy?ref=line_join"
     features:
       - image: "fun-feat-1.png"
