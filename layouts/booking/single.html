@@ -1,15 +1,9 @@
 {{ define "main" }}
 
 <div class="w-full bg-[#f7f9fb] text-[#1a202c] min-h-screen py-10 px-4 md:px-8">
-    
-    <!-- 載入中動畫 -->
-    <div id="booking-loading" class="text-center py-20 text-gray-400 font-medium text-sm">
-        <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-[#0085d9] border-t-transparent mb-3"></div>
-        <p>正在初始化門市試乘資料...</p>
-    </div>
 
-    <!-- 表單容器 -->
-    <div id="booking-container" class="max-w-2xl mx-auto bg-white rounded-2xl border border-gray-200 p-6 md:p-10 shadow-sm hidden space-y-8">
+    <!-- 表單容器（預設顯示，秒開 UI） -->
+    <div id="booking-container" class="max-w-2xl mx-auto bg-white rounded-2xl border border-gray-200 p-6 md:p-10 shadow-sm space-y-8">
         
         <!-- Header -->
         <div class="text-center space-y-2">
@@ -112,12 +106,14 @@
     const GAS_URL = "https://script.google.com/macros/s/AKfycbyjLSjB8OI3aSzS5H0FIE2kL3Ihqx9_uAyvFBCcKnrQctcgi8td5NLzozb9bixZrYAb/exec";
     
     let globalConfig = null;
+
+    // 自動生成帶有 GitHub Pages /website/ 前綴的圖片網址
     const vehicles = [
-      { value: "Shine", name: "免駕照｜Shine", image: "images/vehicles/em25.png" },
-      { value: "EZ1", name: "綠牌｜EZ1", image: "images/vehicles/ez1.png" },
-      { value: "EZR", name: "白牌｜EZR", image: "images/vehicles/ezr.png" },
-      { value: "IE", name: "白牌｜勁炫125", image: "images/vehicles/kg.png" },
-      { value: "FUN", name: "白牌｜FUN", image: "images/vehicles/fun.png"}
+      { value: "Shine", name: "免駕照｜Shine", image: '{{ "images/vehicles/em25.png" | relURL }}' },
+      { value: "EZ1",   name: "綠牌｜EZ1",   image: '{{ "images/vehicles/ez1.png" | relURL }}' },
+      { value: "EZR",   name: "白牌｜EZR",   image: '{{ "images/vehicles/ezr.png" | relURL }}' },
+      { value: "IE",    name: "白牌｜勁炫125", image: '{{ "images/vehicles/kg.png" | relURL }}' },
+      { value: "FUN",   name: "白牌｜FUN",   image: '{{ "images/vehicles/fun.png" | relURL }}' }
     ];
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -171,16 +167,15 @@
         });
     }
 
+    // 背景非同步發送請求，不阻擋頁面顯示
     function fetchInitialData() {
         fetch(GAS_URL + "?action=getData")
             .then(res => res.json())
             .then(res => {
-                document.getElementById('booking-loading').classList.add('hidden');
-                document.getElementById('booking-container').classList.remove('hidden');
                 if (res.success) globalConfig = res;
             })
             .catch(err => {
-                document.getElementById('booking-loading').innerHTML = '<p class="text-red-500">連線失敗，請重新整理頁面試試。</p>';
+                console.warn('門市資料背景載入失敗：', err);
             });
     }
 
