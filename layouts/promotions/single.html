@@ -191,11 +191,11 @@
 
             <!-- 主打優惠頁面最下方雙按鈕（預約試乘 / 其他車款優惠） -->
             <div class="pt-10 flex flex-col sm:flex-row gap-5 justify-center items-center max-w-2xl mx-auto">
-                <a href="book-test-ride/ | relUR" 
+                <a href="{{ "booking/"  | relURL }}" 
                    class="w-full sm:w-1/2 flex items-center justify-center gap-2 bg-[#1155CC] hover:bg-blue-700 text-white font-semibold text-[18px] py-4 px-6 rounded-2xl shadow-lg border-2 border-[#1155CC] transition-all text-center transform hover:-translate-y-0.5">
                     🛵 預約試乘
                 </a>
-                <a href="customer-service/ | relUR" 
+                <a href='{{ "customer-service/" | relURL }}"
                    class="w-full sm:w-1/2 flex items-center justify-center gap-2 bg-[#1155CC] hover:bg-blue-700 text-white font-semibold text-[18px] py-4 px-6 rounded-2xl shadow-lg border-2 border-[#1155CC] transition-all text-center transform hover:-translate-y-0.5">
                     🤖 其他車款優惠
                 </a>
