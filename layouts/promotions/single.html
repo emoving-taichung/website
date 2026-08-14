@@ -4,11 +4,11 @@
 <div class="w-full bg-[#f9fcff] text-[#1C1C1C] min-h-screen flex flex-col justify-between relative">
 
     <div>
-        <!-- ========================================== -->
-<!-- 1. 廣宣圖 Banner (精準扣除 Header 56px + 選單 52px，確保選單底部剛好貼齊手機螢幕) -->
+    <!-- ========================================== -->
+<!-- 1. 廣宣圖 Banner (全面滿版設計：移除圓角與內距，完美貼齊選單與視窗) -->
 <!-- ========================================== -->
-<section class="w-full h-[calc(100dvh-108px)] md:h-[calc(100dvh-116px)] bg-gradient-to-b from-[#6eade3] to-[#81baf0] p-2 md:p-4 flex flex-col justify-center items-center relative shrink-0">
-    <div class="max-w-6xl w-full h-full flex justify-center items-center my-auto overflow-hidden">
+<section class="w-full h-[calc(100dvh-108px)] md:h-[calc(100dvh-116px)] bg-[#6eade3] flex flex-col justify-center items-center relative shrink-0 p-0 overflow-hidden">
+    <div class="w-full h-full flex justify-center items-center my-auto">
         <!-- 預設值與變數讀取 -->
         {{ $imgMobile := .Resources.GetMatch (default "banner_mobile.png" .Params.hero_image_mobile) }}
         {{ $imgDesktop := .Resources.GetMatch (default "banner_desktop.png" .Params.hero_image_desktop) }}
@@ -22,9 +22,9 @@
                 
                 <!-- 手機版 (預設)：顯示直圖 -->
                 {{ if $imgMobile }}
-                    <img src="{{ $imgMobile.RelPermalink }}" alt="{{ $.Title }}" class="w-full h-full object-contain rounded-2xl shadow-xl mx-auto block">
+                    <img src="{{ $imgMobile.RelPermalink }}" alt="{{ $.Title }}" class="w-full h-full object-cover md:object-contain mx-auto block">
                 {{ else if $imgDesktop }}
-                    <img src="{{ $imgDesktop.RelPermalink }}" alt="{{ $.Title }}" class="w-full h-auto max-h-full object-contain rounded-2xl shadow-xl mx-auto block">
+                    <img src="{{ $imgDesktop.RelPermalink }}" alt="{{ $.Title }}" class="w-full h-full object-cover md:object-contain mx-auto block">
                 {{ end }}
             </picture>
         {{ else }}
@@ -191,11 +191,11 @@
 
             <!-- 主打優惠頁面最下方雙按鈕（預約試乘 / 其他車款優惠） -->
             <div class="pt-10 flex flex-col sm:flex-row gap-5 justify-center items-center max-w-2xl mx-auto">
-                <a href="/book-test-ride/" 
+                <a href="book-test-ride/ | relUR" 
                    class="w-full sm:w-1/2 flex items-center justify-center gap-2 bg-[#1155CC] hover:bg-blue-700 text-white font-semibold text-[18px] py-4 px-6 rounded-2xl shadow-lg border-2 border-[#1155CC] transition-all text-center transform hover:-translate-y-0.5">
                     🛵 預約試乘
                 </a>
-                <a href="/customer-service/" 
+                <a href="customer-service/ | relUR" 
                    class="w-full sm:w-1/2 flex items-center justify-center gap-2 bg-[#1155CC] hover:bg-blue-700 text-white font-semibold text-[18px] py-4 px-6 rounded-2xl shadow-lg border-2 border-[#1155CC] transition-all text-center transform hover:-translate-y-0.5">
                     🤖 其他車款優惠
                 </a>
@@ -216,7 +216,7 @@
         <div class="max-w-5xl mx-auto flex flex-col items-center text-center space-y-6">
             
             <div class="text-[18px] md:text-xl font-bold tracking-wider text-white">
-                eMOVING 電動二輪 台中山西店 &nbsp;|&nbsp; 精輪車業有限公司
+                eMOVING 電動二輪 台中山西店 <BR> 精輪車業有限公司
             </div>
 
             <div class="flex items-center justify-center gap-5">
