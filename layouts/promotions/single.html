@@ -5,36 +5,36 @@
 
     <div>
         <!-- ========================================== -->
-        <!-- 1. 廣宣圖 Banner (扣除 Header 與 Nav 高度，確保 Nav 底部貼齊螢幕) -->
-        <!-- ========================================== -->
-        <section class="w-full min-h-[calc(100vh-112px)] md:min-h-[calc(100vh-120px)] bg-gradient-to-b from-[#6eade3] to-[#81baf0] py-6 px-4 flex flex-col justify-center items-center relative shrink-0">
-            <div class="max-w-6xl w-full flex justify-center items-center my-auto">
-                <!-- 預設值與變數讀取 -->
-                {{ $imgMobile := .Resources.GetMatch (default "banner_mobile.png" .Params.hero_image_mobile) }}
-                {{ $imgDesktop := .Resources.GetMatch (default "banner_desktop.png" .Params.hero_image_desktop) }}
-                
-                {{ if or $imgMobile $imgDesktop }}
-                    <picture class="w-full block text-center">
-                        <!-- 電腦版 (>= 768px)：顯示橫圖 -->
-                        {{ if $imgDesktop }}
-                            <source media="(min-width: 768px)" srcset="{{ $imgDesktop.RelPermalink }}">
-                        {{ end }}
-                        
-                        <!-- 手機版 (預設)：顯示直圖 -->
-                        {{ if $imgMobile }}
-                            <img src="{{ $imgMobile.RelPermalink }}" alt="{{ $.Title }}" class="w-full h-auto max-h-[75vh] object-contain rounded-2xl shadow-xl mx-auto block">
-                        {{ else if $imgDesktop }}
-                            <img src="{{ $imgDesktop.RelPermalink }}" alt="{{ $.Title }}" class="w-full h-auto max-h-[75vh] object-contain rounded-2xl shadow-xl mx-auto block">
-                        {{ end }}
-                    </picture>
-                {{ else }}
-                    <div class="w-full py-24 flex flex-col justify-center items-center text-white text-center">
-                        <span class="text-xs bg-white/20 px-3 py-1 rounded-full mb-3 uppercase tracking-widest">eMOVING 主打專案</span>
-                        <h1 class="text-3xl md:text-5xl font-black tracking-wider">{{ .Title }}</h1>
-                    </div>
+<!-- 1. 廣宣圖 Banner (精準扣除 Header 56px + 選單 52px，確保選單底部剛好貼齊手機螢幕) -->
+<!-- ========================================== -->
+<section class="w-full h-[calc(100dvh-108px)] md:h-[calc(100dvh-116px)] bg-gradient-to-b from-[#6eade3] to-[#81baf0] p-2 md:p-4 flex flex-col justify-center items-center relative shrink-0">
+    <div class="max-w-6xl w-full h-full flex justify-center items-center my-auto overflow-hidden">
+        <!-- 預設值與變數讀取 -->
+        {{ $imgMobile := .Resources.GetMatch (default "banner_mobile.png" .Params.hero_image_mobile) }}
+        {{ $imgDesktop := .Resources.GetMatch (default "banner_desktop.png" .Params.hero_image_desktop) }}
+        
+        {{ if or $imgMobile $imgDesktop }}
+            <picture class="w-full h-full flex items-center justify-center text-center">
+                <!-- 電腦版 (>= 768px)：顯示橫圖 -->
+                {{ if $imgDesktop }}
+                    <source media="(min-width: 768px)" srcset="{{ $imgDesktop.RelPermalink }}">
                 {{ end }}
+                
+                <!-- 手機版 (預設)：顯示直圖 -->
+                {{ if $imgMobile }}
+                    <img src="{{ $imgMobile.RelPermalink }}" alt="{{ $.Title }}" class="w-full h-full object-contain rounded-2xl shadow-xl mx-auto block">
+                {{ else if $imgDesktop }}
+                    <img src="{{ $imgDesktop.RelPermalink }}" alt="{{ $.Title }}" class="w-full h-auto max-h-full object-contain rounded-2xl shadow-xl mx-auto block">
+                {{ end }}
+            </picture>
+        {{ else }}
+            <div class="w-full py-24 flex flex-col justify-center items-center text-white text-center">
+                <span class="text-xs bg-white/20 px-3 py-1 rounded-full mb-3 uppercase tracking-widest">eMOVING 主打專案</span>
+                <h1 class="text-3xl md:text-5xl font-black tracking-wider">{{ .Title }}</h1>
             </div>
-        </section>
+        {{ end }}
+    </div>
+</section>
 
         <!-- ========================================== -->
         <!-- 2. 各車款橫式錨點選單 (手機與電腦版皆平均分配寬度 + 置中對齊) -->
