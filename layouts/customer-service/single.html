@@ -1,20 +1,10 @@
 {{ define "main" }}
 
-<!-- 移除強迫垂直置中，改為靠頂對齊，並滿版適應螢幕高度 -->
-<section class="w-full min-h-[calc(100dvh-60px)] bg-[#f9fcff] py-4 md:py-6 px-4 md:px-8 flex flex-col justify-start items-center">
+<!-- 智慧客服滿版頁面容器（自動扣除上方導覽列高度，填滿螢幕高度） -->
+<section class="w-full h-[calc(100dvh-70px)] bg-[#f9fcff] p-3 md:p-6 flex flex-col justify-center items-center">
     
-    <!-- 1. 頂部標題區塊（調小間距 + 顯色標題） -->
-    <div class="max-w-3xl w-full text-center my-2 md:my-4 shrink-0">
-        <h1 class="text-2xl md:text-3xl font-black text-[#1C1C1C] tracking-wide mb-2">
-            eMOVING 線上智慧客服
-        </h1>
-        <p class="text-sm md:text-base text-gray-600 font-medium">
-            請點擊視窗右下角「車款選單」選擇您想了解的車款，將有專人與優惠資訊為您服務！
-        </p>
-    </div>
-
-    <!-- 2. 智慧客服對話視窗（高度自動跟隨螢幕縮放） -->
-    <div class="w-full max-w-3xl flex-1 flex flex-col mb-4">
+    <!-- 智慧客服視窗容器 -->
+    <div class="w-full max-w-4xl h-full flex flex-col">
         <div class="chat-container">
             <div class="chat-header">eMOVING 線上智慧客服</div>
             <div class="chat-box" id="chatBox">
@@ -42,8 +32,7 @@
     .chat-container { 
         position: relative; 
         width: 100%; 
-        /* 核心修復：使用 clamp 讓高度自動適應螢幕！最高 700px、最小 450px、平時佔視窗高度 65% */
-        height: clamp(450px, 65vh, 700px); 
+        height: 100%; /* 填滿外層容器高度，徹底解決下方空白問題 */
         margin: 0 auto; 
         background: #ffffff; 
         display: flex; 
@@ -128,7 +117,7 @@
         },
         4: { 
             name: "🛡️ 白牌125機車 | EZR", 
-            reply: `感謝詢問💥EZR💥！\n\n獨家特色→\n⚡全新自研馬達/定速巡航\n⚡TCS 煞車系統/雲端鑰匙\n\n＼＼可享優惠／／\n💎現金折扣 $１９９０0💎\n💖$８８８騎到飽(指定時段)\n\n來電詢問：<a href='https://lihi1.me/wRMsZ' target='_blank'>點我撥打</a>\n查看車色：<a href='https://lihi1.me/KFohq' target='_blank'>點我查看</a>\n尋找門市：<a href='https://lihi1.me/y5UCf' target='_blank'>點我找據點</a>` 
+            reply: `感謝詢問💥EZR💥！\n\n獨家特色→\n⚡全新自研馬達/定速巡航\n⚡TCS 煞車系統/雲端鑰匙\n\n＼＼可享優惠／／\n💎現金折扣 $１９９００💎\n💖$８８８騎到飽(指定時段)\n\n來電詢問：<a href='https://lihi1.me/wRMsZ' target='_blank'>點我撥打</a>\n查看車色：<a href='https://lihi1.me/KFohq' target='_blank'>點我查看</a>\n尋找門市：<a href='https://lihi1.me/y5UCf' target='_blank'>點我找據點</a>` 
         },
         5: { 
             name: "🍀 白牌125機車 | FUN", 
