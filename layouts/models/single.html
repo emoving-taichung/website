@@ -1,3 +1,671 @@
-git add .
-git commit -m "修正智慧客服車款選單在網站選單上方，車款介紹的hero可以手動滑動以及影片放大只有一層播放鈕"
-git push
+{{ define "main" }}
+{{ $page := . }}
+
+{{/* 取得檔名並自動拼接 static/catalog/ 與 static/manual/ 的 PDF 路徑 */}}
+{{ $baseName := "" }}
+{{ with $page.File }}
+  {{ $baseName = .BaseFileName }}
+{{ else }}
+  {{ $baseName = $page.Slug }}
+{{ end }}
+
+{{ $catalogPdf := (printf "catalog/%s.pdf" $baseName) | absURL }}
+{{ with $page.Params.catalog_url }}{{ $catalogPdf = . | absURL }}{{ end }}
+
+{{ $manualPdf := (printf "manual/%s.pdf" $baseName) | absURL }}
+{{ with $page.Params.manual_url }}{{ $manualPdf = . | absURL }}{{ end }}
+
+<style>
+  /* 全局高度 CSS 變數 (預設 Header 50px, 錨點選單 50px) */
+  :root {
+    --header-h: 50px;
+    --nav-h: 50px;
+  }
+
+  /* 精準計算首屏 Hero 高度：100dvh 自動扣除手機瀏覽器網址列與底部列 */
+  .hero-viewport-height {
+    height: calc(100dvh - var(--header-h, 50px) - var(--nav-h, 50px));
+    min-height: 380px;
+  }
+  @supports not (height: 100dvh) {
+    .hero-viewport-height {
+      height: calc(100vh - var(--header-h, 50px) - var(--nav-h, 50px));
+    }
+  }
+
+  /* 錨點區塊自動補償 */
+  .anchor-section {
+    scroll-margin-top: calc(var(--header-h) + var(--nav-h));
+  }
+
+  /* 隱藏預設捲軸 */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  
+  /* 視差與斜切背景 */
+  .parallax-bg {
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  /* 斜切邊框動畫優化 */
+  .slope-first, .slope-even, .slope-odd, .slope-last-even, .slope-last-odd, .slope-last-single {
+    will-change: transform, clip-path;
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
+
+  .slope-first { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 3.5vw)); margin-top: 0; }
+  .slope-odd { clip-path: polygon(0 0, 100% 3.5vw, 100% calc(100% - 3.5vw), 0 100%); margin-top: -3.5vw; }
+  .slope-even { clip-path: polygon(0 3.5vw, 100% 0, 100% 100%, 0 calc(100% - 3.5vw)); margin-top: -3.5vw; }
+
+  .slope-last-single { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); margin-top: 0; }
+  .slope-last-odd { clip-path: polygon(0 0, 100% 3.5vw, 100% 100%, 0 100%); margin-top: -3.5vw; }
+  .slope-last-even { clip-path: polygon(0 3.5vw, 100% 0, 100% 100%, 0 100%); margin-top: -3.5vw; }
+
+  /* 錨點選單高亮與滾動狀態樣式 */
+  .promo-tab-btn {
+    transition: all 0.25s ease-in-out;
+  }
+  .promo-tab-btn.active {
+    background-color: #1155CC !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+  }
+  #sticky-nav.is-scrolled {
+    background-color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important;
+  }
+
+  /* 手機版選單：置中引導與隱藏提示 */
+  @media (max-width: 767px) {
+    #scroll-menu {
+      padding-left: calc(50vw - 140px);
+    }
+  }
+  #scroll-hint {
+    margin-right: 45vw; 
+    transition: all 0.3s ease-out;
+  }
+  #scroll-hint.is-hidden {
+    opacity: 0 !important;
+    max-width: 0px !important;
+    margin-right: 0px !important;
+    padding: 0px !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+  }
+</style>
+
+<!-- ========================================== -->
+<!-- 1. 車色圖片輪播 (支援手機手勢滑動) -->
+<!-- ========================================== -->
+{{ $heroPhotos := slice }}
+
+{{ with $page.Params.hero_slides }}
+  {{ range . }}
+    {{ $fileName := . }}
+    {{ $imgUrl := "" }}
+
+    {{ $res := $page.Resources.Get $fileName }}
+    {{ if not $res }}
+      {{ $res = $page.Resources.GetMatch (printf "*%s*" $fileName) }}
+    {{ end }}
+
+    {{ if $res }}
+      {{ $imgUrl = $res.RelPermalink }}
+    {{ else }}
+      {{ $imgUrl = (path.Join $page.RelPermalink $fileName) | relURL }}
+    {{ end }}
+
+    {{ $heroPhotos = $heroPhotos | append $imgUrl }}
+  {{ end }}
+{{ end }}
+
+<section class="hero-viewport-height relative w-full bg-black overflow-hidden group touch-pan-y">
+    <div id="hero-slides-container" class="w-full h-full relative cursor-grab active:cursor-grabbing">
+        {{ if gt (len $heroPhotos) 0 }}
+            {{ range $idx, $imgSrc := $heroPhotos }}
+            <img src="{{ $imgSrc }}" 
+                 alt="{{ $page.Title }}" 
+                 class="hero-slide-img absolute inset-0 w-full h-full object-cover transition-opacity duration-700 select-none {{ if eq $idx 0 }}opacity-100 z-10{{ else }}opacity-0 z-0{{ end }}">
+            {{ end }}
+        {{ end }}
+    </div>
+
+    {{ if gt (len $heroPhotos) 1 }}
+    <!-- 左右切換箭頭 -->
+    <button type="button" 
+    onclick="prevHeroSlide()" 
+    class="absolute left-3 md:left-32 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white w-10 h-10 md:w-12 md:h-12 rounded-full backdrop-blur-md flex items-center justify-center text-lg md:text-xl z-20 opacity-70 hover:opacity-100 transition-all shadow-md">❮</button>
+
+    <button type="button" 
+    onclick="nextHeroSlide()" 
+    class="absolute right-3 md:right-12 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white w-10 h-10 md:w-auto md:h-auto md:py-2.5 md:px-4 rounded-full backdrop-blur-md flex items-center justify-center md:gap-2 z-20 opacity-85 hover:opacity-100 transition-all shadow-md group">
+        <span class="hidden md:inline text-sm font-bold tracking-wider">點擊看更多車色</span>
+        <span class="text-base md:text-lg transition-transform group-hover:translate-x-0.5">❯</span>
+    </button>
+
+    <!-- 底部切換小圓點 -->
+    <div id="hero-dots" class="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-20"></div>
+    {{ end }}
+</section>
+
+<!-- ========================================== -->
+<!-- 2. 橫式懸浮錨點選單 -->
+<!-- ========================================== -->
+<nav id="sticky-nav" class="sticky top-[var(--header-h,50px)] z-40 bg-white border-b border-gray-200 shadow-sm transition-all duration-300">
+    <div id="scroll-menu" class="max-w-6xl mx-auto flex overflow-x-auto no-scrollbar items-center py-2 px-3 space-x-1 md:space-x-3 md:justify-center">
+        <a href="#features-gallery" class="promo-tab-btn active px-3 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">車款特色</a>
+        <a href="#reviews" class="promo-tab-btn px-3 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">好騎推推</a>
+        
+        <span id="scroll-hint" class="md:hidden text-sm font-bold text-[#1155CC] animate-pulse whitespace-nowrap select-none inline-block">
+            &gt;&gt;滑動看更多
+        </span>
+
+        <a href="#specs" class="promo-tab-btn px-3 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">詳細規格表</a>
+        <a href="#accessories" class="promo-tab-btn px-3 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">原廠配件</a>
+        <a href="#faq" class="promo-tab-btn px-3 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">常見 QA</a>
+    </div>
+</nav>
+
+<!-- ========================================== -->
+<!-- 3. 車款特色區塊 -->
+<!-- ========================================== -->
+{{ with $page.Params.features }}
+  <section id="features-gallery" class="anchor-section w-full overflow-hidden bg-[#dde1e8]">
+      {{ $features := . }}
+      {{ $total := len $features }}
+  
+      {{ range $index, $item := $features }}
+      {{ $isEven := eq (math.Mod $index 2) 0 }}
+      {{ $isLast := eq $index (math.Sub $total 1) }}
+  
+      {{ $slopeClass := "" }}
+      {{ if $isLast }}
+          {{ if eq $total 1 }} {{ $slopeClass = "slope-last-single" }}
+          {{ else if $isEven }} {{ $slopeClass = "slope-last-even" }}
+          {{ else }} {{ $slopeClass = "slope-last-odd" }}
+          {{ end }}
+      {{ else }}
+          {{ if eq $index 0 }} {{ $slopeClass = "slope-first" }}
+          {{ else if $isEven }} {{ $slopeClass = "slope-even" }}
+          {{ else }} {{ $slopeClass = "slope-odd" }}
+          {{ end }}
+      {{ end }}
+
+      {{ $imgSrc := $item.image }}
+      {{ with $page.Resources.GetMatch $item.image }}
+        {{ $imgSrc = .RelPermalink }}
+      {{ end }}
+  
+      <div class="relative py-20 px-6 md:px-12 transition-all {{ if $isEven }}bg-[#e3e7ec]{{ else }}bg-[#f9fcff]{{ end }} text-gray-900 {{ $slopeClass }}">
+          <div class="max-w-6xl mx-auto flex flex-col {{ if $isEven }}md:flex-row-reverse{{ else }}md:flex-row{{ end }} items-center gap-10 md:gap-14 py-4">
+              
+              <div class="w-full md:w-5/12 space-y-4 text-left">
+                  <h3 class="text-2xl md:text-3xl font-black tracking-wider uppercase border-b pb-3 border-gray-400/40 text-gray-900">
+                      {{ $item.title }}
+                  </h3>
+                  <p class="text-base md:text-lg leading-relaxed font-light text-gray-700">
+                      {{ $item.desc }}
+                  </p>
+              </div>
+  
+              <div class="w-full md:w-7/12 flex justify-center">
+                  <div class="w-full max-w-2xl aspect-[16/10] rounded-3xl overflow-hidden border-4 border-white/60 shadow-xl shrink-0 group">
+                      <img src="{{ $imgSrc }}" alt="{{ $item.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                  </div>
+              </div>
+
+          </div>
+      </div>
+      {{ end }}
+  
+      {{ $lastIndex := math.Sub $total 1 }}
+      {{ $lastIsEven := eq (math.Mod $lastIndex 2) 0 }}
+      <div class="pt-4 pb-20 px-6 transition-all relative z-10 flex flex-col sm:flex-row justify-center gap-4 {{ if $lastIsEven }}bg-[#dde1e8]{{ else }}bg-[#f9fcff]{{ end }} text-gray-900">
+          <a href="{{ "promotions/" | relURL }}" class="px-8 py-3.5 bg-yellow-400 hover:bg-yellow-500 text-black font-extrabold text-center rounded-xl transition-all shadow-xl hover:scale-105">前往主打優惠 ➔</a>
+          <a href="{{ "booking/" | absURL }}" class="px-8 py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-center rounded-xl transition-all shadow-xl hover:scale-105">預約現場試乘 ➔</a>
+      </div>
+  </section>
+{{ end }}
+
+<!-- ========================================== -->
+<!-- 4. 【好騎推推】影音（加大版面，點擊直接播放）與網紅推薦區塊 -->
+<!-- ========================================== -->
+<section id="reviews" class="anchor-section py-12 md:py-16 px-2 sm:px-6 bg-[#F1FAFF] text-gray-800">
+    <div class="max-w-5xl mx-auto space-y-12 md:space-y-16">
+        
+        <div class="text-center space-y-2">
+            <h2 class="text-3xl md:text-4xl font-black text-blue-900 tracking-wide">【好騎推推】</h2>
+            <p class="text-sm md:text-base text-gray-600 font-medium">試乘體驗、專業媒體報導與車主評價推薦</p>
+        </div>
+
+        {{ with $page.Params.videos }}
+        {{ $videos := . }}
+        {{ $firstVid := index $videos 0 }}
+        <div class="space-y-4 md:space-y-6">
+            <h3 class="text-xl md:text-2xl font-bold text-blue-800 flex items-center gap-2 px-2 sm:px-0">
+                <span>▶</span> 精彩試乘影音
+            </h3>
+
+            <!-- 縮減外框內距，讓影片在手機畫面佔比最大化 -->
+            <div class="bg-white p-2 sm:p-4 rounded-2xl border border-blue-100 shadow-md space-y-3 sm:space-y-4">
+                
+                <!-- YouTube 原生播放器（直接嵌入，消除二次點擊） -->
+                <div id="main-video-box" class="relative w-full aspect-video bg-black rounded-xl overflow-hidden shadow-inner">
+                    <iframe id="main-youtube-iframe" 
+                            class="w-full h-full" 
+                            src="https://www.youtube.com/embed/{{ $firstVid.id }}" 
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen 
+                            referrerpolicy="strict-origin-when-cross-origin">
+                    </iframe>
+                </div>
+
+                <!-- 縮圖選單 -->
+                <div class="grid grid-cols-3 gap-2 sm:gap-3">
+                    {{ range $idx, $vid := $videos }}
+                    <div data-vid="{{ $vid.id }}" data-idx="{{ $idx }}" onclick="swapVideo(this.dataset.vid, Number(this.dataset.idx))" id="thumb-btn-{{ $idx }}" class="cursor-pointer aspect-video bg-black rounded-lg overflow-hidden border-2 {{ if eq $idx 0 }}border-yellow-400 opacity-100{{ else }}border-gray-300 opacity-70{{ end }} hover:opacity-100 transition-all relative">
+                        <img src="https://i.ytimg.com/vi/{{ $vid.id }}/hqdefault.jpg" onerror="this.onerror=null; this.src='https://i.ytimg.com/vi/{{ $vid.id }}/0.jpg';" alt="{{ $vid.title }}" class="w-full h-full object-cover">
+                    </div>
+                    {{ end }}
+                </div>
+            </div>
+        </div>
+        {{ end }}
+
+        {{ with $page.Params.ig_posts }}
+        <div class="space-y-6 px-2 sm:px-0">
+            <h3 class="text-xl md:text-2xl font-bold text-blue-800 flex items-center gap-2">
+                <span>📸</span> 網紅推薦
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center">
+                {{ range . }}
+                <div class="w-full flex justify-center">
+                    <blockquote class="instagram-media" 
+                                data-instgrm-permalink="{{ .url }}" 
+                                data-instgrm-version="14" 
+                                style="background:#FFF; border:0; border-radius:12px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%;">
+                    </blockquote>
+                </div>
+                {{ end }}
+            </div>
+        </div>
+        {{ end }}
+
+        {{ with $page.Params.reports }}
+        <div class="space-y-6 px-2 sm:px-0">
+            <h3 class="text-xl md:text-2xl font-bold text-blue-800 flex items-center gap-2">
+                <span>📰</span> 媒體報導觀點
+            </h3>
+            
+            <div class="space-y-6">
+                {{ range . }}
+                {{ $rptImgSrc := .image }}
+                {{ with $page.Resources.GetMatch .image }}
+                  {{ $rptImgSrc = .RelPermalink }}
+                {{ end }}
+
+                <div class="bg-white text-gray-900 rounded-2xl p-6 shadow-md border border-blue-100 flex flex-col md:flex-row gap-6 items-center hover:shadow-lg transition-shadow">
+                    <div class="w-full md:w-[40%] aspect-[4/3] rounded-xl overflow-hidden shrink-0 border border-gray-100">
+                        <img src="{{ $rptImgSrc }}" alt="{{ .source }}" class="w-full h-full object-cover">
+                    </div>
+                    <div class="w-full md:w-[60%] space-y-3 text-left">
+                        <div class="flex items-baseline gap-2">
+                            <h4 class="text-xl font-bold text-gray-900">{{ .source }}</h4>
+                            {{ with .author }}<span class="text-xs text-gray-400">- by {{ . }}</span>{{ end }}
+                        </div>
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            {{ .summary }}
+                        </p>
+                        {{ with .link }}
+                        <div class="text-right pt-2">
+                            <a href="{{ . }}" target="_blank" rel="noopener noreferrer" class="text-blue-600 font-bold hover:underline text-sm inline-flex items-center gap-1">
+                                閱讀完整報導 →
+                            </a>
+                        </div>
+                        {{ end }}
+                    </div>
+                </div>
+                {{ end }}
+            </div>
+        </div>
+        {{ end }}
+
+    </div>
+</section>
+
+<!-- ========================================== -->
+<!-- 5. 詳細規格數據表 -->
+<!-- ========================================== -->
+{{ with $page.Params.specs }}
+<section id="specs" class="anchor-section py-16 px-6 bg-white text-gray-800">
+    <div class="max-w-5xl mx-auto space-y-8">
+        <h2 class="text-2xl md:text-3xl font-black text-center text-gray-900">規格表</h2>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm border-collapse border border-gray-200">
+                <thead>
+                    <tr class="bg-gray-100 text-gray-700">
+                        <th class="border border-gray-200 p-3 text-center">規格項目</th>
+                        <th class="border border-gray-200 p-3 text-center">{{ $page.Title }}</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {{ range . }}
+                    <tr>
+                        <td class="p-3 border font-medium bg-gray-50 text-center">{{ .label }}</td>
+                        <td class="p-3 border text-center">{{ .value }}</td>
+                    </tr>
+                    {{ end }}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="space-y-1 text-xs text-gray-400 text-left font-light [&_a]:text-blue-600 [&_a]:underline [&_a]:hover:text-blue-800">
+            {{ with $page.Params.specs_notes }}
+                {{ range . }}
+                <p>{{ . | markdownify }}</p>
+                {{ end }}
+            {{ else }}
+                <p>* 規格配備以實車為準，本公司保留修改權利。</p>
+            {{ end }}
+        </div>
+    </div>
+</section>
+{{ end }}
+
+<!-- ========================================== -->
+<!-- 6. 專屬原廠精選配件區塊 -->
+<!-- ========================================== -->
+{{ with $page.Params.accessories }}
+<section id="accessories" class="anchor-section py-12 bg-white px-6">
+    <div class="max-w-6xl mx-auto space-y-8">
+        <h2 class="text-2xl md:text-3xl font-extrabold text-center text-gray-900 tracking-wide">
+            專屬原廠精選配件
+        </h2>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {{ range . }}
+            {{ $accImgSrc := .image }}
+            {{ with $page.Resources.GetMatch .image }}
+              {{ $accImgSrc = .RelPermalink }}
+            {{ end }}
+            
+            <div class="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow flex flex-col items-center">
+                <div class="w-full aspect-square rounded-xl overflow-hidden bg-gray-50 mb-3">
+                    <img src="{{ $accImgSrc }}" alt="{{ .title }}" class="w-full h-full object-cover">
+                </div>
+                
+                <h3 class="text-lg md:text-xl font-bold text-gray-900 text-center tracking-wide mt-1">
+                    {{ .title }}
+                </h3>
+            </div>
+            {{ end }}
+        </div>
+    </div>
+</section>
+{{ end }}
+
+<!-- ========================================== -->
+<!-- CTA 按鈕區塊 (型錄、手冊、預約、優惠) -->
+<!-- ========================================== -->
+<section class="py-10 bg-gray-900 text-white px-6">
+    <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
+        <a href="{{ $catalogPdf }}" 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           class="py-4 px-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap">
+            <span>📄</span> <span>電子型錄</span>
+        </a>
+
+        <a href="{{ $manualPdf }}" 
+           target="_blank" 
+           rel="noopener noreferrer" 
+           class="py-4 px-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap">
+            <span>📘</span> <span>使用手冊</span>
+        </a>
+
+        <a href="{{ "booking/" | relURL }}" 
+           class="py-4 px-3 bg-blue-600 hover:bg-blue-500 text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap">
+            <span>🛵</span> <span>預約試乘</span>
+        </a>
+
+        <a href="{{ "promotions/" | relURL }}" 
+           class="py-4 px-3 bg-yellow-400 hover:bg-yellow-300 text-black text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap">
+            <span>🎁</span> <span>獲取優惠</span>
+        </a>
+    </div>
+</section>
+
+<!-- ========================================== -->
+<!-- 7. 常見 Q&A -->
+<!-- ========================================== -->
+{{ with $page.Params.faq }}
+<section id="faq" class="anchor-section py-16 px-6 bg-white text-gray-800">
+    <div class="max-w-3xl mx-auto space-y-6">
+        <h2 class="text-2xl font-bold text-center text-gray-900">常見問題解答 Q&A</h2>
+        <div class="space-y-3">
+            {{ range . }}
+            <details class="group bg-gray-50 p-4 rounded-xl border border-gray-200 cursor-pointer">
+                <summary class="font-bold text-sm text-gray-900 flex justify-between items-center">
+                    {{ .question }}
+                    <span class="text-gray-400 transition-transform group-open:rotate-180">▼</span>
+                </summary>
+                <p class="text-xs text-gray-600 mt-3 leading-relaxed text-left">
+                    {{ .answer }}
+                </p>
+            </details>
+            {{ end }}
+        </div>
+    </div>
+</section>
+{{ end }}
+
+<!-- ========================================== -->
+<!-- 8. 回到頂端懸浮按鈕 -->
+<!-- ========================================== -->
+<button id="back-to-top-btn" class="fixed bottom-6 right-6 z-50 w-11 h-11 md:w-12 md:h-12 rounded-full border-2 border-blue-600 bg-white text-blue-600 shadow-lg flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-110 focus:outline-none opacity-0 pointer-events-none" title="回到頂端">
+    <svg class="w-6 h-6 stroke-current" fill="none" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"/>
+    </svg>
+</button>
+
+<script async src="//www.instagram.com/embed.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        function updateLayoutHeights() {
+            const topHeader = Array.from(document.querySelectorAll('header, nav, div')).find(el => {
+                if (el.id === 'sticky-nav' || el.closest('#sticky-nav')) return false;
+                const style = window.getComputedStyle(el);
+                return (style.position === 'fixed' || style.position === 'sticky') && el.getBoundingClientRect().top <= 5;
+            });
+
+            const headerH = topHeader ? topHeader.offsetHeight : 50;
+            const stickyNav = document.getElementById('sticky-nav');
+            const navH = stickyNav ? stickyNav.offsetHeight : 50;
+
+            document.documentElement.style.setProperty('--header-h', headerH + 'px');
+            document.documentElement.style.setProperty('--nav-h', navH + 'px');
+        }
+
+        updateLayoutHeights();
+        window.addEventListener('resize', updateLayoutHeights);
+        window.addEventListener('load', updateLayoutHeights);
+
+        const scrollMenu = document.getElementById('scroll-menu');
+        const scrollHint = document.getElementById('scroll-hint');
+        if (scrollMenu && scrollHint) {
+            scrollMenu.addEventListener('scroll', function() {
+                if (scrollMenu.scrollLeft > 5) {
+                    scrollHint.classList.add('is-hidden');
+                } else {
+                    scrollHint.classList.remove('is-hidden');
+                }
+            }, { passive: true });
+        }
+
+        /* -------------------------------------- */
+        /* Hero 車色圖片輪播 + 手機觸控滑動支援 */
+        /* -------------------------------------- */
+        const slides = document.querySelectorAll('.hero-slide-img');
+        const totalSlides = slides.length;
+        let heroIdx = 0;
+
+        function initHeroDots() {
+            const dotsBox = document.getElementById('hero-dots');
+            if (!dotsBox || totalSlides <= 1) return;
+            dotsBox.innerHTML = '';
+
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement('button');
+                dot.type = 'button';
+                dot.className = `w-3 h-3 rounded-full transition-all ${i === heroIdx ? 'bg-white w-8' : 'bg-white/50'}`;
+                dot.onclick = () => setHeroSlide(i);
+                dotsBox.appendChild(dot);
+            }
+        }
+
+        window.setHeroSlide = function(idx) {
+            if (totalSlides <= 1 || idx === heroIdx) return;
+            
+            slides[heroIdx].classList.remove('opacity-100', 'z-10');
+            slides[heroIdx].classList.add('opacity-0', 'z-0');
+            
+            heroIdx = idx;
+            
+            slides[heroIdx].classList.remove('opacity-0', 'z-0');
+            slides[heroIdx].classList.add('opacity-100', 'z-10');
+            
+            initHeroDots();
+        };
+
+        window.prevHeroSlide = function() {
+            if (totalSlides <= 1) return;
+            let newIdx = (heroIdx - 1 + totalSlides) % totalSlides;
+            setHeroSlide(newIdx);
+        };
+
+        window.nextHeroSlide = function() {
+            if (totalSlides <= 1) return;
+            let newIdx = (heroIdx + 1) % totalSlides;
+            setHeroSlide(newIdx);
+        };
+
+        initHeroDots();
+
+        /* 手機滑動手勢監聽 (Swipe Left/Right) */
+        const heroContainer = document.getElementById('hero-slides-container');
+        if (heroContainer) {
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            heroContainer.addEventListener('touchstart', function(e) {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            heroContainer.addEventListener('touchend', function(e) {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, { passive: true });
+
+            function handleSwipe() {
+                const distance = touchStartX - touchEndX;
+                const threshold = 40; // 滑動觸發門檻 (px)
+                if (distance > threshold) {
+                    nextHeroSlide(); // 向左滑：下一張
+                } else if (distance < -threshold) {
+                    prevHeroSlide(); // 向右滑：上一張
+                }
+            }
+        }
+
+        /* -------------------------------------- */
+        /* 懸浮錨點列滾動陰影特效 */
+        /* -------------------------------------- */
+        const nav = document.getElementById('sticky-nav');
+        if (nav) {
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 150) {
+                    nav.classList.add('is-scrolled');
+                } else {
+                    nav.classList.remove('is-scrolled');
+                }
+            });
+        }
+
+        const tabs = document.querySelectorAll('.promo-tab-btn');
+        tabs.forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                tabs.forEach(function(t) { t.classList.remove('active'); });
+                this.classList.add('active');
+            });
+        });
+
+        /* -------------------------------------- */
+        /* YouTube 影片切換（直接播放） */
+        /* -------------------------------------- */
+        window.swapVideo = function(videoId, idx) {
+            if (!videoId) return;
+            const iframe = document.getElementById('main-youtube-iframe');
+            const mainBox = document.getElementById('main-video-box');
+            
+            if (mainBox) {
+                const headerH = parseInt(document.documentElement.style.getPropertyValue('--header-h')) || 50;
+                const navH = parseInt(document.documentElement.style.getPropertyValue('--nav-h')) || 50;
+                const topPos = mainBox.getBoundingClientRect().top + window.scrollY - headerH - navH - 20;
+                
+                window.scrollTo({
+                    top: topPos,
+                    behavior: 'smooth'
+                });
+            }
+
+            if (iframe) {
+                iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+            }
+
+            const allThumbs = document.querySelectorAll('[id^="thumb-btn-"]');
+            allThumbs.forEach((btn, i) => {
+                if (i === idx) {
+                    btn.className = "cursor-pointer aspect-video bg-black rounded-lg overflow-hidden border-2 border-yellow-400 opacity-100 transition-all relative";
+                } else {
+                    btn.className = "cursor-pointer aspect-video bg-black rounded-lg overflow-hidden border-2 border-gray-300 opacity-70 hover:opacity-100 transition-all relative";
+                }
+            });
+        };
+
+        if (window.instgrm) {
+            window.instgrm.Embeds.process();
+        }
+
+        /* 回到頂端按鈕 */
+        const backToTopBtn = document.getElementById('back-to-top-btn');
+        if (backToTopBtn) {
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 300) {
+                    backToTopBtn.classList.remove('opacity-0', 'pointer-events-none');
+                    backToTopBtn.classList.add('opacity-100', 'pointer-events-auto');
+                } else {
+                    backToTopBtn.classList.add('opacity-0', 'pointer-events-none');
+                    backToTopBtn.classList.remove('opacity-100', 'pointer-events-auto');
+                }
+            }, { passive: true });
+
+            backToTopBtn.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+    });
+</script>
+
+{{ partial "contact.html" . }}
+
+{{ end }}
