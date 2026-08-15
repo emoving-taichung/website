@@ -165,4 +165,41 @@ catalog_url: "catalog/ez1.pdf"
 # 車主手冊 (假設 PDF 放在 static/manual/ 資料夾內)
 manual_url: "manual/ez1.pdf"
 
+# ==========================================
+# 視差滾動區塊專用獨立設定
+# ==========================================
+
+# 1. 視差車色去背圖、名稱與背景色配對
+parallax_slides:
+  - image: "ez1-blue.png"
+    color_name: "極光藍 ‧ 經典亮彩"
+    bg_color: "#1a2a40"
+  - image: "ez1-gray.png"
+    color_name: "石墨灰 ‧ 質感霧面"
+    bg_color: "#2b2d31"
+  - image: "ez1-red.png"
+    color_name: "烈焰紅 ‧ 熱血動感"
+    bg_color: "#3d161a"
+
+# 2. 視差情境背景圖檔名
+parallax_bg_image: "parallax-bg.jpg"
+
+# 3. 車款特色文字 (滑動時照片不動、文字漸顯)
+parallax_features:
+  - number: "01"
+    title: "專利智慧中柱"
+    desc: "一鍵自動立車與省力設計，即使女性或新手車主也能極致輕鬆停妥。"
+    color_class: "text-yellow-400"
+    badge_bg: "bg-yellow-400"
+  - number: "02"
+    title: "BOOST 貼地加速"
+    desc: "瞬間釋放極致扭力，不論起步爬坡皆能感受貼地飛行的流暢體驗。"
+    color_class: "text-cyan-400"
+    badge_bg: "bg-cyan-400"
+  - number: "03"
+    title: "人體工學坐墊"
+    desc: "頂級高密度泡棉支撐，長途騎乘依舊舒適，給您旗艦級座駕體感。"
+    color_class: "text-emerald-400"
+    badge_bg: "bg-emerald-400"
+
 ---
