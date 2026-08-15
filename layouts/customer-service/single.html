@@ -1,6 +1,6 @@
 {{ define "main" }}
 
-<!-- 智慧客服滿版頁面容器（自動扣除上方導覽列高度，填滿螢幕高度） -->
+<!-- 智慧客服滿版頁面容器 -->
 <section class="w-full h-[calc(100dvh-70px)] bg-[#f9fcff] p-3 md:p-6 flex flex-col justify-center items-center">
     
     <!-- 智慧客服視窗容器 -->
@@ -32,7 +32,7 @@
     .chat-container { 
         position: relative; 
         width: 100%; 
-        height: 100%; /* 填滿外層容器高度，徹底解決下方空白問題 */
+        height: 100%; 
         margin: 0 auto; 
         background: #ffffff; 
         display: flex; 
@@ -71,8 +71,8 @@
 
     .inner-line-btn { display: block; background: #00b900; color: white !important; text-decoration: none; text-align: center; padding: 12px; border-radius: 8px; margin-top: 10px; font-weight: bold; }
 
-    /* 選單樣式 */
-    .menu-wrapper { position: absolute; bottom: 20px; right: 20px; display: flex; flex-direction: column; align-items: flex-end; z-index: 100; }
+    /* 選單樣式：z-index 調整為 30，避免蓋過網站全域主選單 */
+    .menu-wrapper { position: absolute; bottom: 20px; right: 20px; display: flex; flex-direction: column; align-items: flex-end; z-index: 30; }
     .options-list { 
         display: none; 
         background: white; 
