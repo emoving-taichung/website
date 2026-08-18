@@ -179,7 +179,7 @@ parallax_slides:
     bg_color: "#F4D934"
 
 # 2. 視差情境背景圖檔名
-parallax_bg_image: "parallax-bg.jpg"
+parallax_bg_image: "parallax-bg.png"
 
 # 3. 車款特色文字 (滑動時照片不動、文字漸顯)
 parallax_features:
