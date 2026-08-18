@@ -173,10 +173,10 @@ manual_url: "manual/ez1.pdf"
 parallax_slides:
   - image: "ez1-blue.png"
     color_name: "神秘霧藍"
-    bg_color: "#1a2a40"
+    bg_color: "#4378ea"
   - image: "ez1-yellow.png"
     color_name: "芒果雪酪"
-    bg_color: "#2b2d31"
+    bg_color: "#F4D934"
 
 # 2. 視差情境背景圖檔名
 parallax_bg_image: "parallax-bg.jpg"
