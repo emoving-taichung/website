@@ -225,10 +225,10 @@
             <!-- 浮動特色卡片區 -->
             <div id="feature-callouts-container" class="absolute inset-0 pointer-events-none flex items-center justify-center z-20">
                 {{ range $fIdx, $fItem := $page.Params.parallax_features }}
-                {{ $posClass := "bottom-16 md:bottom-20 left-1/2 -translate-x-1/2 w-[90%] sm:w-[85%] max-w-[360px] md:max-w-md text-left md:text-center" }}
-                {{ if eq $fIdx 0 }}{{ $posClass = "top-14 md:top-20 left-12 md:left-44 w-[90%] sm:w-auto max-w-[280px] md:max-w-xs text-left" }}{{ end }}
-                {{ if eq $fIdx 1 }}{{ $posClass = "top-[25%] md:top-1/3 right-12 md:right-44 w-[90%] sm:w-auto max-w-[280px] md:max-w-xs text-left" }}{{ end }}
-                {{ if eq $fIdx 2 }}{{ $posClass = "bottom-20 md:bottom-28 left-1/2 -translate-x-1/2 w-[88%] sm:w-[80%] max-w-[300px] md:max-w-xs text-center" }}{{ end }}
+                {{ $posClass := "bottom-14 sm:bottom-20 md:bottom-28 inset-x-0 mx-auto w-[90%] sm:w-[80%] max-w-[320px] md:max-w-xs text-center" }}
+                {{ if eq $fIdx 0 }}{{ $posClass = "top-12 sm:top-14 md:top-20 left-4 sm:left-12 md:left-44 w-[88%] sm:w-auto max-w-[280px] md:max-w-xs text-left" }}{{ end }}
+                {{ if eq $fIdx 1 }}{{ $posClass = "top-[20%] sm:top-[25%] md:top-1/3 right-4 sm:right-12 md:right-44 w-[88%] sm:w-auto max-w-[280px] md:max-w-xs text-left" }}{{ end }}
+                {{ if eq $fIdx 2 }}{{ $posClass = "bottom-14 sm:bottom-20 md:bottom-28 inset-x-0 mx-auto w-[90%] sm:w-[80%] max-w-[320px] md:max-w-xs text-center" }}{{ end }}
 
                 <div class="feat-card-item absolute {{ $posClass }} bg-black/80 backdrop-blur-xl border border-white/20 p-3 sm:p-4 md:p-5 rounded-xl md:rounded-2xl text-white opacity-0 transform translate-y-6 transition-all duration-500 shadow-2xl pointer-events-none">
                     <div class="flex items-center gap-1.5 md:gap-2 mb-1 {{ $fItem.color_class }} font-bold text-xs md:text-base {{ if eq $fIdx 2 }}justify-center{{ else }}justify-start{{ end }}">
@@ -240,10 +240,12 @@
                 {{ end }}
             </div>
 
-            <!-- 向下滑動探索提示 (絕對置中) -->
-            <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex flex-col items-center justify-center text-center opacity-80 animate-bounce text-white text-xs select-none z-20 w-full max-w-xs pointer-events-none">
-                <span class="text-center w-full block">繼續向下滾動探索</span>
-                <svg class="w-4 h-4 mt-0.5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+            <!-- 向下滑動探索提示 (修正置中與動態衝突) -->
+            <div class="absolute bottom-3 inset-x-0 mx-auto flex flex-col items-center justify-center text-center opacity-80 text-white text-xs select-none z-20 w-fit pointer-events-none">
+                <div class="animate-bounce flex flex-col items-center justify-center">
+                    <span class="text-center w-full block">繼續向下滾動探索</span>
+                    <svg class="w-4 h-4 mt-0.5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                </div>
             </div>
         </div>
     </div>
@@ -548,8 +550,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 bgLayer.style.backgroundColor = currentCar.bg; 
 
                 featCards.forEach(card => {
+                    const isLeftHalf = card.classList.contains("left-1/2");
+                    const translateXStr = isLeftHalf ? "-50%" : "0px";
                     card.style.opacity = "0";
-                    card.style.transform = "translateY(24px)";
+                    card.style.transform = "translate(" + translateXStr + ", 24px)";
                     card.style.pointerEvents = "none";
                 });
 
@@ -599,13 +603,16 @@ document.addEventListener("DOMContentLoaded", function() {
                     }
 
                     featCards.forEach((card, idx) => {
+                        const isLeftHalf = card.classList.contains("left-1/2");
+                        const translateXStr = isLeftHalf ? "-50%" : "0px";
+
                         if (idx === featIdx) {
                             card.style.opacity = cardOpacity.toString();
-                            card.style.transform = "translateY(" + cardTranslateY + "px)";
+                            card.style.transform = "translate(" + translateXStr + ", " + cardTranslateY + "px)";
                             card.style.pointerEvents = "auto";
                         } else {
                             card.style.opacity = "0";
-                            card.style.transform = "translateY(24px)";
+                            card.style.transform = "translate(" + translateXStr + ", 24px)";
                             card.style.pointerEvents = "none";
                         }
                     });
