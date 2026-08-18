@@ -178,24 +178,26 @@ parallax_slides:
     color_name: "芒果雪酪"
     bg_color: "#F4D934"
 
-# 2. 視差情境背景圖檔名
-parallax_bg_image: "parallax-bg.png"
-
-# 3. 車款特色文字 (滑動時照片不動、文字漸顯)
+# 2. 車款特色列表 (一特色對應一張專屬背景圖)
 parallax_features:
   - number: "01"
-    title: "專利智慧中柱"
-    desc: "一鍵自動立車與省力設計，即使女性或新手車主也能極致輕鬆停妥。"
+    title: "晶鑽LED頭燈"
+    desc: "時尚美型頭燈，LED省電同時優雅騎行。"
+    image: "feature-bg-01.png"
     color_class: "text-yellow-400"
     badge_bg: "bg-yellow-400"
+
   - number: "02"
-    title: "BOOST 貼地加速"
-    desc: "瞬間釋放極致扭力，不論起步爬坡皆能感受貼地飛行的流暢體驗。"
+    title: "耐刮耐磨PP車殼"
+    desc: "耐刮耐磨材質，遇到髒髒的，用水沖並用抹布一擦就掉。"
+    image: "feature-bg-02.png"
     color_class: "text-cyan-400"
     badge_bg: "bg-cyan-400"
+
   - number: "03"
-    title: "人體工學坐墊"
-    desc: "頂級高密度泡棉支撐，長途騎乘依舊舒適，給您旗艦級座駕體感。"
+    title: "雙槍式後避震 / 安全前後碟煞"
+    desc: "雙槍式後避震遇到不平路也舒適，前後200mm大碟盤煞車更有力。"
+    image: "feature-bg-03.png"
     color_class: "text-emerald-400"
     badge_bg: "bg-emerald-400"
 

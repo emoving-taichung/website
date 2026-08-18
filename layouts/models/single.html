@@ -70,7 +70,7 @@
     {{ if $res }}
       {{ $imgUrl = $res.RelPermalink }}
     {{ else }}
-      {{ $imgUrl = (printf "%s%s" $page.RelPermalink $fileName) }}
+      {{ $imgUrl = $fileName | relURL }}
     {{ end }}
     {{ $heroPhotos = $heroPhotos | append $imgUrl }}
   {{ end }}
@@ -137,7 +137,7 @@
       {{ if $res }}
         {{ $imgSrc = $res.RelPermalink }}
       {{ else }}
-        {{ $imgSrc = (printf "%s%s" $page.RelPermalink $item.image) }}
+        {{ $imgSrc = $item.image | relURL }}
       {{ end }}
   
       <div class="relative py-20 px-6 md:px-12 transition-all {{ if $isEven }}bg-[#e3e7ec]{{ else }}bg-[#f9fcff]{{ end }} text-gray-900 {{ $slopeClass }}">
@@ -158,7 +158,7 @@
 {{ end }}
 
 <!-- ========================================== -->
-<!-- 3.5 視差滾動區塊 (優化版：手機停留、車圖放大、發散點線、背景滿版) -->
+<!-- 3.5 視差滾動區塊 (優化版：動態特色背景圖切換、手機寬度修正) -->
 <!-- ========================================== -->
 
 {{/* 1. 解析背景圖片路徑 */}}
@@ -172,7 +172,7 @@
   {{ end }}
 {{ end }}
 
-{{/* 2. 於 Hugo 端安全生成陣列 */}}
+{{/* 2. 於 Hugo 端安全生成車色陣列 */}}
 {{ $parallaxDataArray := slice }}
 {{ range $page.Params.parallax_slides }}
   {{ $sImg := .image | relURL }}
@@ -182,8 +182,19 @@
   {{ $parallaxDataArray = $parallaxDataArray | append $dict }}
 {{ end }}
 
+{{/* 3. 於 Hugo 端安全生成特色背景陣列 */}}
+{{ $parallaxFeaturesArray := slice }}
+{{ range $page.Params.parallax_features }}
+  {{ $fImg := .image | relURL }}
+  {{ with $page.Resources.GetMatch (printf "*%s*" .image) }}{{ $fImg = .RelPermalink }}{{ end }}
+  
+  {{ $fDict := dict "number" .number "title" .title "desc" .desc "image" $fImg "color_class" .color_class "badge_bg" .badge_bg }}
+  {{ $parallaxFeaturesArray = $parallaxFeaturesArray | append $fDict }}
+{{ end }}
+
 <section id="interactive-parallax-section" 
          data-parallax='{{ $parallaxDataArray | jsonify }}' 
+         data-features='{{ $parallaxFeaturesArray | jsonify }}'
          data-bg="{{ $pBgImg }}"
          class="relative w-full h-[650vh] md:h-[500vh] bg-black">
          
@@ -192,8 +203,8 @@
         <!-- 動態背景色圖層 -->
         <div id="parallax-bg-color-layer" class="absolute inset-0 transition-colors duration-700 ease-out z-0"></div>
         
-        <!-- 第三階段的自訂背景圖片 (滿版滿覆蓋呈現) -->
-        <div id="parallax-bg-image-layer" class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-500 opacity-0 z-0"></div>
+        <!-- 第三階段的自訂背景圖片 (動態切換特色背景圖) -->
+        <div id="parallax-bg-image-layer" class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-500 opacity-0 z-0"></div>
         
         <!-- 第三階段的暗色漸層遮罩 -->
         <div id="parallax-gradient-layer" class="absolute inset-0 bg-black/75 transition-opacity duration-500 opacity-0 z-0"></div>
@@ -206,9 +217,9 @@
                 <h3 id="color-name-text" class="text-2xl md:text-4xl font-black text-white mt-1 drop-shadow-md"></h3>
             </div>
 
-            <!-- 車輛圖片展示區 (手機版寬度提升至 82vw，畫面放大呈現) -->
+            <!-- 車輛圖片展示區 (手機版寬度修正為 95vw) -->
             <div class="w-full h-[60vh] md:h-[70vh] relative flex items-center justify-center my-auto transition-transform duration-500 z-10">
-                <img id="interactive-car-img" src="" alt="車款展示" class="w-[82vw] sm:w-[75vw] md:w-auto md:max-w-[70vw] h-auto max-h-[62vh] md:max-h-[72vh] object-contain object-center scale-110 sm:scale-100 transition-all duration-500 select-none pointer-events-none">
+                <img id="interactive-car-img" src="" alt="車款展示" class="w-[95vw] sm:w-[75vw] md:w-auto md:max-w-[70vw] h-auto max-h-[62vh] md:max-h-[72vh] object-contain object-center scale-110 sm:scale-125 transition-all duration-500 select-none pointer-events-none">
             </div>
 
             <!-- SVG 連接線與發散圓點 (從車身發散至特色卡片) -->
@@ -317,7 +328,7 @@
                 {{ range . }}
                 {{ $rptImgSrc := "" }}
                 {{ $res := $page.Resources.GetMatch (printf "*%s*" .image) }}
-                {{ if $res }}{{ $rptImgSrc = $res.RelPermalink }}{{ else }}{{ $rptImgSrc = (printf "%s%s" $page.RelPermalink .image) }}{{ end }}
+                {{ if $res }}{{ $rptImgSrc = $res.RelPermalink }}{{ else }}{{ $rptImgSrc = .image | relURL }}{{ end }}
                 <div class="bg-white text-gray-900 rounded-2xl p-6 shadow-md border border-blue-100 flex flex-col md:flex-row gap-6 items-center hover:shadow-lg transition-shadow">
                     <div class="w-full md:w-[40%] aspect-[4/3] rounded-xl overflow-hidden shrink-0 border border-gray-100"><img src="{{ $rptImgSrc }}" alt="{{ .source }}" class="w-full h-full object-cover"></div>
                     <div class="w-full md:w-[60%] space-y-3 text-left">
@@ -374,7 +385,7 @@
             {{ range . }}
             {{ $accImgSrc := "" }}
             {{ $res := $page.Resources.GetMatch (printf "*%s*" .image) }}
-            {{ if $res }}{{ $accImgSrc = $res.RelPermalink }}{{ else }}{{ $accImgSrc = (printf "%s%s" $page.RelPermalink .image) }}{{ end }}
+            {{ if $res }}{{ $accImgSrc = $res.RelPermalink }}{{ else }}{{ $accImgSrc = .image | relURL }}{{ end }}
             <div class="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow flex flex-col items-center">
                 <div class="w-full aspect-square rounded-xl overflow-hidden bg-gray-50 mb-3"><img src="{{ $accImgSrc }}" alt="{{ .title }}" class="w-full h-full object-cover"></div>
                 <h3 class="text-lg md:text-xl font-bold text-gray-900 text-center tracking-wide mt-1">{{ .title }}</h3>
@@ -490,15 +501,18 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     /* =========================================
-       3.5 視差滾動核心邏輯 (延長停留時間與卡片平滑顯現)
+       3.5 視差滾動核心邏輯 (支援車款特色動態背景圖切換)
        ========================================= */
     const parallaxSec = document.getElementById("interactive-parallax-section");
     const pDataAttr = parallaxSec ? parallaxSec.getAttribute("data-parallax") : null;
+    const pFeaturesAttr = parallaxSec ? parallaxSec.getAttribute("data-features") : null;
     const pBgAttr = parallaxSec ? parallaxSec.getAttribute("data-bg") : null;
+    
     const parallaxData = pDataAttr ? JSON.parse(pDataAttr) : [];
+    const parallaxFeatures = pFeaturesAttr ? JSON.parse(pFeaturesAttr) : [];
     const parallaxBgImage = pBgAttr || "";
 
-    if (parallaxSec && parallaxData.length > 0) {
+    if (parallaxSec && (parallaxData.length > 0 || parallaxFeatures.length > 0)) {
         const bgLayer = document.getElementById("parallax-bg-color-layer");
         const bgImgLayer = document.getElementById("parallax-bg-image-layer");
         const gradientLayer = document.getElementById("parallax-gradient-layer");
@@ -508,14 +522,12 @@ document.addEventListener("DOMContentLoaded", function() {
         const featCards = document.querySelectorAll(".feat-card-item");
         const svgLines = document.getElementById("feature-svg-lines");
 
-        if (parallaxBgImage) {
-            bgImgLayer.style.backgroundImage = `url("${parallaxBgImage}")`;
-        }
-
         // 初始化第一台車狀態
-        bgLayer.style.backgroundColor = parallaxData[0].bg;
-        carImgEl.src = parallaxData[0].img;
-        colorText.innerText = parallaxData[0].name;
+        if (parallaxData.length > 0) {
+            bgLayer.style.backgroundColor = parallaxData[0].bg;
+            carImgEl.src = parallaxData[0].img;
+            colorText.innerText = parallaxData[0].name;
+        }
 
         function handleParallaxScroll() {
             const headerH = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--header-h")) || 50;
@@ -536,7 +548,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const colorShare = 0.45;
             const featureShare = 0.55;
 
-            if (progress < colorShare) {
+            if (progress < colorShare && totalSlides > 0) {
                 // 第一階段：車色切換
                 let colorProgress = progress / colorShare;
                 let currentPhaseIdx = Math.floor(colorProgress * totalSlides);
@@ -578,6 +590,26 @@ document.addEventListener("DOMContentLoaded", function() {
                 // 計算特色階段內的進度 (0.0 ~ 1.0)
                 let featureProgress = (progress - colorShare) / featureShare;
                 featureProgress = Math.max(0, Math.min(featureProgress, 1));
+
+                // 依據特色進度動態切換 MD 檔設定的對應特色背景圖片
+                if (parallaxFeatures.length > 0) {
+                    let featIdx = Math.floor(featureProgress * parallaxFeatures.length);
+                    if (featIdx >= parallaxFeatures.length) featIdx = parallaxFeatures.length - 1;
+                    if (featIdx < 0) featIdx = 0;
+                    
+                    const currentFeat = parallaxFeatures[featIdx];
+                    if (currentFeat && currentFeat.image) {
+                        const featImgUrl = `url("${currentFeat.image}")`;
+                        if (bgImgLayer.style.backgroundImage !== featImgUrl) {
+                            bgImgLayer.style.backgroundImage = featImgUrl;
+                        }
+                    }
+                } else if (parallaxBgImage) {
+                    const bgUrl = `url("${parallaxBgImage}")`;
+                    if (bgImgLayer.style.backgroundImage !== bgUrl) {
+                        bgImgLayer.style.backgroundImage = bgUrl;
+                    }
+                }
 
                 // 階段控制：
                 // 0.00 ~ 0.10: 淡入
