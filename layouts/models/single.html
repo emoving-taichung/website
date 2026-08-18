@@ -58,6 +58,9 @@
   #scroll-hint.is-hidden { opacity: 0 !important; max-width: 0px !important; margin-right: 0px !important; padding: 0px !important; overflow: hidden !important; pointer-events: none !important; }
 </style>
 
+<!-- ========================================== -->
+<!-- 1. Hero 車色圖片輪播 -->
+<!-- ========================================== -->
 {{ $heroPhotos := slice }}
 {{ with $page.Params.hero_slides }}
   {{ range . }}
@@ -92,6 +95,9 @@
     {{ end }}
 </section>
 
+<!-- ========================================== -->
+<!-- 2. 懸浮導覽列 -->
+<!-- ========================================== -->
 <nav id="sticky-nav" class="sticky top-[var(--header-h,50px)] z-40 bg-white border-b border-gray-200 shadow-sm transition-all duration-300">
     <div id="scroll-menu" class="max-w-6xl mx-auto flex overflow-x-auto no-scrollbar items-center py-2 px-3 space-x-1 md:space-x-3 md:justify-center">
         <a href="#features-gallery" class="promo-tab-btn active px-3 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">車款特色</a>
@@ -103,6 +109,9 @@
     </div>
 </nav>
 
+<!-- ========================================== -->
+<!-- 3. 車款特色區塊 -->
+<!-- ========================================== -->
 {{ with $page.Params.features }}
   <section id="features-gallery" class="anchor-section w-full overflow-hidden bg-[#dde1e8]">
       {{ $features := . }}
@@ -148,32 +157,34 @@
   </section>
 {{ end }}
 
+<!-- ========================================== -->
+<!-- 3.5 視差滾動區塊 -->
+<!-- ========================================== -->
+
+{{/* 解析背景圖片路徑 */}}
 {{ $pBgImg := "" }}
 {{ with $page.Params.parallax_bg_image }}
   {{ $res := $page.Resources.GetMatch (printf "*%s*" .) }}
   {{ if $res }}
     {{ $pBgImg = $res.RelPermalink }}
   {{ else }}
-    {{ $pBgImg = (printf "%s%s" $page.RelPermalink .) }}
+    {{ $pBgImg = . | relURL }}
   {{ end }}
 {{ end }}
 
-{{ $slidesData := slice }}
+{{/* 安全解析輪播車色設定 */}}
+{{ $parallaxConfig := slice }}
 {{ range $page.Params.parallax_slides }}
-  {{ $sImg := "" }}
-  {{ $res := $page.Resources.GetMatch (printf "*%s*" .image) }}
-  {{ if $res }}
-    {{ $sImg = $res.RelPermalink }}
-  {{ else }}
-    {{ $sImg = (printf "%s%s" $page.RelPermalink .image) }}
+  {{ $sImg := .image | relURL }}
+  {{ with $page.Resources.GetMatch (printf "*%s*" .image) }}
+    {{ $sImg = .RelPermalink }}
   {{ end }}
-  {{ $itemDict := dict "color_name" .color_name "image" $sImg "bg_color" (default "#1a2332" .bg_color) }}
-  {{ $slidesData = $slidesData | append $itemDict }}
+  {{ $parallaxConfig = $parallaxConfig | append (dict "color_name" .color_name "image" $sImg "bg_color" (default "#1a2332" .bg_color)) }}
 {{ end }}
-{{ $parallaxConfig := dict "bgImage" $pBgImg "slides" $slidesData }}
 
+<!-- 關鍵修復：使用 safeHTML 確保 JSON 不會被 Hugo 轉義而導致 JS 報錯 -->
 <script id="parallax-config-data" type="application/json">
-{{ $parallaxConfig | jsonify }}
+{{ dict "bgImage" $pBgImg "slides" $parallaxConfig | jsonify | safeHTML }}
 </script>
 
 <section id="interactive-parallax-section" class="relative w-full h-[350vh] bg-black">
@@ -181,7 +192,8 @@
         
         <div id="parallax-bg-layer" class="absolute inset-0 transition-colors duration-700 ease-out bg-[#1a2332]">
             <div id="parallax-bg-image" class="absolute inset-0 bg-cover bg-center opacity-0 transition-opacity duration-700" style="background-image: url('{{ $pBgImg }}');"></div>
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/70"></div>
+            <!-- 漸層遮罩改為預設 opacity-0，直到最後階段才顯示 -->
+            <div id="parallax-gradient" class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/90 opacity-0 transition-opacity duration-700"></div>
         </div>
 
         <div class="relative z-10 w-full max-w-6xl px-4 flex flex-col items-center justify-center h-full">
@@ -193,8 +205,8 @@
             </div>
 
             <div class="w-full max-w-5xl h-[55vh] md:h-[65vh] relative flex items-center justify-center my-auto transition-transform duration-500 z-10">
-                {{ if gt (len $slidesData) 0 }}
-                <img id="interactive-car-img" src="{{ (index $slidesData 0).image }}" alt="{{ $page.Title }}" class="max-w-full max-h-full object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.85)] transition-all duration-500">
+                {{ if gt (len $parallaxConfig) 0 }}
+                <img id="interactive-car-img" src="{{ (index $parallaxConfig 0).image }}" alt="{{ $page.Title }}" class="max-w-full max-h-full object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.85)] transition-all duration-500">
                 {{ end }}
             </div>
 
@@ -223,6 +235,9 @@
     </div>
 </section>
 
+<!-- ========================================== -->
+<!-- 4. 好騎推推區塊 -->
+<!-- ========================================== -->
 <section id="reviews" class="anchor-section relative z-20 py-12 md:py-16 px-2 sm:px-6 bg-[#F1FAFF] text-gray-800 shadow-[0_-10px_30px_rgba(0,0,0,0.15)]">
     <div class="max-w-5xl mx-auto space-y-12 md:space-y-16">
         <div class="text-center space-y-2">
@@ -295,6 +310,9 @@
     </div>
 </section>
 
+<!-- ========================================== -->
+<!-- 5. 詳細規格數據表 -->
+<!-- ========================================== -->
 {{ with $page.Params.specs }}
 <section id="specs" class="anchor-section py-16 px-6 bg-white text-gray-800 relative z-20">
     <div class="max-w-5xl mx-auto space-y-8">
@@ -314,6 +332,9 @@
 </section>
 {{ end }}
 
+<!-- ========================================== -->
+<!-- 6. 原廠配件區塊 -->
+<!-- ========================================== -->
 {{ with $page.Params.accessories }}
 <section id="accessories" class="anchor-section py-12 bg-white px-6 relative z-20">
     <div class="max-w-6xl mx-auto space-y-8">
@@ -333,6 +354,9 @@
 </section>
 {{ end }}
 
+<!-- ========================================== -->
+<!-- CTA 按鈕區塊 -->
+<!-- ========================================== -->
 <section class="py-10 bg-gray-900 text-white px-6 relative z-20">
     <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
         <a href="{{ $catalogPdf }}" target="_blank" rel="noopener noreferrer" class="py-4 px-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap"><span>📄</span> <span>電子型錄</span></a>
@@ -342,6 +366,9 @@
     </div>
 </section>
 
+<!-- ========================================== -->
+<!-- 7. 常見 QA -->
+<!-- ========================================== -->
 {{ with $page.Params.faq }}
 <section id="faq" class="anchor-section py-16 px-6 bg-white text-gray-800 relative z-20">
     <div class="max-w-3xl mx-auto space-y-6">
@@ -358,6 +385,9 @@
 </section>
 {{ end }}
 
+<!-- ========================================== -->
+<!-- 回到頂端與腳本 -->
+<!-- ========================================== -->
 <button id="back-to-top-btn" class="fixed bottom-6 right-6 z-50 w-11 h-11 md:w-12 md:h-12 rounded-full border-2 border-blue-600 bg-white text-blue-600 shadow-lg flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-110 focus:outline-none opacity-0 pointer-events-none" title="回到頂端">
     <svg class="w-6 h-6 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"/></svg>
 </button>
@@ -430,21 +460,25 @@ document.addEventListener('DOMContentLoaded', function() {
         }, { passive: true });
     }
 
+    /* =========================================
+       3.5 視差滾動核心邏輯 (已徹底重構)
+       ========================================= */
     const parallaxSec = document.getElementById('interactive-parallax-section');
     if (parallaxSec) {
-        let parallaxPhotos = [];
         let parallaxSlideConfig = [];
         try {
             const dataEl = document.getElementById('parallax-config-data');
             if (dataEl) {
-                const parsed = JSON.parse(dataEl.textContent);
+                // 安全解析 JSON，避免因為 Hugo 轉義引發錯誤
+                const parsed = JSON.parse(dataEl.textContent || dataEl.innerHTML);
                 parallaxSlideConfig = parsed.slides || [];
             }
-        } catch (e) { console.warn('Parallax config load fallback:', e); }
+        } catch (e) { console.warn('Parallax config parse error:', e); }
 
         const carImgEl = document.getElementById('interactive-car-img');
         const bgLayer = document.getElementById('parallax-bg-layer');
         const bgImgEl = document.getElementById('parallax-bg-image');
+        const gradientOverlay = document.getElementById('parallax-gradient');
         const titleBox = document.getElementById('color-title-box');
         const colorText = document.getElementById('color-name-text');
         const featContainer = document.getElementById('feature-callouts-container');
@@ -458,37 +492,81 @@ document.addEventListener('DOMContentLoaded', function() {
             const topOffset = headerH + navH;
             const secStart = parallaxSec.offsetTop - topOffset;
             const scrollableDistance = totalH - windowH;
-            const currentScroll = window.scrollY - secStart;
+            let currentScroll = window.scrollY - secStart;
 
-            if (currentScroll >= 0 && currentScroll <= scrollableDistance) {
-                const progress = Math.min(Math.max(currentScroll / scrollableDistance, 0), 1);
-                if (progress < 0.45) {
-                    const phase1Prog = progress / 0.45;
-                    if (titleBox) { titleBox.style.opacity = '1'; titleBox.style.transform = 'translateY(0)'; }
-                    if (featContainer) featContainer.style.opacity = '0';
-                    if (bgImgEl) bgImgEl.style.opacity = '0';
-                    if (parallaxSlideConfig.length > 0) {
-                        let colorIdx = Math.min(Math.floor(phase1Prog * parallaxSlideConfig.length), parallaxSlideConfig.length - 1);
-                        if (colorText && parallaxSlideConfig[colorIdx]) colorText.innerText = parallaxSlideConfig[colorIdx].color_name;
-                        if (bgLayer && parallaxSlideConfig[colorIdx]) bgLayer.style.backgroundColor = parallaxSlideConfig[colorIdx].bg_color;
-                        if (carImgEl && parallaxSlideConfig[colorIdx]) carImgEl.src = parallaxSlideConfig[colorIdx].image;
+            // 確保在有效滾動範圍內
+            if (currentScroll < 0) currentScroll = 0;
+            if (currentScroll > scrollableDistance) currentScroll = scrollableDistance;
+
+            let progress = scrollableDistance > 0 ? currentScroll / scrollableDistance : 0;
+            progress = Math.max(0, Math.min(1, progress));
+
+            const totalSlides = parallaxSlideConfig.length;
+            if (totalSlides === 0) return; // 如果沒資料則退出
+
+            // 總階段數 = 車色數量 + 1個特色區塊
+            const totalPhases = totalSlides + 1; 
+            const phaseThreshold = 1 / totalPhases;
+
+            // 判斷目前處於哪個階段
+            let currentPhaseIdx = Math.floor(progress / phaseThreshold);
+            if (currentPhaseIdx >= totalPhases) currentPhaseIdx = totalPhases - 1;
+
+            const isFeaturePhase = currentPhaseIdx === totalPhases - 1;
+            // 決定要顯示哪台車（如果是特色區塊，預設保留最後一台車色）
+            let carIdx = isFeaturePhase ? totalSlides - 1 : currentPhaseIdx;
+
+            // 1. 更新車子與背景顏色
+            if (parallaxSlideConfig[carIdx]) {
+                if (carImgEl) carImgEl.src = parallaxSlideConfig[carIdx].image;
+                if (colorText) colorText.innerText = parallaxSlideConfig[carIdx].color_name;
+                
+                if (bgLayer) {
+                    if (isFeaturePhase) {
+                        bgLayer.style.backgroundColor = '#0b111e'; // 特色區段固定暗色背景
+                    } else {
+                        bgLayer.style.backgroundColor = parallaxSlideConfig[carIdx].bg_color; // 跟隨車色
                     }
-                } else {
-                    const phase2Prog = (progress - 0.45) / 0.55;
-                    if (titleBox) { titleBox.style.opacity = '0'; titleBox.style.transform = 'translateY(-20px)'; }
-                    if (featContainer) featContainer.style.opacity = '1';
-                    if (bgImgEl) bgImgEl.style.opacity = '0.35';
-                    if (bgLayer) bgLayer.style.backgroundColor = '#0b111e';
-                    featCards.forEach((card, index) => {
-                        const cardThreshold = index * 0.25;
-                        if (phase2Prog > cardThreshold) { card.style.opacity = '1'; card.style.transform = 'translateY(0)'; }
-                        else { card.style.opacity = '0'; card.style.transform = 'translateY(24px)'; }
-                    });
                 }
+            }
+
+            // 2. 處理 UI 顯示隱藏
+            if (isFeaturePhase) {
+                // 計算在特色區塊內的細部進度 (0 ~ 1)
+                const featurePhaseStart = (totalPhases - 1) * phaseThreshold;
+                const featureProgress = (progress - featurePhaseStart) / phaseThreshold;
+
+                if (titleBox) { titleBox.style.opacity = '0'; titleBox.style.transform = 'translateY(-20px)'; }
+                if (bgImgEl) bgImgEl.style.opacity = '0.35'; // 顯示 parallax-bg.png
+                if (gradientOverlay) gradientOverlay.style.opacity = '1'; // 顯示深色漸層
+                if (featContainer) featContainer.style.opacity = '1';
+
+                // 讓特色卡片依序彈出
+                featCards.forEach((card, index) => {
+                    const cardThreshold = index * (1 / featCards.length);
+                    if (featureProgress > cardThreshold) { 
+                        card.style.opacity = '1'; 
+                        card.style.transform = 'translateY(0)'; 
+                    } else { 
+                        card.style.opacity = '0'; 
+                        card.style.transform = 'translateY(24px)'; 
+                    }
+                });
+            } else {
+                // 車色展示區塊
+                if (titleBox) { titleBox.style.opacity = '1'; titleBox.style.transform = 'translateY(0)'; }
+                if (bgImgEl) bgImgEl.style.opacity = '0';
+                if (gradientOverlay) gradientOverlay.style.opacity = '0'; // 隱藏深色漸層，讓純色清晰
+                if (featContainer) featContainer.style.opacity = '0';
+
+                featCards.forEach(card => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(24px)';
+                });
             }
         }
         window.addEventListener('scroll', handleParallaxScroll, { passive: true });
-        handleParallaxScroll();
+        handleParallaxScroll(); // 初始化
     }
 
     const nav = document.getElementById('sticky-nav');
