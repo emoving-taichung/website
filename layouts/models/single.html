@@ -423,20 +423,38 @@
 </div>
 
 <!-- ========================================== -->
-<!-- 5. 詳細規格數據表 -->
+<!-- 5. 詳細規格數據表 (支援雙表並排 / 單表自適應) -->
 <!-- ========================================== -->
-{{ with $page.Params.specs }}
+{{ with $page.Params.specs_tables }}
 <section id="specs" class="anchor-section py-16 px-6 bg-white text-gray-800 relative z-20">
-    <div class="max-w-5xl mx-auto space-y-8">
-        <h2 class="text-2xl md:text-3xl font-black text-center text-gray-900">規格表</h2>
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm border-collapse border border-gray-200">
-                <thead><tr class="bg-gray-100 text-gray-700"><th class="border border-gray-200 p-3 text-center">規格項目</th><th class="border border-gray-200 p-3 text-center">{{ $page.Title }}</th></tr></thead>
-                <tbody class="divide-y divide-gray-200">
-                    {{ range . }}<tr><td class="p-3 border font-medium bg-gray-50 text-center">{{ .label }}</td><td class="p-3 border text-center">{{ .value }}</td></tr>{{ end }}
-                </tbody>
-            </table>
+    <div class="max-w-6xl mx-auto space-y-8">
+        <h2 class="text-2xl md:text-3xl font-black text-center text-gray-900 tracking-wide">詳細規格對比</h2>
+        
+        {{/* 依表格數量自動切換：1 個全寬，2 個以上自動一列兩欄 */}}
+        <div class="grid grid-cols-1 {{ if gt (len .) 1 }}md:grid-cols-2{{ end }} gap-6 md:gap-8 items-start">
+            {{ range . }}
+            <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                {{ with .title }}
+                <div class="bg-gray-900 text-white font-bold text-center py-3.5 px-4 text-base md:text-lg tracking-wider">
+                    {{ . }}
+                </div>
+                {{ end }}
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm border-collapse">
+                        <tbody class="divide-y divide-gray-200">
+                            {{ range .specs }}
+                            <tr class="hover:bg-gray-50/80 transition-colors">
+                                <td class="p-3.5 border-r border-gray-200 font-medium bg-gray-50 text-gray-700 text-center w-5/12">{{ .label }}</td>
+                                <td class="p-3.5 text-center text-gray-900 font-semibold w-7/12">{{ .value }}</td>
+                            </tr>
+                            {{ end }}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {{ end }}
         </div>
+
         <div class="space-y-1 text-xs text-gray-400 text-left font-light [&_a]:text-blue-600 [&_a]:underline [&_a]:hover:text-blue-800">
             {{ with $page.Params.specs_notes }}{{ range . }}<p>{{ . | markdownify }}</p>{{ end }}{{ else }}<p>* 規格配備以實車為準，本公司保留修改權利。</p>{{ end }}
         </div>
