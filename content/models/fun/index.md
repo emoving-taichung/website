@@ -6,8 +6,7 @@ description: "Fun 新生活"
 hero_slides:
   - "hero_1.png"
   - "hero_2.png"
-  - "hero_3.png"
-
+  
 # 1. 精彩試乘影片
 videos:
   - id: "s_2gbzvvlzY"
@@ -27,7 +26,7 @@ ig_posts:
 
 # 2. 車款特色 (已改為 .png)
 features:
-  - title: "\ 魚是 變可愛 /"
+  - title: " \ 魚是 變可愛 /"
     desc: "美的事物讓生活 變得更簡單"
     image: "feature_1.png"
   - title: "26.5L大容量置物箱"
@@ -54,15 +53,14 @@ features:
 # 3. 詳細規格數據表注意事項
 specs_notes:
   - "* 規格配備以實車為準，本公司保留修改權利。"
-  - |-
-    註:<br>
+  - 註:<br>
     1. eReady全車系均含或可選購原廠車型標準配備以外之加配配件。車輛使用地區之法令制定或變更或主管機關相關解釋或決定，可能造成使用或安裝加配配件產生適法性問題，購買人知悉並願承擔此一風險。<br>
     2. 本表僅供參考，eReady保留隨時對車種及產品出售與否或對其變更上述規格配備之權利，不另行個別通知。任何於本網頁所提及之效能數據或測試結果等，均可能因其他因素之影響而造成結果有所差異。<br>
     3. 產品（包括但不限於車型及手機APP）可能隨時更新，因此本網頁的訊息、圖片及功能等，可能在外觀、配備、技術參數及各項條件上有與實際產品所不同。請洽門店具體了解實際產品再決定是否購買。<br>
     4. 台鈴工業亦保留隨時對車款及產品出售與否或對其內容記載變更之權利。<br>
     5. 實際規格以量產為主。<br>
     6. 年耗電量(度)係以年平均行駛4,500公里除以能源效率測試值計算；表列能耗值測試方法為CNS 15819-4及其後續修正測試方法。<br>
-    車主車輛使用常見問題請參閱：<a href='https://www.eready.com.tw/faq.php' target='_blank'>https://www.eready.com.tw/faq.php</a>。
+    車主車輛使用常見問題請參閱：<a href='https://www.eready.com.tw/faq.php' target='_blank'>https://www.eready.com.tw/faq.php</a>。"
 
 specs_tables:
   - title: "eReady Fun"
@@ -167,7 +165,7 @@ manual_url: "manual/fun.pdf"
 parallax_slides:
   - image: "fun-black.png"
     color_name: "夜鈦黑"
-    bg_color: "#1875C7"
+    bg_color: "#383A3B"
   - image: "fun-white.png"
     color_name: "帕瑪森白"
     bg_color: "#F7F7F7"
