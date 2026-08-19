@@ -122,8 +122,8 @@ specs:
     value: "23.8km/度"
   - label: "純電行程"
     value: "82km"
-  - label: "純電行程"
-    value: "82km"
+  - label: "年耗電源"
+    value: "189度"
 
 
 # 4. 媒體報導觀點 (已改為 .png)
@@ -204,10 +204,10 @@ parallax_slides:
   - image: "ezr-blue.png"
     color_name: "青釉藍"
     bg_color: "#1875C7"
-  - image: "ez1-black.png"
+  - image: "ezr-black.png"
     color_name: "曜石黑"
     bg_color: "#112F4A"
-  - image: "ez1-white.png"
+  - image: "ezr-white.png"
     color_name: "鈦金白"
     bg_color: "#F7F7F7"
 
