@@ -34,12 +34,12 @@
 
   .anchor-section { 
     scroll-margin-top: calc(var(--header-h) + var(--nav-h));
-    padding-top: 4rem !important; /* 手機版留白 */
+    padding-top: 4rem !important;
     padding-bottom: 4rem !important;
   }
   @media (min-width: 768px) {
     .anchor-section {
-      padding-top: 7rem !important; /* 電腦版留白加大 */
+      padding-top: 7rem !important;
       padding-bottom: 7rem !important;
     }
   }
@@ -66,10 +66,20 @@
   @media (max-width: 767px) { #scroll-menu { padding-left: calc(50vw - 140px); } }
   #scroll-hint { margin-right: 45vw; transition: all 0.3s ease-out; }
   #scroll-hint.is-hidden { opacity: 0 !important; max-width: 0px !important; margin-right: 0px !important; padding: 0px !important; overflow: hidden !important; pointer-events: none !important; }
+
+  /* 4.5 固定背景視差樣式 (使用 CSS 變數，避開 VS Code Linter 警告) */
+  .custom-fixed-parallax {
+    background-image: var(--bg-mb);
+  }
+  @media (min-width: 768px) {
+    .custom-fixed-parallax {
+      background-image: var(--bg-pc);
+    }
+  }
 </style>
 
 <!-- ========================================== -->
-<!-- 1. Hero 車色圖片輪播 -->
+<!-- 1. Hero 車色圖片輪播 (自動 PNG 轉 WebP) -->
 <!-- ========================================== -->
 {{ $heroPhotos := slice }}
 {{ with $page.Params.hero_slides }}
@@ -78,7 +88,8 @@
     {{ $imgUrl := "" }}
     {{ $res := $page.Resources.GetMatch (printf "*%s*" $fileName) }}
     {{ if $res }}
-      {{ $imgUrl = $res.RelPermalink }}
+      {{ $webp := $res.Process "webp" }}
+      {{ $imgUrl = $webp.RelPermalink }}
     {{ else }}
       {{ $imgUrl = $fileName | relURL }}
     {{ end }}
@@ -120,7 +131,7 @@
 </nav>
 
 <!-- ========================================== -->
-<!-- 3. 車款特色區塊 -->
+<!-- 3. 車款特色區塊 (自動 PNG 轉 WebP) -->
 <!-- ========================================== -->
 {{ with $page.Params.features }}
   <section id="features-gallery" class="anchor-section w-full overflow-hidden bg-[#dde1e8]">
@@ -145,7 +156,8 @@
       {{ $imgSrc := "" }}
       {{ $res := $page.Resources.GetMatch (printf "*%s*" $item.image) }}
       {{ if $res }}
-        {{ $imgSrc = $res.RelPermalink }}
+        {{ $webp := $res.Process "webp" }}
+        {{ $imgSrc = $webp.RelPermalink }}
       {{ else }}
         {{ $imgSrc = $item.image | relURL }}
       {{ end }}
@@ -158,7 +170,7 @@
               </div>
               <div class="w-full md:w-7/12 flex justify-center">
                   <div class="w-full max-w-2xl aspect-[16/10] rounded-3xl overflow-hidden border-4 border-white/60 shadow-xl shrink-0 group">
-                      <img src="{{ $imgSrc }}" alt="{{ $item.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                      <img src="{{ $imgSrc }}" alt="{{ $item.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
                   </div>
               </div>
           </div>
@@ -168,35 +180,44 @@
 {{ end }}
 
 <!-- ========================================== -->
-<!-- 3.5 視差滾動區塊 (動態特色背景與特色卡片一對一同步切換) -->
+<!-- 3.5 視差滾動區塊 (自動 PNG 轉 WebP) -->
 <!-- ========================================== -->
 
-{{/* 1. 解析背景圖片路徑 */}}
+{{/* 1. 解析背景圖片路徑與轉 WebP */}}
 {{ $pBgImg := "" }}
 {{ with $page.Params.parallax_bg_image }}
   {{ $res := $page.Resources.GetMatch (printf "*%s*" .) }}
   {{ if $res }}
-    {{ $pBgImg = $res.RelPermalink }}
+    {{ $webp := $res.Process "webp" }}
+    {{ $pBgImg = $webp.RelPermalink }}
   {{ else }}
     {{ $pBgImg = . | relURL }}
   {{ end }}
 {{ end }}
 
-{{/* 2. 於 Hugo 端安全生成車色陣列 */}}
+{{/* 2. 於 Hugo 端安全生成車色陣列與轉 WebP */}}
 {{ $parallaxDataArray := slice }}
 {{ range $page.Params.parallax_slides }}
   {{ $sImg := .image | relURL }}
-  {{ with $page.Resources.GetMatch (printf "*%s*" .image) }}{{ $sImg = .RelPermalink }}{{ end }}
+  {{ $res := $page.Resources.GetMatch (printf "*%s*" .image) }}
+  {{ if $res }}
+    {{ $webp := $res.Process "webp" }}
+    {{ $sImg = $webp.RelPermalink }}
+  {{ end }}
   
   {{ $dict := dict "name" .color_name "img" $sImg "bg" (.bg_color | default "#1a2332") }}
   {{ $parallaxDataArray = $parallaxDataArray | append $dict }}
 {{ end }}
 
-{{/* 3. 於 Hugo 端安全生成特色背景與內容陣列 */}}
+{{/* 3. 於 Hugo 端安全生成特色背景與內容陣列並轉 WebP */}}
 {{ $parallaxFeaturesArray := slice }}
 {{ range $page.Params.parallax_features }}
   {{ $fImg := .image | relURL }}
-  {{ with $page.Resources.GetMatch (printf "*%s*" .image) }}{{ $fImg = .RelPermalink }}{{ end }}
+  {{ $res := $page.Resources.GetMatch (printf "*%s*" .image) }}
+  {{ if $res }}
+    {{ $webp := $res.Process "webp" }}
+    {{ $fImg = $webp.RelPermalink }}
+  {{ end }}
   
   {{ $fDict := dict "number" .number "title" .title "desc" .desc "image" $fImg "color_class" .color_class "badge_bg" .badge_bg }}
   {{ $parallaxFeaturesArray = $parallaxFeaturesArray | append $fDict }}
@@ -210,47 +231,46 @@
          
     <div id="parallax-sticky-box" class="sticky top-[calc(var(--header-h,50px)+var(--nav-h,50px))] w-full h-[calc(100dvh-var(--header-h,50px)-var(--nav-h,50px))] min-h-[480px] overflow-hidden flex items-center justify-center z-10">
         
-        <!-- 動態背景色圖層 -->
         <div id="parallax-bg-color-layer" class="absolute inset-0 transition-colors duration-700 ease-out z-0"></div>
-        
-        <!-- 特色背景圖層 (獨立特色圖動態切換) -->
         <div id="parallax-bg-image-layer" class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-500 opacity-0 z-0"></div>
-        
-        <!-- 暗色漸層遮罩 (bg-black/50) -->
         <div id="parallax-gradient-layer" class="absolute inset-0 bg-black/50 transition-opacity duration-500 opacity-0 z-0"></div>
 
         <div class="relative z-10 w-full max-w-6xl px-3 sm:px-4 flex flex-col items-center justify-center h-full">
             
-            <!-- 車色標題 -->
             <div id="color-title-box" class="absolute top-4 md:top-8 text-center transition-all duration-500 opacity-100 transform translate-y-0 z-20">
                 <span class="text-xs md:text-sm uppercase tracking-[0.3em] text-yellow-400 font-bold">COLOR COLLECTION</span>
                 <h3 id="color-name-text" class="text-2xl md:text-4xl font-black text-white mt-1 drop-shadow-md"></h3>
             </div>
 
-            <!-- 車輛圖片展示區 -->
-            <div class="w-full h-[60vh] md:h-[70vh] relative flex items-center justify-center my-auto transition-transform duration-500 z-10">
-                <img id="interactive-car-img" src="" alt="車款展示" class="w-[95vw] sm:w-[75vw] md:w-auto md:max-w-[70vw] h-auto max-h-[62vh] md:max-h-[72vh] object-contain object-center scale-110 sm:scale-125 transition-all duration-500 select-none pointer-events-none">
+            <div id="car-images-container" class="w-full h-[60vh] md:h-[70vh] relative flex items-center justify-center my-auto transition-transform duration-500 z-10">
+                {{ range $cIdx, $cItem := $page.Params.parallax_slides }}
+                {{ $sImg := .image | relURL }}
+                {{ $res := $page.Resources.GetMatch (printf "*%s*" .image) }}
+                {{ if $res }}
+                  {{ $webp := $res.Process "webp" }}
+                  {{ $sImg = $webp.RelPermalink }}
+                {{ end }}
+                <img id="parallax-car-img-{{ $cIdx }}" src="{{ $sImg }}" alt="{{ .color_name }}" class="parallax-car-img absolute inset-0 m-auto w-[95vw] sm:w-[75vw] md:w-auto md:max-w-[70vw] h-auto max-h-[62vh] md:max-h-[72vh] object-contain object-center scale-110 sm:scale-125 transition-opacity duration-700 ease-in-out select-none pointer-events-none {{ if eq $cIdx 0 }}opacity-100 z-10{{ else }}opacity-0 z-0{{ end }}">
+                {{ end }}
             </div>
 
-            <!-- 浮動特色卡片區 -->
             <div id="feature-callouts-container" class="absolute inset-0 pointer-events-none flex items-center justify-center z-20">
                 {{ range $fIdx, $fItem := $page.Params.parallax_features }}
-                {{ $posClass := "bottom-14 sm:bottom-20 md:bottom-28 inset-x-0 mx-auto w-[90%] sm:w-[80%] max-w-[320px] md:max-w-xs text-center" }}
-                {{ if eq $fIdx 0 }}{{ $posClass = "top-12 sm:top-14 md:top-20 left-4 sm:left-12 md:left-44 w-[88%] sm:w-auto max-w-[280px] md:max-w-xs text-left" }}{{ end }}
-                {{ if eq $fIdx 1 }}{{ $posClass = "top-[20%] sm:top-[25%] md:top-1/3 right-4 sm:right-12 md:right-44 w-[88%] sm:w-auto max-w-[280px] md:max-w-xs text-left" }}{{ end }}
-                {{ if eq $fIdx 2 }}{{ $posClass = "bottom-32 sm:bottom-20 md:bottom-40 inset-x-0 mx-auto w-[90%] sm:w-[80%] max-w-[320px] md:max-w-xs text-center" }}{{ end }}
+                {{ $posClass := "bottom-14 sm:bottom-20 md:bottom-28 inset-x-0 mx-auto w-[90%] sm:w-[80%] max-w-[320px] md:max-w-md text-center" }}
+                {{ if eq $fIdx 0 }}{{ $posClass = "top-12 sm:top-14 md:top-20 left-4 sm:left-12 md:left-36 w-[88%] md:w-auto max-w-[280px] md:max-w-md text-left" }}{{ end }}
+                {{ if eq $fIdx 1 }}{{ $posClass = "top-[20%] sm:top-[25%] md:top-1/3 right-4 sm:right-12 md:right-36 w-[88%] md:w-auto max-w-[280px] md:max-w-md text-left" }}{{ end }}
+                {{ if eq $fIdx 2 }}{{ $posClass = "bottom-32 sm:bottom-20 md:bottom-40 inset-x-0 mx-auto w-[90%] sm:w-[80%] max-w-[320px] md:max-w-md text-center" }}{{ end }}
 
                 <div class="feat-card-item absolute {{ $posClass }} bg-black/80 backdrop-blur-xl border border-white/20 p-3 sm:p-4 md:p-5 rounded-xl md:rounded-2xl text-white opacity-0 transform translate-y-6 transition-all duration-500 shadow-2xl pointer-events-none">
                     <div class="flex items-center gap-1.5 md:gap-2 mb-1.5 {{ $fItem.color_class }} font-bold text-base md:text-xl {{ if eq $fIdx 2 }}justify-center{{ else }}justify-start{{ end }}">
                         <span class="{{ $fItem.badge_bg }} text-black px-1.5 py-0.5 rounded-md text-xs md:text-sm font-black shrink-0">{{ $fItem.number }}</span>
-                        <h4 class="truncate text-center">{{ $fItem.title }}</h4>
+                        <h4 class="whitespace-nowrap font-bold">{{ $fItem.title }}</h4>
                     </div>
-                    <p class="text-sm md:text-lg text-gray-300 leading-normal md:leading-relaxed font-light {{ if eq $fIdx 2 }}text-center{{ else }}text-left{{ end }}">{{ $fItem.desc }}</p>
+                    <p class="text-sm md:text-base text-gray-300 leading-normal md:leading-relaxed font-light {{ if eq $fIdx 2 }}text-center{{ else }}text-left{{ end }}">{{ $fItem.desc }}</p>
                 </div>
                 {{ end }}
             </div>
 
-            <!-- 向下滑動探索提示 -->
             <div class="absolute bottom-3 inset-x-0 mx-auto flex flex-col items-center justify-center text-center opacity-80 text-white text-xs select-none z-20 w-fit pointer-events-none">
                 <div class="animate-bounce flex flex-col items-center justify-center">
                     <span class="text-center w-full block">繼續向下滾動探索</span>
@@ -262,7 +282,7 @@
 </section>
 
 <!-- ========================================== -->
-<!-- 4. 好騎推推區塊 -->
+<!-- 4. 好騎推推區塊 (自動 PNG 轉 WebP) -->
 <!-- ========================================== -->
 <section id="reviews" class="anchor-section relative z-20 py-12 md:py-16 px-2 sm:px-6 bg-[#F1FAFF] text-gray-800 shadow-[0_-10px_30px_rgba(0,0,0,0.15)]">
     <div class="max-w-5xl mx-auto space-y-12 md:space-y-16">
@@ -276,10 +296,8 @@
         <div class="space-y-4 md:space-y-6">
             <h3 class="text-xl md:text-2xl font-bold text-blue-800 flex items-center gap-2 px-2 sm:px-0"><span>▶</span> 精彩試乘影音</h3>
             <div class="bg-white p-2 sm:p-4 rounded-2xl border border-blue-100 shadow-md space-y-3 sm:space-y-4">
-                <div id="main-video-box" class="relative w-full aspect-video bg-black rounded-xl overflow-hidden shadow-inner group">
-                    <img id="main-video-cover" src="https://i.ytimg.com/vi/{{ $firstVid.id }}/hqdefault.jpg" data-fallback="https://i.ytimg.com/vi/{{ $firstVid.id }}/0.jpg" class="w-full h-full object-cover fallback-img">
-                    <button id="play-video-btn" type="button" data-vid="{{ $firstVid.id }}" onclick="playMainVideo(this.dataset.vid)" class="absolute inset-0 m-auto w-36 h-12 bg-yellow-400 hover:bg-yellow-300 text-black font-extrabold flex items-center justify-center gap-2 rounded-lg shadow-2xl transition-transform transform group-hover:scale-105 z-10"><span>▶</span> 播放影片</button>
-                    <div id="iframe-target" class="hidden absolute inset-0 w-full h-full z-20"></div>
+                <div id="main-video-box" class="relative w-full aspect-video bg-black rounded-xl overflow-hidden shadow-inner">
+                    <iframe id="main-youtube-iframe" class="w-full h-full" src="https://www.youtube.com/embed/{{ $firstVid.id }}?rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-origin"></iframe>
                 </div>
                 <div class="grid grid-cols-3 gap-2 sm:gap-3">
                     {{ range $idx, $vid := . }}
@@ -312,9 +330,14 @@
                 {{ range . }}
                 {{ $rptImgSrc := "" }}
                 {{ $res := $page.Resources.GetMatch (printf "*%s*" .image) }}
-                {{ if $res }}{{ $rptImgSrc = $res.RelPermalink }}{{ else }}{{ $rptImgSrc = .image | relURL }}{{ end }}
+                {{ if $res }}
+                  {{ $webp := $res.Process "webp" }}
+                  {{ $rptImgSrc = $webp.RelPermalink }}
+                {{ else }}
+                  {{ $rptImgSrc = .image | relURL }}
+                {{ end }}
                 <div class="bg-white text-gray-900 rounded-2xl p-6 shadow-md border border-blue-100 flex flex-col md:flex-row gap-6 items-center hover:shadow-lg transition-shadow">
-                    <div class="w-full md:w-[40%] aspect-[4/3] rounded-xl overflow-hidden shrink-0 border border-gray-100"><img src="{{ $rptImgSrc }}" alt="{{ .source }}" class="w-full h-full object-cover"></div>
+                    <div class="w-full md:w-[40%] aspect-[4/3] rounded-xl overflow-hidden shrink-0 border border-gray-100"><img src="{{ $rptImgSrc }}" alt="{{ .source }}" class="w-full h-full object-cover" loading="lazy"></div>
                     <div class="w-full md:w-[60%] space-y-3 text-left">
                         <div class="flex items-baseline gap-2">
                             <h4 class="text-xl font-bold text-gray-900">{{ .source }}</h4>
@@ -337,26 +360,47 @@
 </section>
 
 <!-- ========================================== -->
-<!-- 4.5 視差圖片區塊 (加上單引號以通過 VS Code CSS 檢查) -->
+<!-- 4.5 固定背景視差圖片區塊 (手機/電腦分離 + 自動 PNG 轉 WebP + 解決 Linter 警告) -->
 <!-- ========================================== -->
-{{ $fixedImgSrc := "" }}
-{{ with $page.Params.fixed_picture }}
+{{ $fixedPcSrc := "" }}
+{{ $fixedMbSrc := "" }}
+
+{{/* 解析電腦版圖片並轉檔為 WebP */}}
+{{ with $page.Params.fixed_picture_pc }}
   {{ $res := $page.Resources.GetMatch (printf "*%s*" .) }}
   {{ if $res }}
-    {{ $fixedImgSrc = $res.RelPermalink }}
+    {{ $webp := $res.Process "webp" }}
+    {{ $fixedPcSrc = $webp.RelPermalink }}
   {{ else }}
-    {{ $fixedImgSrc = . | relURL }}
+    {{ $fixedPcSrc = . | relURL }}
   {{ end }}
 {{ else }}
-  {{ $res := $page.Resources.GetMatch "*fixed_picture*" }}
-  {{ if $res }}
-    {{ $fixedImgSrc = $res.RelPermalink }}
-  {{ else }}
-    {{ $fixedImgSrc = "fixed_picture.png" | relURL }}
+  {{ with $page.Params.fixed_picture }}
+    {{ $res := $page.Resources.GetMatch (printf "*%s*" .) }}
+    {{ if $res }}
+      {{ $webp := $res.Process "webp" }}
+      {{ $fixedPcSrc = $webp.RelPermalink }}
+    {{ else }}
+      {{ $fixedPcSrc = . | relURL }}
+    {{ end }}
   {{ end }}
 {{ end }}
 
-<div class="relative w-full h-[45vh] md:h-[65vh] bg-fixed bg-center bg-cover bg-no-repeat shadow-inner" style="background-image: url('{{ $fixedImgSrc }}');"></div>
+{{/* 解析手機版圖片並轉檔為 WebP */}}
+{{ with $page.Params.fixed_picture_mb }}
+  {{ $res := $page.Resources.GetMatch (printf "*%s*" .) }}
+  {{ if $res }}
+    {{ $webp := $res.Process "webp" }}
+    {{ $fixedMbSrc = $webp.RelPermalink }}
+  {{ else }}
+    {{ $fixedMbSrc = . | relURL }}
+  {{ end }}
+{{ else }}
+  {{ $fixedMbSrc = $fixedPcSrc }}
+{{ end }}
+
+<div class="custom-fixed-parallax relative w-full h-[calc(100dvh-var(--header-h,50px)-var(--nav-h,50px))] min-h-[380px] md:h-[85vh] bg-fixed bg-center bg-cover bg-no-repeat shadow-inner"
+     style="--bg-pc: url('{{ $fixedPcSrc }}'); --bg-mb: url('{{ $fixedMbSrc }}');"></div>
 
 <!-- ========================================== -->
 <!-- 5. 詳細規格數據表 -->
@@ -381,7 +425,7 @@
 {{ end }}
 
 <!-- ========================================== -->
-<!-- 6. 原廠配件區塊 -->
+<!-- 6. 原廠配件區塊 (自動 PNG 轉 WebP) -->
 <!-- ========================================== -->
 {{ with $page.Params.accessories }}
 <section id="accessories" class="anchor-section py-12 bg-white px-6 relative z-20">
@@ -391,9 +435,14 @@
             {{ range . }}
             {{ $accImgSrc := "" }}
             {{ $res := $page.Resources.GetMatch (printf "*%s*" .image) }}
-            {{ if $res }}{{ $accImgSrc = $res.RelPermalink }}{{ else }}{{ $accImgSrc = .image | relURL }}{{ end }}
+            {{ if $res }}
+              {{ $webp := $res.Process "webp" }}
+              {{ $accImgSrc = $webp.RelPermalink }}
+            {{ else }}
+              {{ $accImgSrc = .image | relURL }}
+            {{ end }}
             <div class="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow flex flex-col items-center">
-                <div class="w-full aspect-square rounded-xl overflow-hidden bg-gray-50 mb-3"><img src="{{ $accImgSrc }}" alt="{{ .title }}" class="w-full h-full object-cover"></div>
+                <div class="w-full aspect-square rounded-xl overflow-hidden bg-gray-50 mb-3"><img src="{{ $accImgSrc }}" alt="{{ .title }}" class="w-full h-full object-cover" loading="lazy"></div>
                 <h3 class="text-lg md:text-xl font-bold text-gray-900 text-center tracking-wide mt-1">{{ .title }}</h3>
             </div>
             {{ end }}
@@ -521,7 +570,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     /* =========================================
-       3.5 視差滾動核心邏輯
+       3.5 視差滾動核心邏輯 (多圖 Fade 轉換)
        ========================================= */
     const parallaxSec = document.getElementById("interactive-parallax-section");
     const pDataAttr = parallaxSec ? parallaxSec.getAttribute("data-parallax") : null;
@@ -536,14 +585,13 @@ document.addEventListener("DOMContentLoaded", function() {
         const bgLayer = document.getElementById("parallax-bg-color-layer");
         const bgImgLayer = document.getElementById("parallax-bg-image-layer");
         const gradientLayer = document.getElementById("parallax-gradient-layer");
-        const carImgEl = document.getElementById("interactive-car-img");
         const titleBox = document.getElementById("color-title-box");
         const colorText = document.getElementById("color-name-text");
         const featCards = document.querySelectorAll(".feat-card-item");
+        const carImgs = document.querySelectorAll(".parallax-car-img");
 
         if (parallaxData.length > 0) {
             bgLayer.style.backgroundColor = parallaxData[0].bg;
-            carImgEl.src = parallaxData[0].img;
             colorText.innerText = parallaxData[0].name;
         }
 
@@ -571,14 +619,20 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 const currentCar = parallaxData[currentPhaseIdx];
 
-                if (carImgEl.getAttribute("src") !== currentCar.img) {
-                    carImgEl.setAttribute("src", currentCar.img);
-                }
+                carImgs.forEach((img, idx) => {
+                    if (idx === currentPhaseIdx) {
+                        img.classList.remove("opacity-0", "z-0");
+                        img.classList.add("opacity-100", "z-10");
+                    } else {
+                        img.classList.remove("opacity-100", "z-10");
+                        img.classList.add("opacity-0", "z-0");
+                    }
+                });
+
                 if (colorText.innerText !== currentCar.name) { 
                     colorText.innerText = currentCar.name; 
                 }
 
-                carImgEl.style.opacity = "1";
                 titleBox.style.opacity = "1";
                 titleBox.style.transform = "translateY(0)";
 
@@ -587,15 +641,16 @@ document.addEventListener("DOMContentLoaded", function() {
                 bgLayer.style.backgroundColor = currentCar.bg; 
 
                 featCards.forEach(card => {
-                    const isLeftHalf = card.classList.contains("left-1/2");
-                    const translateXStr = isLeftHalf ? "-50%" : "0px";
                     card.style.opacity = "0";
-                    card.style.transform = "translate(" + translateXStr + ", 24px)";
+                    card.style.transform = "translateY(24px)";
                     card.style.pointerEvents = "none";
                 });
 
             } else {
-                carImgEl.style.opacity = "0";
+                carImgs.forEach(img => {
+                    img.classList.remove("opacity-100", "z-10");
+                    img.classList.add("opacity-0", "z-0");
+                });
                 titleBox.style.opacity = "0";
                 titleBox.style.transform = "translateY(-20px)";
 
@@ -614,7 +669,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
                     const currentFeat = parallaxFeatures[featIdx];
                     if (currentFeat && currentFeat.image) {
-                        const featImgUrl = `url("${currentFeat.image}")`;
+                        const featImgUrl = "url('" + currentFeat.image + "')";
                         if (bgImgLayer.style.backgroundImage !== featImgUrl) {
                             bgImgLayer.style.backgroundImage = featImgUrl;
                         }
@@ -640,21 +695,18 @@ document.addEventListener("DOMContentLoaded", function() {
                     }
 
                     featCards.forEach((card, idx) => {
-                        const isLeftHalf = card.classList.contains("left-1/2");
-                        const translateXStr = isLeftHalf ? "-50%" : "0px";
-
                         if (idx === featIdx) {
                             card.style.opacity = cardOpacity.toString();
-                            card.style.transform = "translate(" + translateXStr + ", " + cardTranslateY + "px)";
+                            card.style.transform = "translateY(" + cardTranslateY + "px)";
                             card.style.pointerEvents = "auto";
                         } else {
                             card.style.opacity = "0";
-                            card.style.transform = "translate(" + translateXStr + ", 24px)";
+                            card.style.transform = "translateY(24px)";
                             card.style.pointerEvents = "none";
                         }
                     });
                 } else if (parallaxBgImage) {
-                    const bgUrl = `url("${parallaxBgImage}")`;
+                    const bgUrl = "url('" + parallaxBgImage + "')";
                     if (bgImgLayer.style.backgroundImage !== bgUrl) {
                         bgImgLayer.style.backgroundImage = bgUrl;
                     }
@@ -683,35 +735,18 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    window.playMainVideo = function(videoId) {
-        const target = document.getElementById("iframe-target");
-        const cover = document.getElementById("main-video-cover");
-        const playBtn = document.getElementById("play-video-btn");
-        if (target) {
-            target.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-origin"></iframe>`;
-            target.classList.remove("hidden");
-        }
-        if (cover) cover.classList.add("hidden");
-        if (playBtn) playBtn.classList.add("hidden");
-    };
-
     window.swapVideo = function(videoId, idx) {
         if (!videoId) return;
-        const target = document.getElementById("iframe-target");
-        const cover = document.getElementById("main-video-cover");
-        const playBtn = document.getElementById("play-video-btn");
+        const iframe = document.getElementById("main-youtube-iframe");
         const mainBox = document.getElementById("main-video-box");
         if (mainBox) {
             const headerH = parseInt(document.documentElement.style.getPropertyValue("--header-h")) || 50;
             const navH = parseInt(document.documentElement.style.getPropertyValue("--nav-h")) || 50;
             window.scrollTo({ top: mainBox.getBoundingClientRect().top + window.scrollY - headerH - navH - 20, behavior: "smooth" });
         }
-        if (target) {
-            target.innerHTML = `<iframe class="w-full h-full" src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-origin"></iframe>`;
-            target.classList.remove("hidden");
+        if (iframe) {
+            iframe.src = "https://www.youtube.com/embed/" + videoId + "?autoplay=1&rel=0";
         }
-        if (cover) cover.classList.add("hidden");
-        if (playBtn) playBtn.classList.add("hidden");
         document.querySelectorAll("[id^=\"thumb-btn-\"]").forEach((btn, i) => {
             btn.className = i === idx ? "cursor-pointer aspect-video bg-black rounded-lg overflow-hidden border-2 border-yellow-400 opacity-100 transition-all relative" : "cursor-pointer aspect-video bg-black rounded-lg overflow-hidden border-2 border-gray-300 opacity-70 hover:opacity-100 transition-all relative";
         });

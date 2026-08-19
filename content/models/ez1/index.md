@@ -202,6 +202,7 @@ parallax_features:
     badge_bg: "bg-emerald-400"
 
 # 視差固定背景圖片
-fixed_picture: "fixed_picture.png"
+fixed_picture_pc: "fixed_bg_desktop.png" # 電腦版 (橫圖, 如 1920x1080)
+fixed_picture_mb: "fixed_bg_mobile.png"  # 手機版 (直圖, 如 800x1200)
 
 ---
