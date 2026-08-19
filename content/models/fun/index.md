@@ -12,7 +12,7 @@ hero_slides:
 videos:
   - id: "s_2gbzvvlzY"
     title: "首購白牌電車，為什麼選擇eReadyFun？Ft. 阿計廚房【Auto Online 汽車線上 試駕影片】"
-  - id: "Sn22bkXsYvE
+  - id: "Sn22bkXsYvE"
     title: "跟著湘瑩！一日體驗台鈴eReady Fun～Let's go"
   - id: "ucgOCz52eqs"
     title: "二輪界電動新潮流 eReady Fun便利功能顯親民@57DreamSt 預約你的夢想 精華篇》20201229 李冠儀 Rick 張迺庭"
@@ -51,60 +51,54 @@ features:
 
 
 
-# 3. 詳細規格數據表注意事項（可依車款新增多條）
+# 3. 詳細規格數據表注意事項
 specs_notes:
   - "* 規格配備以實車為準，本公司保留修改權利。"
-  - "註:<br>
-
-    1.eReady全車系均含或可選購原廠車型標準配備以外之加配配件。車輛使用地區之法令制定或變更或主管機關相關解釋或決定，可能造成使用或安裝加配配件產生適法性問題，購買人知悉並願承擔此一風險。<br>
-
-   2. 本表僅供參考，eReady保留隨時對車種及產品出售與否或對其變更上述規格配備之權利，不另行個別通知。任何於本網頁所提及之效能數據或測試結果等，均可能因其他因素之影響而造成結果有所差異。<br>
-
+  - |-
+    註:<br>
+    1. eReady全車系均含或可選購原廠車型標準配備以外之加配配件。車輛使用地區之法令制定或變更或主管機關相關解釋或決定，可能造成使用或安裝加配配件產生適法性問題，購買人知悉並願承擔此一風險。<br>
+    2. 本表僅供參考，eReady保留隨時對車種及產品出售與否或對其變更上述規格配備之權利，不另行個別通知。任何於本網頁所提及之效能數據或測試結果等，均可能因其他因素之影響而造成結果有所差異。<br>
     3. 產品（包括但不限於車型及手機APP）可能隨時更新，因此本網頁的訊息、圖片及功能等，可能在外觀、配備、技術參數及各項條件上有與實際產品所不同。請洽門店具體了解實際產品再決定是否購買。<br>
+    4. 台鈴工業亦保留隨時對車款及產品出售與否或對其內容記載變更之權利。<br>
+    5. 實際規格以量產為主。<br>
+    6. 年耗電量(度)係以年平均行駛4,500公里除以能源效率測試值計算；表列能耗值測試方法為CNS 15819-4及其後續修正測試方法。<br>
+    車主車輛使用常見問題請參閱：<a href='https://www.eready.com.tw/faq.php' target='_blank'>https://www.eready.com.tw/faq.php</a>。
 
-    4.台鈴工業亦保留隨時對車款及產品出售與否或對其內容記載變更之權利。<br>
-
-    5.實際規格以量產為主。<br>
-
-    6.年耗電量(度)係以年平均行駛4,500公里除以能源效率測試值計算；表列能耗值測試方法為CNS 15819-4及其後續修正測試方法。<br>
-
-    車主車輛使用常見問題請參閱：<a href='https://www.eready.com.tw/faq.php' target='_blank'>https://www.eready.com.tw/faq.php</a>。"
-
-specs:
-- title: "eReady Fun"
-- specs:
-  - label: "長 x 寬 x 高"
-    value: "1915 x 705 x 1090 mm"
-  - label: "軸距"
-    value: "1,310 mm"
-  - label: "座墊高"
-    value: "744 mm"
-  - label: "車重(含電池)"
-    value: "120 kg"
-  - label: "最大功率（馬力）"
-    value: "6.0kW（8.05hp）"
-  - label: "最大扭力"
-    value: "21 Nm"
-  - label: "剎車輔助"
-    value: "CBS同步剎車"
-  - label: "剎車系統"
-    value: "前後油壓碟煞"
-  - label: "碟盤規格"
-    value: "前：220 mm 浪花碟 / 後：180 mm 通風碟"
-  - label: "輪胎規格"
-    value: "前：100/90-12 / 後：1110/70-12"
-  - label: "懸吊系統"
-    value: "前：潛望鏡式前叉 / 後：雙槍式5段可調後避震器"
-  - label: "動力系統"
-    value: "G2.2L鋁合金水冷永磁同步馬達"
-  - label: "貼心便利"
-    value: "智慧鑰匙卡/智慧型手機/電子倒車/USB充電"
-  - label: "能源效率"
-    value: "23.8km/度"
-  - label: "純電行程"
-    value: "64km"
-  - label: "年耗電源"
-    value: "189度"
+specs_tables:
+  - title: "eReady Fun"
+    specs:
+      - label: "長 x 寬 x 高"
+        value: "1915 x 705 x 1090 mm"
+      - label: "軸距"
+        value: "1,310 mm"
+      - label: "座墊高"
+        value: "744 mm"
+      - label: "車重(含電池)"
+        value: "120 kg"
+      - label: "最大功率（馬力）"
+        value: "6.0kW（8.05hp）"
+      - label: "最大扭力"
+        value: "21 Nm"
+      - label: "剎車輔助"
+        value: "CBS同步剎車"
+      - label: "剎車系統"
+        value: "前後油壓碟煞"
+      - label: "碟盤規格"
+        value: "前：220 mm 浪花碟 / 後：180 mm 通風碟"
+      - label: "輪胎規格"
+        value: "前：100/90-12 / 後：110/70-12"
+      - label: "懸吊系統"
+        value: "前：潛望鏡式前叉 / 後：雙槍式5段可調後避震器"
+      - label: "動力系統"
+        value: "G2.2L鋁合金水冷永磁同步馬達"
+      - label: "貼心便利"
+        value: "智慧鑰匙卡/智慧型手機/電子倒車/USB充電"
+      - label: "能源效率"
+        value: "23.8km/度"
+      - label: "純電行程"
+        value: "64km"
+      - label: "年耗電源"
+        value: "189度"
 
 
 # 4. 媒體報導觀點 (已改為 .png)
