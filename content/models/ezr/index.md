@@ -42,10 +42,10 @@ features:
   - title: "定速巡航"
     desc: "輕輕一按，降低長距離騎乘帶來的疲憊。"
     image: "feature_4.png"
-  - title: "Class D LED 頭燈"
-    desc: "確保最佳清晰視野。"
+  - title: "車身均衡重量配置"
+    desc: "參考乘坐者位置進行重量配置，展現絕佳指向性與操控表現。"
     image: "feature_5.png"
-  - title: "美國 Gates皮帶 TCS煞車系統"
+  - title: "美國 Gates皮帶 ABS煞車系統"
     desc: "22mm碳纖材質皮帶，享受強勁扭力的同時，守護你的安全，輪胎不飄移。"
     image: "feature_6.png"          
   - title: "手機也能當鑰匙"
@@ -79,50 +79,51 @@ specs_notes:
 
 specs:
   - label: "長 x 寬 x 高"
-    value: "1,690 X 645 X 1,042 mm"
+    value: "1,820 X 690 X 1,090mm"
   - label: "軸距"
-    value: "1,174 mm"
+    value: "1,305 mm"
   - label: "座墊高"
-    value: "740 mm"
+    value: "765 mm"
   - label: "車重(含電池)"
-    value: "80  kg"
-  - label: "頭燈"
-    value: "LED"
-  - label: "方向燈"
-    value: "LED"
-  - label: "尾燈"
-    value: "LED"
-  - label: "懸吊系統"
-    value: "雙槍式後避震"
-  - label: "煞車系統"
-    value: "油壓碟煞 / 金屬油管"
-  - label: "碟盤規格"
-    value: "前：200 mm / 後：180 mm"
-  - label: "輪胎規格"
-    value: "前：90/90-10 50L / 後：100-90-10 56L"
-  - label: "最大功率(馬力)"
-    value: "3 kw(4.0hp)"
+    value: "126 kg"
+  - label: "最大功率（馬力）"
+    value: "7.2kW（9.0hp）"
   - label: "最大扭力"
-    value: "115Nm"
-  - label: "最高時速"
-    value: "50 km/hr"
-  - label: "後置物箱空間"
-    value: "21.6 L"
-  - label: "貼心配備"
-    value: "置物掛勾 / 後扶手 / USB充電孔 / 大容量雙側前置物盒"
-  - label: "解鎖與上鎖"
-    value: "智慧鑰匙卡 / 智慧型手機"
-  - label: "置物箱開啟方式"
-    value: "車上按鍵 / 智慧鑰匙卡 / 智慧型手機 "
-  - label: "儀錶板"
-    value: "負顯背光單色液晶"
+    value: "28 Nm"
+  - label: "傳動型式"
+    value: "皮帶"
+  - label: "動力模式"
+    value: "ECO/ Normal / Boost"
+  - label: "後避震器"
+    value: "雙避震（預載可調）"
+  - label: "碟盤規格"
+    value: "前：245 mm / 後：200 mm"
+  - label: "輪胎規格"
+    value: "前：100/90-12 59J / 後：120-70-12 58J"
+  - label: "ABS防鎖死煞車"
+    value: "有 (✓)"
+  - label: "TCS循跡防滑"
+    value: "有 (✓)"
+  - label: "鑰匙鎖組"
+    value: "智慧鑰匙卡/智慧型手機"
+  - label: "USB充電器"
+    value: "有 (✓)"
+  - label: "OTA線上更新"
+    value: "有 (✓)"
+  - label: "雲端鑰匙"
+    value: "有 (✓)（啟動車輛）"
+  - label: "智慧定速巡航"
+    value: "有 (✓)"
+  - label: "輔助倒車"
+    value: "有 (✓)"
+  - label: "後置物箱"
+    value: "27.4L"
   - label: "能源效率"
-    value: "27km/度"
-  - label: "純電行程 "
-    value: "39km"
-  - label: "年耗電源"
-    value: "167度 "
-
+    value: "23.8km/度"
+  - label: "純電行程"
+    value: "82km"
+  - label: "純電行程"
+    value: "82km"
 
 
 # 4. 媒體報導觀點 (已改為 .png)
@@ -160,19 +161,81 @@ accessories:
 
 # 6. 常見問題解答
 faq:
-  - question: "騎乘 EZ1 需要考駕照嗎？"
-    answer: "EZ1 為綠牌輕型電動機車，需持有「普通輕型機車駕照」或 2023年6月30日前考取的「普通小型車駕照（汽車駕照）」即可合法騎乘上路。"
-  - question: "如何進行換電與計費？"
-    answer: "A. 採用換電系統。 eMOVING EZ1 是與 Gogoro 合作的 PBGN 聯盟車款，使用的是 Gogoro Network 智慧電池交換平台（單顆電池配置）。全台有超過 2,400 座 GoStation 換電站可以 24 小時隨時換電，不需要在家充電，但每個月必須依照騎乘里程向 Gogoro 繳納電池月租費資費方案。 "
-  - question: "eMOVING EZ1 的車身尺寸與重點規格為何？"
-    answer: "A. EZ1 是專為台灣女性與小隻女的身形打造，主打極致輕巧與極佳的人體工學。詳細規格如下：車身尺寸：1,690 x 645 x 1,042 mm｜座墊高度：740 mm（155cm 的嬌小身材也能輕鬆雙腳著地｜全車重量：80 公斤（含單顆電池，移車、牽車毫無負擔｜動力輸出：3kW 最大馬力 / 115Nm 最大扭力（與 Gogoro VIVA 相同）｜煞車系統：前後雙碟煞（前輪配備同級最大 200mm 碟盤，安全性極佳）｜智慧科技：標配 SmartKey 智慧鑰匙卡、支援「FUN心騎」智慧車聯網 APP"
-  - question: "eMOVING EZ1 有哪些針對女性貼心設計的置物機能？"
-    answer: "A. EZ1 的三大實用機能在同級綠牌換電車中表現非常亮眼：同級最大前置物空間： 前方的開放式置物深槽很大，能同時穩穩放下兩瓶保溫杯與智慧型手機，並附有 USB 前置充電座。21.6 公升大容量車廂： 雖然是單電池設定，但車廂空間被最大化利用，放入一頂 3/4 罩安全帽後，旁邊還留有格位能收納雨衣、抹布與隨身小物。優化騎乘三角： 擁有 565mm 加長加寬舒適平整座墊，腳踏空間也經過平整化改良（改善了 Gogoro 原始車系容易腳滑的缺點），更標配了省力中柱與好抓握的加粗後扶手。"
+  - question: "eMOVING EZ-R 是白牌還是綠牌？需要什麼駕照才能騎？"
+    answer: "是白牌（普通重型）電動機車。 eMOVING EZ-R 採用雙電池設定，動力等同於傳統 125cc 到 150cc 的燃油機車，因此騎乘者必須持有普通重型機車駕照以上才可以合法上路，並且必須懸掛普通重型機車的普通白底車牌。"
+  - question: "EZ-R 雖然用 Gogoro 電池，但聽說馬達是中華自己研發的？動力表現如何？"
+    answer: "是的。 EZ-R 雖然屬於 PBGN（Powered by Gogoro Network）換電聯盟，但它打破了以往聯盟車直接套用 Gogoro 內部的慣例，而是搭載 eMOVING 全新自主研發的 7.2kW 節能馬達。 "
+  - question: "eMOVING EZ-R 的置物空間大嗎？放得下全罩安全帽嗎？"
+    answer: "放得下。 雖然 EZ-R 的車尾線條非常銳利收尖，但它擁有同級距中最大的 27.4 公升大容量車廂。內部空間平整，實測可以輕鬆放入大尺寸的全罩式安全帽，前方置物空間也配有基本的置杯架、前掛鉤以及 USB 充電孔（ABS版限定）。"
+  - question: "聽說 EZ-R 沒帶鑰匙和手機也能開鎖？什麼是專利「雲端鑰匙」？"
+    answer: "這是 EZ-R 非常實用的科技亮點。除了支援智慧鑰匙卡、智慧型手機藍牙解鎖以及專屬 OTA（線上雲端更新）外，它還配備了獨家專利免鑰匙密碼解鎖功能：<br>💡 萬一出門忘記帶鑰匙卡、手機又剛好沒電，車主可以直接在車輛上透過預先設定好的實體按鍵密碼組合，免鑰匙、免手機即可直接解鎖開啟車廂或啟動車輛出發。"
+  - question: "eMOVING EZ-R 有配備定速巡航嗎？長途騎乘舒適嗎？"
+    answer: "全車系標配智慧定速巡航。 在時速 10 km/h 至 80 km/h 之間，騎士只要按下定速鍵，車輛就會自動維持當前速度。遇到坡度起伏時，電腦也會自動微調動力輸出維持車速，定速期間隨時催油門也能直接加速。此外，它還配備了電動機車首見的前斜踏板，長途行駛時雙腳可以往前延伸踩踏，大幅降低疲勞感。"
+  - question: "EZ-R 的 ABS 版和 CBS 版規格差在哪？怎麼選？"
+    answer: "A. 兩款車的馬達動力完全相同，主要差別在於安全配備與部分科技小細節：<br>
+      EZ-R ABS 版　<br>
+      煞車防鎖死 (ABS)：有（前後雙迴路 ABS）<br>
+      循跡防滑系統(TCS)：有（減少雨天起步打滑）<br>
+      前置 USB 充電座：有<br>
+      車款顏色選擇：青釉藍、曜石黑、鈦金白（部分特殊塗料）<br>
+      車全重量：126 公斤<br>
+      <br>
+      EZ-R CBS 版　<br>
+      煞車防鎖死 (ABS)：無<br>
+      循跡防滑系統(TCS)：無<br>
+      前置 USB 充電座：無<br>
+      車款顏色選擇：鈦金白<br>
+      車全重量：124 公斤<br>
+      <br>
+      如果預算允許，強烈建議直上 ABS 版。因為除了有 ABS 外，還額外綁定了 TCS 循跡防滑系統，在台灣多雨、標線容易打滑的路況下，主動安全性高出非常多。"
 
 # 電子型錄 (對應 static/catalog/ez1.pdf)
 catalog_url: "catalog/ezr.pdf"
 
 # 車主手冊 (假設 PDF 放在 static/manual/ 資料夾內)
 manual_url: "manual/ezr.pdf"
+
+# ==========================================
+# 視差滾動區塊專用獨立設定
+# ==========================================
+
+# 1. 視差車色去背圖、名稱與背景色配對
+parallax_slides:
+  - image: "ezr-blue.png"
+    color_name: "青釉藍"
+    bg_color: "#1875C7"
+  - image: "ez1-black.png"
+    color_name: "曜石黑"
+    bg_color: "#112F4A"
+  - image: "ez1-white.png"
+    color_name: "鈦金白"
+    bg_color: "#F7F7F7"
+
+# 2. 車款特色列表 (一特色對應一張專屬背景圖)
+parallax_features:
+  - number: "01"
+    title: "Class D LED 頭燈"
+    desc: "汽車等級 Class D LED 頭燈，確保最佳清晰視野。"
+    image: "feature-bg-01.png"
+    color_class: "text-yellow-400"
+    badge_bg: "bg-yellow-400"
+
+  - number: "02"
+    title: "超人造型尾燈"
+    desc: "打造360度兇猛的電動機車，連背後也殺。"
+    image: "feature-bg-02.png"
+    color_class: "text-cyan-400"
+    badge_bg: "bg-cyan-400"
+
+  - number: "03"
+    title: "全新研發馬達"
+    desc: "搭配性能提升方案，0-50km/h 僅 3.7秒，起步不落人後。"
+    image: "feature-bg-03.png"
+    color_class: "text-emerald-400"
+    badge_bg: "bg-emerald-400"
+
+# 視差固定背景圖片
+fixed_picture_pc: "fixed_bg_desktop.png" # 電腦版 (橫圖, 如 1920x1080)
+fixed_picture_mb: "fixed_bg_mobile.png"  # 手機版 (直圖, 如 800x1200)
 
 ---
