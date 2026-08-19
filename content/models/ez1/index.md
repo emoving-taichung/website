@@ -201,4 +201,7 @@ parallax_features:
     color_class: "text-emerald-400"
     badge_bg: "bg-emerald-400"
 
+# 視差固定背景圖片
+fixed_picture: "fixed_picture.png"
+
 ---
