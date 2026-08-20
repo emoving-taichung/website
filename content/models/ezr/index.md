@@ -77,7 +77,7 @@ specs_notes:
 
     車主車輛使用常見問題請參閱：<a href='https://www.e-moving.com.tw/QA' target='_blank'>https://www.e-moving.com.tw/QA</a>。"
 
-specs:
+specs_tables:
 - title: "ABS 旗艦版"
 - specs:
   - label: "長 x 寬 x 高"
