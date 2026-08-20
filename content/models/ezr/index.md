@@ -79,7 +79,7 @@ specs_notes:
 
 specs_tables:
 - title: "ABS 旗艦版"
-- specs:
+  specs:
   - label: "長 x 寬 x 高"
     value: "1,820 X 690 X 1,090mm"
   - label: "軸距"
@@ -128,7 +128,7 @@ specs_tables:
     value: "189度"
 
 - title: "CBS 標準版"
-- specs:
+  specs:
   - label: "長 x 寬 x 高"
     value: "1,820 X 690 X 1,090mm"
   - label: "軸距"
