@@ -1,5 +1,5 @@
 ---
 title: "最新消息"
-url: "/news/"
+url: "news/"
 layout: "news"
 ---
