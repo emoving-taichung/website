@@ -666,7 +666,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
                 carImgs.forEach((img, idx) => {
                     if (idx === currentPhaseIdx) {
-                        img.classList.remove("opacity-0", "z-0");
+                        img.classList.remove("opacity-0", "z-10");
                         img.classList.add("opacity-100", "z-10");
                     } else {
                         img.classList.remove("opacity-100", "z-10");
@@ -764,6 +764,9 @@ document.addEventListener("DOMContentLoaded", function() {
         handleParallaxScroll(); 
     }
 
+    /* =========================================
+       選單陰影控制 & ScrollSpy (捲動監聽自動切換 Tab)
+       ========================================= */
     const nav = document.getElementById("sticky-nav");
     if (nav) {
         window.addEventListener("scroll", () => {
@@ -772,13 +775,69 @@ document.addEventListener("DOMContentLoaded", function() {
         }, { passive: true });
     }
 
-    const tabs = document.querySelectorAll(".promo-tab-btn");
-    tabs.forEach(tab => {
-        tab.addEventListener("click", function() {
-            tabs.forEach(t => t.classList.remove("active"));
-            this.classList.add("active");
-        });
-    });
+    // 取得所有具有對應 ID 區塊的導覽列連結
+    const navLinksData = Array.from(document.querySelectorAll(".promo-tab-btn")).map(link => {
+        const href = link.getAttribute("href");
+        return {
+            link: link,
+            id: href.substring(1),
+            target: document.getElementById(href.substring(1))
+        };
+    }).filter(item => item.target);
+
+    // 負責依據目前捲動位置更新 active 的函數
+    function updateActiveTabOnScroll() {
+        const headerH = parseInt(document.documentElement.style.getPropertyValue("--header-h")) || 50;
+        const navH = parseInt(document.documentElement.style.getPropertyValue("--nav-h")) || 50;
+        const offset = headerH + navH + 150; // 增加緩衝區，讓區塊還沒完全碰到頂部時就提早切換
+        
+        let foundId = "";
+        
+        // 從下往上找，找到第一個已經超過觸發線的區塊
+        for (let i = navLinksData.length - 1; i >= 0; i--) {
+            const item = navLinksData[i];
+            const rect = item.target.getBoundingClientRect();
+            if (rect.top <= offset) {
+                foundId = item.id;
+                break;
+            }
+        }
+
+        // 如果在最頂部，預設選中第一個
+        if (!foundId && navLinksData.length > 0) {
+            foundId = navLinksData[0].id;
+        }
+
+        if (foundId) {
+            navLinksData.forEach(item => {
+                if (item.id === foundId) {
+                    item.link.classList.add("active");
+                    // 手機版自動將選單水平滾動，保持啟用中的項目在可視範圍
+                    const scrollMenu = document.getElementById("scroll-menu");
+                    if (scrollMenu && window.innerWidth < 768) {
+                        const linkLeft = item.link.offsetLeft;
+                        const linkWidth = item.link.offsetWidth;
+                        const menuWidth = scrollMenu.offsetWidth;
+                        const currentScroll = scrollMenu.scrollLeft;
+                        
+                        // 判斷是否超出畫面範圍
+                        if (linkLeft < currentScroll + 30 || (linkLeft + linkWidth) > (currentScroll + menuWidth - 30)) {
+                            scrollMenu.scrollTo({
+                                left: linkLeft - menuWidth / 2 + linkWidth / 2,
+                                behavior: "smooth"
+                            });
+                        }
+                    }
+                } else {
+                    item.link.classList.remove("active");
+                }
+            });
+        }
+    }
+    
+    // 註冊捲動事件與畫面載入事件來初始化 ScrollSpy
+    window.addEventListener("scroll", updateActiveTabOnScroll, { passive: true });
+    window.addEventListener("load", updateActiveTabOnScroll);
 
     window.swapVideo = function(videoId, idx) {
         if (!videoId) return;
