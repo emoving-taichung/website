@@ -27,100 +27,118 @@
             </div>
         </div>
 
-        <!-- 抓取 Blogger 專欄文章（加上 max-results=500 抓取最多 500 篇文章） -->
+        <!-- 查無結果提示隱藏區塊 -->
+        <div id="no-search-results" class="hidden text-center py-12 text-gray-500">
+            <p class="text-lg font-medium">找不到符合關鍵字的文章 🔍</p>
+            <p class="text-sm mt-1">請嘗試輸入其他關鍵字搜尋</p>
+        </div>
+
+        <!-- 抓取 Blogger 文章 (加上 User-Agent 避免被 Blogger 防火牆阻擋) -->
         {{ $url := "https://emoving-taichung.blogspot.com/feeds/posts/default?alt=json&max-results=500" }}
-        {{ with try (resources.GetRemote $url) }}
-            {{ with .Err }}
+        {{ $opts := dict "headers" (dict "User-Agent" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36") }}
+        {{ $res := resources.GetRemote $url $opts }}
+
+        {{ if $res }}
+            {{ if $res.Err }}
                 <div class="text-center py-12 text-gray-500">
-                    <p>目前暫時無法載入最新消息，請稍後再試。</p>
+                    <p class="text-lg font-medium">目前暫時無法載入最新消息，請稍後再試。</p>
                 </div>
-            {{ else with .Value }}
-                {{ $data := . | transform.Unmarshal }}
+            {{ else }}
+                {{ $data := $res.Content | transform.Unmarshal }}
                 
-                <!-- 查無結果提示隱藏區塊 -->
-                <div id="no-search-results" class="hidden text-center py-12 text-gray-500">
-                    <p class="text-lg font-medium">找不到符合關鍵字的文章 🔍</p>
-                    <p class="text-sm mt-1">請嘗試輸入其他關鍵字搜尋</p>
-                </div>
+                {{ if and $data $data.feed $data.feed.entry }}
+                    <div id="news-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
+                        {{ range $entry := $data.feed.entry }}
+                            
+                            <!-- 解析標題與發布時間 -->
+                            {{ $title := index $entry.title "$t" }}
+                            {{ $publishedRaw := index $entry.published "$t" }}
+                            {{ $published := $publishedRaw | time.Format "2006-01-02" }}
 
-                <div id="news-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4">
-                    {{ range $entry := $data.feed.entry }}
-                        
-                        <!-- 解析標題與發布時間 -->
-                        {{ $title := index $entry.title "$t" }}
-                        {{ $publishedRaw := index $entry.published "$t" }}
-                        {{ $published := $publishedRaw | time.Format "2006-01-02" }}
-
-                        <!-- 取得 Blogger 原文章連結 -->
-                        {{ $link := "" }}
-                        {{ range $entry.link }}
-                            {{ if eq .rel "alternate" }}
-                                {{ $link = .href }}
+                            <!-- 取得 Blogger 原文章連結 -->
+                            {{ $link := "" }}
+                            {{ range $entry.link }}
+                                {{ if eq .rel "alternate" }}
+                                    {{ $link = .href }}
+                                {{ end }}
                             {{ end }}
-                        {{ end }}
 
-                        <!-- 高清圖片解析 (s1600) -->
-                        {{ $imgSrc := "" }}
-                        {{ if index $entry "media$thumbnail" }}
-                            {{ $thumb := index $entry "media$thumbnail" }}
-                            {{ $rawUrl := $thumb.url }}
-                            {{ $imgSrc = replaceRE `/s\d+[^/]*/` "/s1600/" $rawUrl }}
-                            {{ $imgSrc = replaceRE `=w\d+-h\d+[^$]*` "=s1600" $imgSrc }}
-                        {{ end }}
-
-                        {{ if and (eq $imgSrc "") $entry.content }}
-                            {{ $content := index $entry.content "$t" }}
-                            {{ $matches := findRE `<img[^>]+src="([^">]+)"` $content }}
-                            {{ if gt (len $matches) 0 }}
-                                {{ $rawImg := index $matches 0 | replaceRE `<img[^>]+src="([^">]+)"` "$1" }}
-                                {{ $imgSrc = replaceRE `/s\d+[^/]*/` "/s1600/" $rawImg }}
+                            <!-- 高清圖片解析 (s1600) -->
+                            {{ $imgSrc := "" }}
+                            {{ if index $entry "media$thumbnail" }}
+                                {{ $thumb := index $entry "media$thumbnail" }}
+                                {{ $rawUrl := $thumb.url }}
+                                {{ $imgSrc = replaceRE `/s\d+[^/]*/` "/s1600/" $rawUrl }}
                                 {{ $imgSrc = replaceRE `=w\d+-h\d+[^$]*` "=s1600" $imgSrc }}
                             {{ end }}
-                        {{ end }}
 
-                        <!-- 取得摘要 -->
-                        {{ $summary := "" }}
-                        {{ if $entry.summary }}
-                            {{ $summary = index $entry.summary "$t" }}
-                        {{ else if $entry.content }}
-                            {{ $summary = index $entry.content "$t" }}
-                        {{ end }}
-                        {{ $cleanSummary := $summary | plainify | truncate 90 "..." }}
-
-                        <!-- 文章卡片 (加入 news-card class 與搜尋 data 屬性) -->
-                        <a href="{{ $link }}" target="_blank" rel="noopener noreferrer" 
-                           data-title="{{ $title }}" data-summary="{{ $cleanSummary }}"
-                           class="news-card group flex flex-col justify-between bg-white p-5 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[#1155CC] transition-all transform hover:-translate-y-1">
-                            
-                            <div class="space-y-4">
-                                <!-- 主要圖片（4:5 比例滿版框） -->
-                                {{ if $imgSrc }}
-                                <div class="w-full aspect-[4/5] overflow-hidden rounded-xl bg-gray-100">
-                                    <img src="{{ $imgSrc }}" alt="{{ $title }}" loading="lazy" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
-                                </div>
+                            {{ if and (eq $imgSrc "") $entry.content }}
+                                {{ $content := index $entry.content "$t" }}
+                                {{ $matches := findRE `<img[^>]+src="([^">]+)"` $content }}
+                                {{ if gt (len $matches) 0 }}
+                                    {{ $rawImg := index $matches 0 | replaceRE `<img[^>]+src="([^">]+)"` "$1" }}
+                                    {{ $imgSrc = replaceRE `/s\d+[^/]*/` "/s1600/" $rawImg }}
+                                    {{ $imgSrc = replaceRE `=w\d+-h\d+[^$]*` "=s1600" $imgSrc }}
                                 {{ end }}
+                            {{ end }}
 
-                                <!-- 發布日期 -->
-                                <div class="flex items-center justify-between text-xs text-gray-400">
-                                    <time class="font-medium">{{ $published }}</time>
+                            <!-- 取得摘要 -->
+                            {{ $summary := "" }}
+                            {{ if $entry.summary }}
+                                {{ $summary = index $entry.summary "$t" }}
+                            {{ else if $entry.content }}
+                                {{ $summary = index $entry.content "$t" }}
+                            {{ end }}
+                            {{ $cleanSummary := $summary | plainify | truncate 90 "..." }}
+
+                            <!-- 文章卡片 (使用 htmlEscape 避免標題內的引號破壞 HTML 屬性) -->
+                            <a href="{{ $link }}" target="_blank" rel="noopener noreferrer" 
+                               data-title="{{ $title | htmlEscape }}" 
+                               data-summary="{{ $cleanSummary | htmlEscape }}"
+                               class="news-card group flex flex-col justify-between bg-white p-5 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[#1155CC] transition-all transform hover:-translate-y-1">
+                                
+                                <div class="space-y-4">
+                                    <!-- 主要圖片（4:5 比例滿版框，採用純 img 標籤避免 CSS url() 檢測錯誤） -->
+                                    {{ if $imgSrc }}
+                                    <div class="w-full aspect-[4/5] overflow-hidden rounded-xl bg-gray-100">
+                                        <img src="{{ $imgSrc }}" alt="{{ $title }}" loading="lazy" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300">
+                                    </div>
+                                    {{ else }}
+                                    <div class="w-full aspect-[4/5] overflow-hidden rounded-xl bg-gray-100 flex items-center justify-center text-gray-400 font-bold">
+                                        eMOVING
+                                    </div>
+                                    {{ end }}
+
+                                    <!-- 發布日期 -->
+                                    <div class="flex items-center justify-between text-xs text-gray-400">
+                                        <time class="font-medium">{{ $published }}</time>
+                                    </div>
+
+                                    <h2 class="text-lg font-bold text-gray-800 group-hover:text-[#1155CC] line-clamp-2 transition-colors">
+                                        {{ $title }}
+                                    </h2>
+                                    <p class="text-sm text-gray-600 line-clamp-3 leading-relaxed">
+                                        {{ $cleanSummary }}
+                                    </p>
                                 </div>
 
-                                <h2 class="text-lg font-bold text-gray-800 group-hover:text-[#1155CC] line-clamp-2 transition-colors">
-                                    {{ $title }}
-                                </h2>
-                                <p class="text-sm text-gray-600 line-clamp-3 leading-relaxed">
-                                    {{ $cleanSummary }}
-                                </p>
-                            </div>
-
-                            <div class="pt-4 mt-4 border-t border-gray-100 flex items-center justify-between text-sm font-semibold text-[#1155CC]">
-                                <span>閱讀完整文章</span>
-                                <span class="transform group-hover:translate-x-1 transition-transform">➔</span>
-                            </div>
-                        </a>
-                    {{ end }}
-                </div>
+                                <div class="pt-4 mt-4 border-t border-gray-100 flex items-center justify-between text-sm font-semibold text-[#1155CC]">
+                                    <span>閱讀完整文章</span>
+                                    <span class="transform group-hover:translate-x-1 transition-transform">➔</span>
+                                </div>
+                            </a>
+                        {{ end }}
+                    </div>
+                {{ else }}
+                    <div class="text-center py-12 text-gray-500">
+                        <p class="text-lg font-medium">目前尚無最新消息。</p>
+                    </div>
+                {{ end }}
             {{ end }}
+        {{ else }}
+            <div class="text-center py-12 text-gray-500">
+                <p class="text-lg font-medium">目前暫時無法載入最新消息，請稍後再試。</p>
+            </div>
         {{ end }}
 
     </div>
