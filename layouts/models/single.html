@@ -152,12 +152,19 @@
 <!-- 3. 車款特色區塊 (自動 PNG 轉 WebP) -->
 <!-- ========================================== -->
 {{ with $page.Params.features }}
-    <section id="features-gallery" class="anchor-section w-full overflow-hidden !py-0 bg-transparent">
-      {{ $features := . }}
-      {{ $total := len $features }}
+    {{ $features := . }}
+    {{ $total := len $features }}
+    {{ $lastIndex := math.Sub $total 1 }}
+    {{ $lastIsEven := eq (math.Mod $lastIndex 2) 0 }}
+    {{ $sectionBg := "bg-[#f9fcff]" }}
+    {{ if $lastIsEven }}
+        {{ $sectionBg = "bg-[#e3e7ec]" }}
+    {{ end }}
+
+    <section id="features-gallery" class="anchor-section w-full overflow-hidden !py-0 {{ $sectionBg }}">
       {{ range $index, $item := $features }}
       {{ $isEven := eq (math.Mod $index 2) 0 }}
-      {{ $isLast := eq $index (math.Sub $total 1) }}
+      {{ $isLast := eq $index $lastIndex }}
       {{ $slopeClass := "" }}
       {{ if $isLast }}
           {{ if eq $total 1 }} {{ $slopeClass = "slope-last-single" }}
