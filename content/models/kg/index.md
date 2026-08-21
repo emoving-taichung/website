@@ -71,7 +71,9 @@ specs_notes:
 
     車主車輛使用常見問題請參閱：<a href='https://www.e-moving.com.tw/QA' target='_blank'>https://www.e-moving.com.tw/QA</a>。"
 
-specs:
+specs_tables:
+- title: "勁炫125 超質型"
+  specs:
   - label: "長 x 寬 x 高"
     value: "1,690 X 645 X 1,042 mm"
   - label: "軸距"
