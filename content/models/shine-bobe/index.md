@@ -1,12 +1,13 @@
 ---
-title: "eMOVING EZR"
-description: "旗艦動力，混血再勁化"
+title: "eMOVING Shine Bobe"
+description: "免駕照 自由行動不受限"
 
 # 0. 頁首輪播圖 (新增此區塊，統一使用 .png)
 hero_slides:
   - "hero_1.png"
   - "hero_2.png"
   - "hero_3.png"
+  - "hero_4.png"
 
 # 1. 精彩試乘影片
 videos:
