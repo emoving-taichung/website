@@ -42,93 +42,99 @@
     </div>
 </div>
 
-<!-- ⚡ 前端即時抓取與搜尋 JavaScript -->
+<!-- ⚡ 採用 JSONP 解決 CORS 跨網域存取問題 -->
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const feedUrl = 'https://emoving-taichung.blogspot.com/feeds/posts/default?alt=json&max-results=500';
+    // 全域 Callback 回呼函數
+    window.renderBloggerNews = function(data) {
         const newsGrid = document.getElementById('news-grid');
         const loadingBox = document.getElementById('news-loading');
+        
+        if (loadingBox) loadingBox.style.display = 'none';
+
+        const entries = (data && data.feed && data.feed.entry) ? data.feed.entry : [];
+
+        if (entries.length === 0) {
+            newsGrid.innerHTML = '<p class="col-span-full text-center py-12 text-gray-500 text-lg font-medium">目前尚無最新消息。</p>';
+            return;
+        }
+
+        entries.forEach(entry => {
+            const title = entry.title ? entry.title.$t : '';
+            const publishedRaw = entry.published ? entry.published.$t : '';
+            const published = publishedRaw.split('T')[0];
+
+            let link = '#';
+            if (entry.link) {
+                const alt = entry.link.find(l => l.rel === 'alternate');
+                if (alt) link = alt.href;
+            }
+
+            // 圖片解析 (自動替換高清 s1600)
+            let imgSrc = '';
+            if (entry.media$thumbnail) {
+                imgSrc = entry.media$thumbnail.url.replace(/\/s\d+[^/]*\//, '/s1600/').replace(/=w\d+-h\d+[^$]*/, '=s1600');
+            } else if (entry.content && entry.content.$t) {
+                const match = entry.content.$t.match(/<img[^>]+src="([^">]+)"/);
+                if (match) {
+                    imgSrc = match[1].replace(/\/s\d+[^/]*\//, '/s1600/').replace(/=w\d+-h\d+[^$]*/, '=s1600');
+                }
+            }
+
+            // 摘要解析 (去除 HTML 標籤)
+            let rawSummary = '';
+            if (entry.summary) rawSummary = entry.summary.$t;
+            else if (entry.content) rawSummary = entry.content.$t;
+
+            const cleanSummary = rawSummary.replace(/<[^>]*>/g, '').substring(0, 90) + '...';
+
+            // 建立 HTML 卡片
+            const card = document.createElement('a');
+            card.href = link;
+            card.target = '_blank';
+            card.rel = 'noopener noreferrer';
+            card.className = 'news-card group flex flex-col justify-between bg-white p-5 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[#1155CC] transition-all transform hover:-translate-y-1';
+            card.setAttribute('data-title', title.toLowerCase());
+            card.setAttribute('data-summary', cleanSummary.toLowerCase());
+
+            const imgContainer = imgSrc 
+                ? `<div class="w-full aspect-[4/5] overflow-hidden rounded-xl bg-gray-100"><img src="${imgSrc}" alt="${title}" loading="lazy" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"></div>`
+                : `<div class="w-full aspect-[4/5] overflow-hidden rounded-xl bg-gray-100 flex items-center justify-center text-gray-400 font-bold">eMOVING</div>`;
+
+            card.innerHTML = `
+                <div class="space-y-4">
+                    ${imgContainer}
+                    <div class="flex items-center justify-between text-xs text-gray-400">
+                        <time class="font-medium">${published}</time>
+                    </div>
+                    <h2 class="text-lg font-bold text-gray-800 group-hover:text-[#1155CC] line-clamp-2 transition-colors">${title}</h2>
+                    <p class="text-sm text-gray-600 line-clamp-3 leading-relaxed">${cleanSummary}</p>
+                </div>
+                <div class="pt-4 mt-4 border-t border-gray-100 flex items-center justify-between text-sm font-semibold text-[#1155CC]">
+                    <span>閱讀完整文章</span>
+                    <span class="transform group-hover:translate-x-1 transition-transform">➔</span>
+                </div>
+            `;
+
+            newsGrid.appendChild(card);
+        });
+    };
+
+    document.addEventListener('DOMContentLoaded', function () {
         const searchInput = document.getElementById('news-search-input');
         const noResultsMsg = document.getElementById('no-search-results');
 
-        fetch(feedUrl)
-            .then(res => res.json())
-            .then(data => {
-                loadingBox.style.display = 'none';
-                const entries = (data.feed && data.feed.entry) ? data.feed.entry : [];
+        // 動態注入 JSONP Script 標籤 (解決 CORS 限制)
+        const script = document.createElement('script');
+        script.src = 'https://emoving-taichung.blogspot.com/feeds/posts/default?alt=json-in-script&callback=renderBloggerNews&max-results=500';
+        script.onerror = function() {
+            const loadingBox = document.getElementById('news-loading');
+            const newsGrid = document.getElementById('news-grid');
+            if (loadingBox) loadingBox.style.display = 'none';
+            if (newsGrid) newsGrid.innerHTML = '<p class="col-span-full text-center py-12 text-gray-500 text-lg font-medium">無法載入最新消息，請重新整理頁面再試。</p>';
+        };
+        document.head.appendChild(script);
 
-                if (entries.length === 0) {
-                    newsGrid.innerHTML = '<p class="col-span-full text-center py-12 text-gray-500 text-lg font-medium">目前尚無最新消息。</p>';
-                    return;
-                }
-
-                entries.forEach(entry => {
-                    const title = entry.title ? entry.title.$t : '';
-                    const publishedRaw = entry.published ? entry.published.$t : '';
-                    const published = publishedRaw.split('T')[0];
-
-                    let link = '#';
-                    if (entry.link) {
-                        const alt = entry.link.find(l => l.rel === 'alternate');
-                        if (alt) link = alt.href;
-                    }
-
-                    // 圖片解析 (自動替換高清 s1600)
-                    let imgSrc = '';
-                    if (entry.media$thumbnail) {
-                        imgSrc = entry.media$thumbnail.url.replace(/\/s\d+[^/]*\//, '/s1600/').replace(/=w\d+-h\d+[^$]*/, '=s1600');
-                    } else if (entry.content && entry.content.$t) {
-                        const match = entry.content.$t.match(/<img[^>]+src="([^">]+)"/);
-                        if (match) {
-                            imgSrc = match[1].replace(/\/s\d+[^/]*\//, '/s1600/').replace(/=w\d+-h\d+[^$]*/, '=s1600');
-                        }
-                    }
-
-                    // 摘要解析 (去除 HTML 標籤)
-                    let rawSummary = '';
-                    if (entry.summary) rawSummary = entry.summary.$t;
-                    else if (entry.content) rawSummary = entry.content.$t;
-
-                    const cleanSummary = rawSummary.replace(/<[^>]*>/g, '').substring(0, 90) + '...';
-
-                    // 建立 HTML 卡片
-                    const card = document.createElement('a');
-                    card.href = link;
-                    card.target = '_blank';
-                    card.rel = 'noopener noreferrer';
-                    card.className = 'news-card group flex flex-col justify-between bg-white p-5 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[#1155CC] transition-all transform hover:-translate-y-1';
-                    card.setAttribute('data-title', title.toLowerCase());
-                    card.setAttribute('data-summary', cleanSummary.toLowerCase());
-
-                    const imgContainer = imgSrc 
-                        ? `<div class="w-full aspect-[4/5] overflow-hidden rounded-xl bg-gray-100"><img src="${imgSrc}" alt="${title}" loading="lazy" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"></div>`
-                        : `<div class="w-full aspect-[4/5] overflow-hidden rounded-xl bg-gray-100 flex items-center justify-center text-gray-400 font-bold">eMOVING</div>`;
-
-                    card.innerHTML = `
-                        <div class="space-y-4">
-                            ${imgContainer}
-                            <div class="flex items-center justify-between text-xs text-gray-400">
-                                <time class="font-medium">${published}</time>
-                            </div>
-                            <h2 class="text-lg font-bold text-gray-800 group-hover:text-[#1155CC] line-clamp-2 transition-colors">${title}</h2>
-                            <p class="text-sm text-gray-600 line-clamp-3 leading-relaxed">${cleanSummary}</p>
-                        </div>
-                        <div class="pt-4 mt-4 border-t border-gray-100 flex items-center justify-between text-sm font-semibold text-[#1155CC]">
-                            <span>閱讀完整文章</span>
-                            <span class="transform group-hover:translate-x-1 transition-transform">➔</span>
-                        </div>
-                    `;
-
-                    newsGrid.appendChild(card);
-                });
-            })
-            .catch(err => {
-                loadingBox.style.display = 'none';
-                newsGrid.innerHTML = '<p class="col-span-full text-center py-12 text-gray-500 text-lg font-medium">暫時無法載入最新消息，請稍後再試。</p>';
-                console.error('Blogger Feed 載入失敗：', err);
-            });
-
-        // 搜尋功能
+        // 關鍵字搜尋過濾功能
         if (searchInput) {
             searchInput.addEventListener('input', function (e) {
                 const query = e.target.value.toLowerCase().trim();
