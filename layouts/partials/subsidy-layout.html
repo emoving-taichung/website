@@ -10,13 +10,13 @@
   
         <!-- 右側膠囊按鈕區 -->
         <div class="flex flex-wrap items-center gap-3">
-          <a href="https://mobile.moenv.gov.tw/Low/LowPollReNew.aspx" target="_blank" rel="noopener noreferrer" class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2 rounded-full text-sm shadow-sm transition">
+          <a href="https://mobile.moenv.gov.tw/Low/LowPollReNew.aspx" target="_blank" rel="noopener noreferrer" class="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2.5 rounded-full text-sm md:text-base shadow-sm transition">
             補助資格查詢
             <svg class="w-4 h-4 ml-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
           </a>
-          <button onclick="openModal('modal-carbon')" class="border border-gray-300 hover:border-gray-400 text-gray-700 font-medium px-5 py-2 rounded-full text-sm bg-white shadow-sm transition">減碳獎勵</button>
-          <button onclick="openModal('modal-air')" class="border border-gray-300 hover:border-gray-400 text-gray-700 font-medium px-5 py-2 rounded-full text-sm bg-white shadow-sm transition">空汙補助</button>
-          <button onclick="openModal('modal-recycle')" class="border border-gray-300 hover:border-gray-400 text-gray-700 font-medium px-5 py-2 rounded-full text-sm bg-white shadow-sm transition">回收獎勵金</button>
+          <button onclick="openModal('modal-carbon')" class="border border-gray-300 hover:border-gray-400 text-gray-700 font-medium px-5 py-2.5 rounded-full text-sm md:text-base bg-white shadow-sm transition">減碳獎勵</button>
+          <button onclick="openModal('modal-air')" class="border border-gray-300 hover:border-gray-400 text-gray-700 font-medium px-5 py-2.5 rounded-full text-sm md:text-base bg-white shadow-sm transition">空汙補助</button>
+          <button onclick="openModal('modal-recycle')" class="border border-gray-300 hover:border-gray-400 text-gray-700 font-medium px-5 py-2.5 rounded-full text-sm md:text-base bg-white shadow-sm transition">回收獎勵金</button>
         </div>
       </div>
     </section>
@@ -35,11 +35,12 @@
         {{ range $regionName := $regionsOrder }}
           {{ $regionPages := where $subsidies ".Params.region" $regionName }}
           {{ if $regionPages }}
-          <div class="flex flex-col md:flex-row md:items-center py-5 gap-4">
-            <div class="md:w-32 font-semibold text-gray-400 text-base md:text-lg">{{ $regionName }}</div>
-            <div class="flex-1 flex flex-wrap gap-3">
+          <div class="flex flex-col md:flex-row md:items-center py-6 gap-4">
+            <div class="md:w-32 font-bold text-gray-400 text-lg md:text-xl">{{ $regionName }}</div>
+            <div class="flex-1 flex flex-wrap gap-3.5">
               {{ range $regionPages }}
-              <a href="{{ .RelPermalink }}#subsidy-info" class="border border-gray-200 text-gray-700 hover:text-blue-600 hover:border-blue-400 px-5 py-2 bg-white rounded-2xl shadow-sm hover:shadow transition text-sm font-medium">
+              <!-- 加大版本的縣市按鈕 -->
+              <a href="{{ .RelPermalink }}#subsidy-info" class="border border-gray-300 text-gray-800 hover:text-blue-600 hover:border-blue-500 px-7 py-3 bg-white rounded-2xl shadow-sm hover:shadow-md transition text-base md:text-lg font-bold min-w-[120px] text-center">
                 {{ .Title | replaceRE "補助$" "" }}
               </a>
               {{ end }}
@@ -77,13 +78,13 @@
       <!-- 按鈕群組 (置中對齊) -->
       <div class="flex flex-wrap justify-center items-center gap-3 pb-6 mb-6 border-b border-gray-200">
         {{ if .Params.website_url }}
-        <a href="{{ .Params.website_url }}" target="_blank" rel="noopener noreferrer" class="border border-gray-300 text-gray-700 hover:bg-gray-50 px-5 py-2 rounded-xl text-sm font-medium transition shadow-sm bg-white">環保局網站</a>
+        <a href="{{ .Params.website_url }}" target="_blank" rel="noopener noreferrer" class="border border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-2.5 rounded-xl text-base font-medium transition shadow-sm bg-white">環保局網站</a>
         {{ end }}
         {{ if .Params.doc_url }}
-        <a href="{{ .Params.doc_url }}" target="_blank" rel="noopener noreferrer" class="border border-gray-300 text-gray-700 hover:bg-gray-50 px-5 py-2 rounded-xl text-sm font-medium transition shadow-sm bg-white">相關文件</a>
+        <a href="{{ .Params.doc_url }}" target="_blank" rel="noopener noreferrer" class="border border-gray-300 text-gray-700 hover:bg-gray-50 px-6 py-2.5 rounded-xl text-base font-medium transition shadow-sm bg-white">相關文件</a>
         {{ end }}
         {{ if .Params.query_url }}
-        <a href="{{ .Params.query_url }}" target="_blank" rel="noopener noreferrer" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl text-sm font-medium transition shadow-sm">資格查詢</a>
+        <a href="{{ .Params.query_url }}" target="_blank" rel="noopener noreferrer" class="bg-blue-600 hover:bg-blue-700 text-white px-7 py-2.5 rounded-xl text-base font-medium transition shadow-sm">資格查詢</a>
         {{ end }}
       </div>
   
