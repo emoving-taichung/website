@@ -1,14 +1,11 @@
 <div class="w-full pt-6 min-h-screen" style="background-color: #f9fcfb;">
 
     <!-- ================= 第一區塊：環境部標題與按鈕 ================= -->
-    <section class="max-w-6xl mx-auto px-4 mb-10">
+    <section class="max-w-6xl mx-auto px-4 mb-20">
       <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <!-- 環境部 標題1 樣式 -->
         <div class="flex items-center gap-3">
           <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
-          <h1 class="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight flex items-baseline gap-2">
-            環境部 <span class="text-xs md:text-sm font-normal text-gray-400 tracking-wider">MOENV</span>
-          </h1>
+          <h1 class="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight">環境部</h1>
         </div>
   
         <!-- 右側膠囊按鈕區 -->
@@ -26,12 +23,9 @@
   
     <!-- ================= 第二區塊：各縣市環保局 Directory ================= -->
     <section class="max-w-6xl mx-auto px-4 mb-16">
-      <div class="flex justify-between items-end border-b border-gray-200 pb-3 mb-6">
-        <div class="flex items-center gap-3">
-          <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
-          <h1 class="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight">各縣市環保局</h1>
-        </div>
-        <span class="text-xs tracking-widest text-gray-400 uppercase font-semibold">DIRECTORY</span>
+      <div class="flex items-center gap-3 border-b border-gray-200 pb-3 mb-6">
+        <div class="w-1.5 h-8 bg-blue-600 rounded-full"></div>
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight">各縣市環保局</h1>
       </div>
   
       {{ $subsidies := where .Site.RegularPages "Section" "subsidies" }}
@@ -58,106 +52,78 @@
   
     <!-- ================= 第三區塊：縣市詳細資訊（僅在點擊縣市頁面時顯示） ================= -->
     {{ if not .IsNode }}
-    <div id="subsidy-info" class="scroll-mt-24 w-full">
-      <!-- 橫向滿版藍底標題 -->
-      <div class="w-full bg-blue-600 text-white py-5 px-4 mb-8">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-          <div class="flex items-center gap-3">
-            <div class="w-1.5 h-8 bg-white rounded-full"></div>
-            <h2 class="text-2xl md:text-3xl font-bold tracking-wide">{{ .Title }}</h2>
-          </div>
-          <span class="text-xs md:text-sm tracking-widest text-blue-200 uppercase font-semibold">REGION</span>
+    <div id="subsidy-info" class="w-full bg-blue-600 text-white py-5 px-4 mb-8 scroll-mt-14">
+      <div class="max-w-6xl mx-auto flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
+        <!-- 縣市名稱 -->
+        <div class="flex items-center gap-3">
+          <div class="w-1.5 h-8 bg-white rounded-full"></div>
+          <h2 class="text-2xl md:text-3xl font-bold tracking-wide">{{ .Title }}</h2>
         </div>
+  
+        <!-- 電話號碼 (靠右對齊) -->
+        {{ if .Params.phone }}
+        <div class="flex items-center text-white font-mono text-base md:text-lg font-semibold sm:text-right">
+          <svg class="w-5 h-5 mr-2 text-blue-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+          </svg>
+          <a href="tel:{{ .Params.phone }}" class="hover:underline">{{ .Params.phone }}</a>
+        </div>
+        {{ end }}
+      </div>
+    </div>
+  
+    <!-- 縣市資訊內容 -->
+    <section class="max-w-6xl mx-auto px-4 mb-16">
+      <!-- 按鈕群組 (置中對齊) -->
+      <div class="flex flex-wrap justify-center items-center gap-3 pb-6 mb-6 border-b border-gray-200">
+        {{ if .Params.website_url }}
+        <a href="{{ .Params.website_url }}" target="_blank" rel="noopener noreferrer" class="border border-gray-300 text-gray-700 hover:bg-gray-50 px-5 py-2 rounded-xl text-sm font-medium transition shadow-sm bg-white">環保局網站</a>
+        {{ end }}
+        {{ if .Params.doc_url }}
+        <a href="{{ .Params.doc_url }}" target="_blank" rel="noopener noreferrer" class="border border-gray-300 text-gray-700 hover:bg-gray-50 px-5 py-2 rounded-xl text-sm font-medium transition shadow-sm bg-white">相關文件</a>
+        {{ end }}
+        {{ if .Params.query_url }}
+        <a href="{{ .Params.query_url }}" target="_blank" rel="noopener noreferrer" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl text-sm font-medium transition shadow-sm">資格查詢</a>
+        {{ end }}
       </div>
   
-      <!-- 縣市資訊內容（電話與連結） -->
-      <section class="max-w-6xl mx-auto px-4 mb-16">
-        <div class="flex flex-col md:flex-row justify-between items-center gap-4 pb-6 mb-6 border-b border-gray-200">
-          <div class="flex items-center text-gray-800 font-mono text-lg font-semibold">
-            {{ if .Params.phone }}
-            <svg class="w-5 h-5 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
-            <span>{{ .Params.phone }}</span>
-            {{ end }}
-          </div>
-  
-          <div class="flex flex-wrap gap-3">
-            {{ if .Params.website_url }}
-            <a href="{{ .Params.website_url }}" target="_blank" rel="noopener noreferrer" class="border border-gray-300 text-gray-700 hover:bg-gray-50 px-5 py-2 rounded-xl text-sm font-medium transition shadow-sm bg-white">環保局網站</a>
-            {{ end }}
-            {{ if .Params.doc_url }}
-            <a href="{{ .Params.doc_url }}" target="_blank" rel="noopener noreferrer" class="border border-gray-300 text-gray-700 hover:bg-gray-50 px-5 py-2 rounded-xl text-sm font-medium transition shadow-sm bg-white">相關文件</a>
-            {{ end }}
-            {{ if .Params.query_url }}
-            <a href="{{ .Params.query_url }}" target="_blank" rel="noopener noreferrer" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl text-sm font-medium transition shadow-sm">資格查詢</a>
-            {{ end }}
-          </div>
-        </div>
-  
-        <!-- 圖片或內文區塊 -->
-        <div class="flex justify-center py-4">
-          {{ $imgSrc := "" }}
-          
-          {{ if .Params.image }}
-            {{ with .Resources.GetMatch .Params.image }}
-              {{ $imgSrc = .RelPermalink }}
-            {{ else }}
-              {{ $imgSrc = .Params.image | relURL }}
-            {{ end }}
-          {{ end }}
-  
-          {{ if not $imgSrc }}
-            {{ with .Resources.ByType "image" }}
-              {{ $firstImg := index . 0 }}
-              {{ $imgSrc = $firstImg.RelPermalink }}
-            {{ end }}
-          {{ end }}
-  
-          {{ if $imgSrc }}
-          <img 
-            src="{{ $imgSrc }}" 
-            alt="{{ .Title }}" 
-            class="max-w-full h-auto cursor-zoom-in rounded-lg shadow-sm" 
-            onclick="openImageModal(this.src)"
-          >
+      <!-- 圖片或內文區塊 -->
+      <div class="flex justify-center py-4">
+        {{ $imgSrc := "" }}
+        
+        {{ if .Params.image }}
+          {{ with .Resources.GetMatch .Params.image }}
+            {{ $imgSrc = .RelPermalink }}
           {{ else }}
-          <div class="prose max-w-none text-gray-700 w-full py-4">
-            {{ .Content }}
-          </div>
+            {{ $imgSrc = .Params.image | relURL }}
           {{ end }}
+        {{ end }}
+  
+        {{ if not $imgSrc }}
+          {{ with .Resources.ByType "image" }}
+            {{ $firstImg := index . 0 }}
+            {{ $imgSrc = $firstImg.RelPermalink }}
+          {{ end }}
+        {{ end }}
+  
+        {{ if $imgSrc }}
+        <img 
+          src="{{ $imgSrc }}" 
+          alt="{{ .Title }}" 
+          class="max-w-full h-auto cursor-zoom-in rounded-lg shadow-sm" 
+          onclick="openImageModal(this.src)"
+        >
+        {{ else }}
+        <div class="prose max-w-none text-gray-700 w-full py-4">
+          {{ .Content }}
         </div>
-      </section>
-    </div>
+        {{ end }}
+      </div>
+    </section>
     {{ end }}
   
-    <!-- ================= 第四區塊：頁尾聯絡我們 ================= -->
-    <footer class="w-full bg-gray-100 border-t border-gray-300 py-12 text-gray-700">
-      <div class="max-w-6xl mx-auto px-4">
-        <h3 class="text-xl font-bold text-gray-800 mb-6 text-center md:text-left border-b border-gray-300 pb-3">聯絡我們與諮詢管道</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-sm">
-          
-          <div class="space-y-2">
-            <p class="font-bold text-gray-900 text-base">臺中市政府環境保護局</p>
-            <p>諮詢電話：<a href="tel:04-22201661" class="text-blue-700 font-semibold hover:underline">04-22201661</a></p>
-            <p>其他諮詢：<a href="tel:04-22289111" class="text-blue-700 font-semibold hover:underline">04-22289111</a> 分機 66213</p>
-            <p>LINE 官方帳號：<span class="font-mono font-semibold text-gray-800">@pzb4753f</span></p>
-          </div>
-  
-          <div class="space-y-2">
-            <p class="font-bold text-gray-900 text-base">中央機關補助諮詢</p>
-            <p><span class="font-semibold">環境部：</span>廢機車回收與補助諮詢</p>
-            <p><span class="font-semibold">經濟部產業發展署：</span>電動機車購車補助</p>
-            <p><span class="font-semibold">財政部：</span>貨物稅退稅諮詢</p>
-          </div>
-  
-          <div class="space-y-2 md:col-span-2 lg:col-span-1">
-            <p class="font-bold text-gray-900 text-base">門市專頁訊息</p>
-            <p class="font-medium text-gray-800">eMOVING 山西店 | 台中電動機車專賣</p>
-            <p class="text-gray-600">提供各大品牌電動機車補助代辦與購車諮詢服務。</p>
-          </div>
-  
-        </div>
-      </div>
-    </footer>
+    <!-- ================= 第四區塊：全站通用頁尾 (引用 contact.html) ================= -->
+    {{ partial "contact.html" . }}
   
   </div>
   
