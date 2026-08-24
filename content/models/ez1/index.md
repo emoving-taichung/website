@@ -67,7 +67,7 @@ specs_notes:
 
     6.年耗電量(度)係以年平均行駛4,500公里除以能源效率測試值計算；表列能耗值測試方法為CNS 15819-4及其後續修正測試方法。<br>
 
-    7.7.本車款採用gogoro換電系統，無提供預選里程方案。<br>
+    7.本車款採用gogoro換電系統，無提供預選里程方案。<br>
 
     車主車輛使用常見問題請參閱：<a href='https://www.e-moving.com.tw/QA' target='_blank'>https://www.e-moving.com.tw/QA</a>。"
 
