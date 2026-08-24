@@ -32,6 +32,7 @@
     }
   }
 
+  /* 一般區塊的錨點與留白 */
   .anchor-section { 
     scroll-margin-top: calc(var(--header-h) + var(--nav-h));
     padding-top: 4rem !important;
@@ -43,6 +44,12 @@
       padding-bottom: 7rem !important;
     }
   }
+
+  /* 車款特色專用錨點 (不加 Padding，避免頭尾露出空白區塊) */
+  .features-section-wrapper {
+    scroll-margin-top: calc(var(--header-h) + var(--nav-h));
+  }
+
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
   
@@ -161,7 +168,7 @@
         {{ $sectionBg = "bg-[#e3e7ec]" }}
     {{ end }}
 
-    <section id="features-gallery" class="anchor-section w-full overflow-hidden !py-0 {{ $sectionBg }}">
+    <section id="features-gallery" class="features-section-wrapper w-full overflow-hidden {{ $sectionBg }}">
       {{ range $index, $item := $features }}
       {{ $isEven := eq (math.Mod $index 2) 0 }}
       {{ $isLast := eq $index $lastIndex }}
