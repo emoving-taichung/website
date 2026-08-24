@@ -11,12 +11,12 @@ hero_slides:
 
 # 1. 精彩試乘影片
 videos:
-  - id: "-szXGQCbUDo"
-    title: "為運動而生！ eMOVING EZ-R 深度介紹｜跳脫Gogoro束縛的新世代電動速克達！"
-  - id: "jcemjIXSG9g"
-    title: "超值性能電動機車！eMOVING EZ-R"
-  - id: "JEKf9fqM2C0"
-    title: "拒絕Gogoro現成品 做一台最有樂趣電動車！"
+  - id: "-y8b_TQ8S2Q4"
+    title: "全台第一家百貨公司菜市場?! 兩間隱藏台中巷弄60年必買人氣伴手禮 小菜一日採買 ft.eMOVING｜乾杯與小菜的日常"
+  - id: "EmcQ7yWLL4w"
+    title: "**獨家測試**emoving shine 續航力實測 台74甲線 大坡度路線 超硬 不開玩笑 花了一整天才測完"
+  - id: "rYhtss5zxBw"
+    title: "輕巧可愛的微型電動車🛵Emoving BOBE＆SHIN"
 
 
 # 網紅推薦 IG 貼文嵌入 (新增區塊)
