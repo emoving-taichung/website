@@ -1,5 +1,5 @@
 ---
-title: "台中市補助"
+title: "臺中市補助"
 region: "中部"       # 必須精準填寫：中部、北部、南部、東部、外島
 phone: "04-22201661"
 website_url: "https://www.google.com/url?q=https%3A%2F%2Fgreen.epb.taichung.gov.tw%2Findex.aspx&sa=D&sntz=1&usg=AOvVaw1kSQWubOgZtBks36IcxLER"
