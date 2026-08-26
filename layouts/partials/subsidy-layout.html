@@ -137,15 +137,15 @@
 
 <!-- ================= 燈箱結構與 JavaScript 控制 ================= -->
 {{ $modalData := dict 
-   "modal-carbon" (dict "title" "減碳獎勵 $2000" 
-   "desc" `舊車條件：車齡10年以上<br>補助對象：新車主<br>114年內報廢是否可申請：O<br><br>補助資格：<br>1.限購買電動機車<br>2.報廢及回收於113-114年<br>3.報廢一年內購買；買新車後半年內報廢 
-   "url" "https://mobile.moenv.gov.tw/EPAMobileETP/Home/QnA")
-   "modal-air" (dict "title" "空汙補助 $1000起" 
-   "desc" "舊車條件：車齡10年以上<br>補助對象：新車主<br>114年內報廢是否可申請：O<br><br>補助資格：<br>1.限購買電動機車<br>2.報廢及回收於113-114年<br>3.報廢一年內購買；買新車後半年內報廢<br>4.僅能賣給同空品區的買家或環保署" 
-   "url" "https://mobile.moenv.gov.tw/EPAMobileETP/Home/QnA")
-   "modal-recycle" (dict "title" "回收獎勵金 $300" 
-   "desc" "舊車條件：車齡7年以上<br>補助對象：舊車主<br>114年內報廢是否可申請：X<br><br>補助資格：<br>1.車輛已完成回收及報廢，機車車齡達7年以上（含）。<br>2.所有人為政府機關、公立學校或公營事業者，不得申請。<br>3.若使用一站通系統申請者，須於車體回收後二週內完成車籍報廢。" 
-   "url" "https://recyclecar.moenv.gov.tw/people/OneStepQnA.aspx") 
+  "modal-carbon" (dict "title" "減碳獎勵 $2000" 
+  "desc" `舊車條件：車齡10年以上<br>補助對象：新車主<br>114年內報廢是否可申請：O<br><br>補助資格：<br>1.限購買電動機車<br>2.報廢及回收於113-114年<br>3.報廢一年內購買；買新車後半年內報廢` 
+  "url" "https://mobile.moenv.gov.tw/EPAMobileETP/Home/QnA")
+  "modal-air" (dict "title" "空汙補助 $1000起" 
+  "desc" `舊車條件：車齡10年以上<br>補助對象：新車主<br>114年內報廢是否可申請：O<br><br>補助資格：<br>1.限購買電動機車<br>2.報廢及回收於113-114年<br>3.報廢一年內購買；買新車後半年內報廢<br>4.僅能賣給同空品區的買家或環保署` 
+  "url" "https://mobile.moenv.gov.tw/EPAMobileETP/Home/QnA")
+  "modal-recycle" (dict "title" "回收獎勵金 $300" 
+  "desc" `舊車條件：車齡7年以上<br>補助對象：舊車主<br>114年內報廢是否可申請：X<br><br>補助資格：<br>1.車輛已完成回收及報廢，機車車齡達7年以上（含）。<br>2.所有人為政府機關、公立學校或公營事業者，不得申請。<br>3.若使用一站通系統申請者，須於車體回收後二週內完成車籍報廢。` 
+  "url" "https://recyclecar.moenv.gov.tw/people/OneStepQnA.aspx") 
 }}
 
 {{ range $id, $data := $modalData }}
