@@ -2,8 +2,10 @@
 title: "臺中市補助"
 region: "中部"       # 必須精準填寫：中部、北部、南部、東部、外島
 phone: "04-22201661"
-website_url: "https://www.google.com/url?q=https%3A%2F%2Fgreen.epb.taichung.gov.tw%2Findex.aspx&sa=D&sntz=1&usg=AOvVaw1kSQWubOgZtBks36IcxLER"
-doc_url: "https://www.google.com/url?q=https%3A%2F%2Fgreen.epb.taichung.gov.tw%2Fpage%2Fnews%2Fshow.aspx%3Fnum%3D1865%26kind%3D11%26page%3D1&sa=D&sntz=1&usg=AOvVaw1ErwhAAcIVEH2ly92tn5r1"
+website_url: "https://green.epb.taichung.gov.tw/index.aspx
+doc_url: "https://green.epb.taichung.gov.tw/page/news/show.aspx?num=1865&kind=11&page=1"
 query_url: "https://green.epb.taichung.gov.tw/page/replace/login3.aspx"    # 若無此項，前台會自動隱藏該按鈕
+query_label: "資格查詢" # 👈 加入這行，按鈕名稱就會自動變成「線上申請」
 image: "115.png" # 填入您的圖片路徑
+weight: 1
 ---

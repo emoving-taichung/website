@@ -1,0 +1,9 @@
+---
+title: "澎湖縣補助"
+region: "外島"       # 必須精準填寫：中部、北部、南部、東部、外島
+phone: "06-9221778 "
+website_url: "https://www.phepb.gov.tw/home.jsp?id=73"
+doc_url: ""
+query_url: ""    # 若無此項，前台會自動隱藏該按鈕
+image: "115.png" # 填入您的圖片路徑
+---
