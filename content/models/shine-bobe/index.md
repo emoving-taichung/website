@@ -11,7 +11,7 @@ hero_slides_pc:
 hero_slides_mb:
   - "hero_1_mb.png"
   - "hero_2_mb.png"
-  - "hero_2_mb.png"
+  - "hero_3_mb.png"
 
 
 # 1. 精彩試乘影片
