@@ -169,7 +169,12 @@
   {{ end }}
 {{ end }}
 
-{{ $maxSlides := max (len $heroPhotosMb) (len $heroPhotosPc) }}
+{{ $lenMb := len $heroPhotosMb }}
+{{ $lenPc := len $heroPhotosPc }}
+{{ $maxSlides := $lenMb }}
+{{ if gt $lenPc $lenMb }}
+  {{ $maxSlides = $lenPc }}
+{{ end }}
 
 <section class="hero-viewport-height relative w-full bg-black overflow-hidden group touch-pan-y">
     <div id="hero-slides-container" class="w-full h-full relative cursor-grab active:cursor-grabbing">
