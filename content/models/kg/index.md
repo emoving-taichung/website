@@ -3,9 +3,13 @@ title: "eMOVING 勁炫125"
 description: "免月租 首當騎充"
 
 # 0. 頁首輪播圖 (新增此區塊，統一使用 .png)
-hero_slides:
-  - "hero_1.png"
-  - "hero_2.png"
+hero_slides_pc:
+  - "hero_1_pc.png"
+  - "hero_2_pc.png"
+
+hero_slides_mb:
+  - "hero_1_mb.png"
+  - "hero_2_mb.png"
 
 # 1. 精彩試乘影片
 videos:

@@ -22,13 +22,22 @@
     --nav-h: 50px;
   }
 
+  /* 手機版 Hero 獨立高度設定 (68vh / 最小 420px)，電腦版維持 full viewport */
   .hero-viewport-height {
-    height: calc(100dvh - var(--header-h, 50px) - var(--nav-h, 50px));
-    min-height: 380px;
+    height: 68vh;
+    min-height: 420px;
+  }
+  @media (min-width: 768px) {
+    .hero-viewport-height {
+      height: calc(100dvh - var(--header-h, 50px) - var(--nav-h, 50px));
+      min-height: 380px;
+    }
   }
   @supports not (height: 100dvh) {
-    .hero-viewport-height {
-      height: calc(100vh - var(--header-h, 50px) - var(--nav-h, 50px));
+    @media (min-width: 768px) {
+      .hero-viewport-height {
+        height: calc(100vh - var(--header-h, 50px) - var(--nav-h, 50px));
+      }
     }
   }
 
@@ -104,10 +113,13 @@
 </style>
 
 <!-- ========================================== -->
-<!-- 1. Hero 車色圖片輪播 (自動 PNG 轉 WebP) -->
+<!-- 1. Hero 車色圖片輪播 (支援手機/電腦版分開或共用) -->
 <!-- ========================================== -->
-{{ $heroPhotos := slice }}
-{{ with $page.Params.hero_slides }}
+{{ $heroPhotosMb := slice }}
+{{ $heroPhotosPc := slice }}
+
+{{/* 解析手機版獨立圖片 */}}
+{{ with $page.Params.hero_slides_mb }}
   {{ range . }}
     {{ $fileName := . }}
     {{ $imgUrl := "" }}
@@ -118,23 +130,65 @@
     {{ else }}
       {{ $imgUrl = $fileName | relURL }}
     {{ end }}
-    {{ $heroPhotos = $heroPhotos | append $imgUrl }}
+    {{ $heroPhotosMb = $heroPhotosMb | append $imgUrl }}
   {{ end }}
 {{ end }}
 
+{{/* 解析電腦版獨立圖片 */}}
+{{ with $page.Params.hero_slides_pc }}
+  {{ range . }}
+    {{ $fileName := . }}
+    {{ $imgUrl := "" }}
+    {{ $res := $page.Resources.GetMatch (printf "*%s*" $fileName) }}
+    {{ if $res }}
+      {{ $webp := $res.Process "webp" }}
+      {{ $imgUrl = $webp.RelPermalink }}
+    {{ else }}
+      {{ $imgUrl = $fileName | relURL }}
+    {{ end }}
+    {{ $heroPhotosPc = $heroPhotosPc | append $imgUrl }}
+  {{ end }}
+{{ end }}
+
+{{/* 若無分開設定，則回退使用通用 hero_slides */}}
+{{ if and (eq (len $heroPhotosMb) 0) (eq (len $heroPhotosPc) 0) }}
+  {{ with $page.Params.hero_slides }}
+    {{ range . }}
+      {{ $fileName := . }}
+      {{ $imgUrl := "" }}
+      {{ $res := $page.Resources.GetMatch (printf "*%s*" $fileName) }}
+      {{ if $res }}
+        {{ $webp := $res.Process "webp" }}
+        {{ $imgUrl = $webp.RelPermalink }}
+      {{ else }}
+        {{ $imgUrl = $fileName | relURL }}
+      {{ end }}
+      {{ $heroPhotosMb = $heroPhotosMb | append $imgUrl }}
+      {{ $heroPhotosPc = $heroPhotosPc | append $imgUrl }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ $maxSlides := max (len $heroPhotosMb) (len $heroPhotosPc) }}
+
 <section class="hero-viewport-height relative w-full bg-black overflow-hidden group touch-pan-y">
     <div id="hero-slides-container" class="w-full h-full relative cursor-grab active:cursor-grabbing">
-        {{ if gt (len $heroPhotos) 0 }}
-            {{ range $idx, $imgSrc := $heroPhotos }}
-            <img src="{{ $imgSrc }}" alt="{{ $page.Title }}" class="hero-slide-img absolute inset-0 w-full h-full object-cover transition-opacity duration-700 select-none {{ if eq $idx 0 }}opacity-100 z-10{{ else }}opacity-0 z-0{{ end }}">
+        {{ if gt $maxSlides 0 }}
+            {{ range $idx := seq 0 (sub $maxSlides 1) }}
+            {{ $mbImg := index $heroPhotosMb $idx | default (index $heroPhotosPc $idx) }}
+            {{ $pcImg := index $heroPhotosPc $idx | default (index $heroPhotosMb $idx) }}
+            <picture class="hero-slide-img absolute inset-0 w-full h-full transition-opacity duration-700 select-none {{ if eq $idx 0 }}opacity-100 z-10{{ else }}opacity-0 z-0{{ end }}">
+                <source media="(min-width: 768px)" srcset="{{ $pcImg }}">
+                <img src="{{ $mbImg }}" alt="{{ $page.Title }}" class="w-full h-full object-cover">
+            </picture>
             {{ end }}
         {{ end }}
     </div>
 
-    {{ if gt (len $heroPhotos) 1 }}
+    {{ if gt $maxSlides 1 }}
     <button type="button" onclick="prevHeroSlide()" class="absolute left-3 md:left-32 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white w-10 h-10 md:w-12 md:h-12 rounded-full backdrop-blur-md flex items-center justify-center text-lg md:text-xl z-20 opacity-70 hover:opacity-100 transition-all shadow-md">❮</button>
     <button type="button" onclick="nextHeroSlide()" class="absolute right-3 md:right-12 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white w-10 h-10 md:w-auto md:h-auto md:py-2.5 md:px-4 rounded-full backdrop-blur-md flex items-center justify-center md:gap-2 z-20 opacity-85 hover:opacity-100 transition-all shadow-md group">
-        <span class="hidden md:inline text-sm font-bold tracking-wider">點擊看更多車色</span>
+        <span class="hidden md:inline text-sm font-bold tracking-wider">點擊看更多</span>
         <span class="text-base md:text-lg transition-transform group-hover:translate-x-0.5">❯</span>
     </button>
     <div id="hero-dots" class="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-20"></div>
