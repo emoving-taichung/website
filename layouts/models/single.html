@@ -83,7 +83,7 @@
   #scroll-hint { margin-right: 45vw; transition: all 0.3s ease-out; }
   #scroll-hint.is-hidden { opacity: 0 !important; max-width: 0px !important; margin-right: 0px !important; padding: 0px !important; overflow: hidden !important; pointer-events: none !important; }
 
-  /* 4.5 固定背景視差樣式 (iOS Safari clip-path 相容版，避開 VS Code Linter 警告) */
+  /* 4.5 固定背景視差樣式 (iOS Safari clip-path 相容版) */
   .ios-fixed-parallax-wrapper {
     position: relative;
     clip-path: inset(0 0 0 0);
@@ -451,7 +451,7 @@
 </section>
 
 <!-- ========================================== -->
-<!-- 4.5 固定背景視差圖片區塊 (iOS clip-path 相容版 + 手機/電腦分離 + 解決 Linter 警告) -->
+<!-- 4.5 固定背景視差圖片區塊 (包裹單引號，符合 VS Code CSS Linter 規範) -->
 <!-- ========================================== -->
 {{ $fixedPcSrc := "" }}
 {{ $fixedMbSrc := "" }}
@@ -917,7 +917,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (iframe) {
             iframe.src = "https://www.youtube.com/embed/" + videoId + "?autoplay=1&rel=0";
         }
-        document.querySelectorAll("[id^=\"thumb-btn-\"]").forEach((btn, i) => {
+        document.querySelectorAll("[id^='thumb-btn-']").forEach((btn, i) => {
             btn.className = i === idx ? "cursor-pointer aspect-video bg-black rounded-lg overflow-hidden border-2 border-yellow-400 opacity-100 transition-all relative" : "cursor-pointer aspect-video bg-black rounded-lg overflow-hidden border-2 border-gray-300 opacity-70 hover:opacity-100 transition-all relative";
         });
     };
