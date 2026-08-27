@@ -24,12 +24,12 @@
 
   /* 手機版 Hero 獨立高度設定 (68vh / 最小 420px)，電腦版維持 full viewport */
   .hero-viewport-height {
-  height: calc(100dvh - var(--header-h, 50px) - var(--nav-h, 30px));
+  height: calc(100dvh - var(--header-h, 50px) - var(--nav-h, 50px));
   min-height: 380px;
 }
   @media (min-width: 768px) {
     .hero-viewport-height {
-      height: calc(100dvh - var(--header-h, 50px) - var(--nav-h, 40px));
+      height: calc(100dvh - var(--header-h, 50px) - var(--nav-h, 50px));
       min-height: 380px;
     }
   }
@@ -176,7 +176,7 @@
   {{ $maxSlides = $lenPc }}
 {{ end }}
 
-<section class="hero-viewport-height relative w-full bg-black overflow-hidden group touch-pan-y">
+<section class="relative w-full h-[100dvh] bg-black overflow-hidden group touch-pan-y">
     <div id="hero-slides-container" class="w-full h-full relative cursor-grab active:cursor-grabbing">
         {{ if gt $maxSlides 0 }}
             {{ range $idx := seq 0 (sub $maxSlides 1) }}
@@ -196,8 +196,23 @@
         <span class="hidden md:inline text-sm font-bold tracking-wider">點擊看更多</span>
         <span class="text-base md:text-lg transition-transform group-hover:translate-x-0.5">❯</span>
     </button>
-    <div id="hero-dots" class="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-20"></div>
+    
+    <!-- 輪播圓點：向上調至 bottom-20，避免覆蓋底部選單 -->
+    <div id="hero-dots" class="absolute bottom-20 md:bottom-24 left-1/2 -translate-x-1/2 flex gap-3 z-20"></div>
     {{ end }}
+
+    <!-- 底部貼齊切換選單區塊 -->
+    <div class="absolute bottom-0 left-0 w-full z-30 bg-white border-t border-gray-100 py-2.5 px-4 flex items-center justify-center gap-3 shadow-lg">
+        <button type="button" class="bg-blue-600 text-white font-bold px-4 py-1.5 rounded-lg text-sm shadow-sm">
+            車款特色
+        </button>
+        <button type="button" class="bg-transparent text-gray-700 font-bold px-4 py-1.5 rounded-lg text-sm hover:bg-gray-100">
+            好騎推薦
+        </button>
+        <span class="text-xs text-blue-600 font-bold tracking-wide">
+            &gt;&gt;滑動看更多
+        </span>
+    </div>
 </section>
 
 <!-- ========================================== -->

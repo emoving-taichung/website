@@ -5,13 +5,13 @@ description: "輕巧好騎，城市通勤首選"
 # 0. 頁首輪播圖 (新增此區塊，統一使用 .png)
 # 電腦版 Hero 輪播圖 (橫式 16:9)
 hero_slides_pc:
-  - "hero-01-pc.png"
-  - "hero-02-pc.png"
+  - "hero_1_pc.png"
+  - "hero_2_pc.png"
 
 # 手機版 Hero 輪播圖 (直式 3:4，建議 1080x1440)
 hero_slides_mb:
-  - "hero-01-mb.png"
-  - "hero-02-mb.png"
+  - "hero_1_mb.png"
+  - "hero_2_mb.png"
 
 # 1. 精彩試乘影片
 videos:
