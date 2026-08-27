@@ -1,152 +1,178 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const storesData = window.STORES_DATA || [];
+  const dataElem = document.getElementById("stores-data");
+  if (!dataElem) return;
 
-  let selectedModel = "ALL";
-  let selectedCity = "";
-  let selectedDistrict = "ALL";
-
-  const modelSelect = document.getElementById("model-select");
-  const citySelect = document.getElementById("city-select");
-  const districtContainer = document.getElementById("district-buttons");
-  const dealerGrid = document.getElementById("dealer-grid");
-  const resultTitle = document.getElementById("result-title");
-  const resultCount = document.getElementById("result-count");
-
-  // 初始化縣市選單
-  function initCityOptions() {
-    const cities = [...new Set(storesData.map(d => d.city))].filter(Boolean);
-    if (cities.length === 0) {
-      citySelect.innerHTML = `<option value="">無據點資料</option>`;
-      renderDealers();
-      return;
-    }
-    citySelect.innerHTML = cities.map(c => `<option value="${c}">${c}</option>`).join("");
-    selectedCity = cities[0];
-    renderDistricts();
+  let stores = [];
+  try {
+    stores = JSON.parse(dataElem.textContent);
+  } catch (err) {
+    console.error("無法解析據點 JSON 資料：", err);
+    return;
   }
 
-  // 渲染行政區按鈕
-  function renderDistricts() {
-    const availableDealers = storesData.filter(d => {
-      const matchCity = d.city === selectedCity;
-      const matchModel = selectedModel === "ALL" || (d.models && d.models.includes(selectedModel));
-      return matchCity && matchModel;
+  const searchInput = document.getElementById("store-search");
+  const cityFilter = document.getElementById("city-filter");
+  const tagFilter = document.getElementById("tag-filter");
+  const resetBtn = document.getElementById("reset-filter-btn");
+  const grid = document.getElementById("store-list-grid");
+  const countElem = document.getElementById("store-count");
+  const noResultsElem = document.getElementById("no-results");
+
+  // 建立選單選項（自動動態擷取所有據點的縣市與標籤）
+  function initFilterOptions() {
+    const cities = new Set();
+    const tags = new Set();
+
+    stores.forEach((store) => {
+      if (store.city && store.city.trim() !== "") {
+        cities.add(store.city.trim());
+      }
+      if (Array.isArray(store.tags)) {
+        store.tags.forEach((tag) => {
+          if (tag && tag.trim() !== "") tags.add(tag.trim());
+        });
+      }
     });
 
-    const districts = [...new Set(availableDealers.map(d => d.district))].filter(Boolean);
-
-    let html = `
-      <button type="button" data-district="ALL" class="district-btn ${selectedDistrict === 'ALL' ? 'bg-blue-600 text-white font-bold' : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100'} px-3.5 py-1.5 rounded-lg text-sm transition-all shadow-sm">
-        全部 ${selectedCity}
-      </button>
-    `;
-
-    districts.forEach(dist => {
-      const activeClass = selectedDistrict === dist 
-        ? 'bg-blue-600 text-white font-bold' 
-        : 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-100';
-      html += `
-        <button type="button" data-district="${dist}" class="district-btn ${activeClass} px-3.5 py-1.5 rounded-lg text-sm transition-all shadow-sm">
-          ${dist}
-        </button>
-      `;
-    });
-
-    if (districts.length === 0) {
-      html = `<span class="text-sm text-gray-400 italic py-1">該縣市暫無符合此車款的據點</span>`;
+    if (cityFilter) {
+      Array.from(cities)
+        .sort()
+        .forEach((city) => {
+          const opt = document.createElement("option");
+          opt.value = city;
+          opt.textContent = city;
+          cityFilter.appendChild(opt);
+        });
     }
 
-    districtContainer.innerHTML = html;
-
-    // 綁定行政區按鈕點擊事件
-    document.querySelectorAll(".district-btn").forEach(btn => {
-      btn.addEventListener("click", function () {
-        selectedDistrict = this.dataset.district;
-        renderDistricts();
-        renderDealers();
-
-        // 點擊後滾動至下方結果
-        const targetWrapper = document.getElementById("dealer-results-wrapper");
-        if (targetWrapper) {
-          targetWrapper.scrollIntoView({ behavior: "smooth" });
-        }
-      });
-    });
-
-    renderDealers();
+    if (tagFilter) {
+      Array.from(tags)
+        .sort()
+        .forEach((tag) => {
+          const opt = document.createElement("option");
+          opt.value = tag;
+          opt.textContent = tag;
+          tagFilter.appendChild(opt);
+        });
+    }
   }
 
-  // 渲染據點卡片
-  function renderDealers() {
-    const filtered = storesData.filter(d => {
-      const matchModel = selectedModel === "ALL" || (d.models && d.models.includes(selectedModel));
-      const matchCity = d.city === selectedCity;
-      const matchDistrict = selectedDistrict === "ALL" || d.district === selectedDistrict;
-      return matchModel && matchCity && matchDistrict;
-    });
+  // 渲染據點卡片 HTML
+  function renderCardHTML(store) {
+    const tagsHTML = Array.isArray(store.tags)
+      ? store.tags
+          .map(
+            (tag) =>
+              `<span class="bg-blue-50 text-blue-700 text-xs px-2.5 py-1 rounded-md font-semibold">${tag}</span>`
+          )
+          .join(" ")
+      : "";
 
-    resultTitle.innerText = `${selectedCity}${selectedDistrict === 'ALL' ? '' : selectedDistrict} - 據點列表`;
-    resultCount.innerText = `共 ${filtered.length} 家據點`;
+    const mapBtnHTML = store.map_url
+      ? `<a href="${store.map_url}" target="_blank" rel="noopener noreferrer" class="flex-1 py-2 px-3 bg-gray-100 hover:bg-gray-200 text-gray-800 text-xs font-bold rounded-xl text-center transition-colors">地圖導航 ➔</a>`
+      : "";
 
-    if (filtered.length === 0) {
-      dealerGrid.innerHTML = `
-        <div class="col-span-full py-12 text-center bg-gray-50 border border-dashed border-gray-300 rounded-2xl">
-          <p class="text-gray-500 font-medium">該區域暫無符合條件的據點。</p>
-        </div>
-      `;
-      return;
-    }
+    const bookingBtnHTML = store.booking_url
+      ? `<a href="${store.booking_url}" class="flex-1 py-2 px-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl text-center transition-colors">線上預約 ➔</a>`
+      : "";
 
-    dealerGrid.innerHTML = filtered.map(d => `
-      <div class="bg-white border border-gray-200 hover:border-blue-400 rounded-2xl p-5 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+    return `
+      <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
         <div class="space-y-3">
-          <div class="flex justify-between items-start gap-2">
-            <h3 class="text-lg font-black text-gray-900">${d.title}</h3>
-            <span class="bg-blue-100 text-blue-800 text-xs font-bold px-2.5 py-1 rounded-md shrink-0">${d.district}</span>
+          <div class="flex items-start justify-between gap-2">
+            <h3 class="text-xl font-bold text-gray-900 leading-snug">${store.title}</h3>
+            ${
+              store.city
+                ? `<span class="bg-gray-100 text-gray-600 text-xs font-bold px-2.5 py-1 rounded-md shrink-0">${store.city}</span>`
+                : ""
+            }
           </div>
 
-          <div class="space-y-1.5 text-sm text-gray-600">
-            <p class="flex items-start gap-2">
-              <span class="shrink-0">📍</span>
-              <span>${d.address}</span>
-            </p>
-            <p class="flex items-center gap-2">
-              <span class="shrink-0">📞</span>
-              <a href="tel:${d.phone}" class="text-blue-600 font-bold hover:underline">${d.phone}</a>
-            </p>
-            <p class="flex items-center gap-2">
-              <span class="shrink-0">🕒</span>
-              <span>${d.hours}</span>
-            </p>
+          ${tagsHTML ? `<div class="flex flex-wrap gap-1.5 pt-1">${tagsHTML}</div>` : ""}
+
+          <div class="space-y-1.5 text-sm text-gray-600 pt-2 font-light">
+            ${
+              store.address
+                ? `<p class="flex items-start gap-2"><span class="shrink-0">📍</span><span>${store.address}</span></p>`
+                : ""
+            }
+            ${
+              store.phone
+                ? `<p class="flex items-center gap-2"><span class="shrink-0">📞</span><a href="tel:${store.phone}" class="hover:text-blue-600 font-medium">${store.phone}</a></p>`
+                : ""
+            }
+            ${
+              store.hours
+                ? `<p class="flex items-start gap-2"><span class="shrink-0">🕒</span><span>${store.hours}</span></p>`
+                : ""
+            }
           </div>
         </div>
 
-        <div class="mt-5 pt-3 border-t border-gray-100">
-          <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.title + ' ' + d.address)}" target="_blank" rel="noopener noreferrer" class="block w-full bg-gray-900 hover:bg-gray-800 text-white font-bold text-center py-2.5 rounded-xl text-xs md:text-sm transition-colors">
-            開啟 Google 地圖導航 ➔
-          </a>
+        <div class="flex items-center gap-2 pt-6 mt-4 border-t border-gray-100">
+          ${mapBtnHTML}
+          ${bookingBtnHTML}
         </div>
       </div>
-    `).join("");
+    `;
   }
 
-  // 車款下拉選單變更事件
-  if (modelSelect) {
-    modelSelect.addEventListener("change", function () {
-      selectedModel = this.value;
-      selectedDistrict = "ALL";
-      renderDistricts();
+  // 篩選核心邏輯
+  function handleFilter() {
+    const query = searchInput ? searchInput.value.trim().toLowerCase() : "";
+    const selectedCity = cityFilter ? cityFilter.value : "";
+    const selectedTag = tagFilter ? tagFilter.value : "";
+
+    const filtered = stores.filter((store) => {
+      const matchQuery =
+        !query ||
+        (store.title && store.title.toLowerCase().includes(query)) ||
+        (store.address && store.address.toLowerCase().includes(query)) ||
+        (store.phone && store.phone.includes(query));
+
+      const matchCity = !selectedCity || store.city === selectedCity;
+
+      const matchTag =
+        !selectedTag ||
+        (Array.isArray(store.tags) && store.tags.includes(selectedTag));
+
+      return matchQuery && matchCity && matchTag;
+    });
+
+    if (countElem) {
+      countElem.textContent = `共找到 ${filtered.length} 個據點`;
+    }
+
+    if (grid) {
+      grid.innerHTML = filtered.map(renderCardHTML).join("");
+    }
+
+    if (noResultsElem) {
+      if (filtered.length === 0) {
+        noResultsElem.classList.remove("hidden");
+        if (grid) grid.classList.add("hidden");
+      } else {
+        noResultsElem.classList.add("hidden");
+        if (grid) grid.classList.remove("hidden");
+      }
+    }
+  }
+
+  // 綁定事件監聽器
+  if (searchInput) searchInput.addEventListener("input", handleFilter);
+  if (cityFilter) cityFilter.addEventListener("change", handleFilter);
+  if (tagFilter) tagFilter.addEventListener("change", handleFilter);
+
+  if (resetBtn) {
+    resetBtn.addEventListener("click", function () {
+      if (searchInput) searchInput.value = "";
+      if (cityFilter) cityFilter.value = "";
+      if (tagFilter) tagFilter.value = "";
+      handleFilter();
     });
   }
 
-  // 縣市下拉選單變更事件
-  if (citySelect) {
-    citySelect.addEventListener("change", function () {
-      selectedCity = this.value;
-      selectedDistrict = "ALL";
-      renderDistricts();
-    });
-  }
-
-  initCityOptions();
+  // 初始化流程
+  initFilterOptions();
+  handleFilter();
 });
