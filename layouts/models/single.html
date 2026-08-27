@@ -1,881 +1,198 @@
-{{ define "main" }}
-{{ $page := . }}
-
-{{/* 取得檔名並自動拼接 static/catalog/ 與 static/manual/ 的 PDF 路徑 */}}
-{{ $baseName := "" }}
-{{ with $page.File }}
-  {{ $baseName = .BaseFileName }}
-{{ else }}
-  {{ $baseName = $page.Slug }}
-{{ end }}
-
-{{ $catalogPdf := (printf "catalog/%s.pdf" $baseName) | absURL }}
-{{ with $page.Params.catalog_url }}{{ $catalogPdf = . | absURL }}{{ end }}
-
-{{ $manualPdf := (printf "manual/%s.pdf" $baseName) | absURL }}
-{{ with $page.Params.manual_url }}{{ $manualPdf = . | absURL }}{{ end }}
-
-<style>
-  /* 全局高度 CSS 變數 */
-  :root {
-    --header-h: 50px;
-    --nav-h: 50px;
-  }
-
-  .hero-viewport-height {
-    height: calc(100dvh - var(--header-h, 50px) - var(--nav-h, 50px));
-    min-height: 380px;
-  }
-  @supports not (height: 100dvh) {
-    .hero-viewport-height {
-      height: calc(100vh - var(--header-h, 50px) - var(--nav-h, 50px));
-    }
-  }
-
-  /* 一般區塊的錨點與留白 */
-  .anchor-section { 
-    scroll-margin-top: calc(var(--header-h) + var(--nav-h));
-    padding-top: 4rem !important;
-    padding-bottom: 4rem !important;
-  }
-  @media (min-width: 768px) {
-    .anchor-section {
-      padding-top: 7rem !important;
-      padding-bottom: 7rem !important;
-    }
-  }
-
-  /* 車款特色專用錨點 (不加 Padding，避免頭尾露出空白區塊) */
-  .features-section-wrapper {
-    scroll-margin-top: calc(var(--header-h) + var(--nav-h));
-  }
-
-  .no-scrollbar::-webkit-scrollbar { display: none; }
-  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-  
-  .slope-first, .slope-even, .slope-odd, .slope-last-even, .slope-last-odd, .slope-last-single {
-    will-change: transform, clip-path;
-    transform: translateZ(0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-  }
-  .slope-first { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - 3.5vw)); margin-top: 0; }
-  .slope-odd { clip-path: polygon(0 0, 100% 3.5vw, 100% calc(100% - 3.5vw), 0 100%); margin-top: -3.5vw; }
-  .slope-even { clip-path: polygon(0 3.5vw, 100% 0, 100% 100%, 0 calc(100% - 3.5vw)); margin-top: -3.5vw; }
-  .slope-last-single { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); margin-top: 0; }
-  .slope-last-odd { clip-path: polygon(0 0, 100% 3.5vw, 100% 100%, 0 100%); margin-top: -3.5vw; }
-  .slope-last-even { clip-path: polygon(0 3.5vw, 100% 0, 100% 100%, 0 100%); margin-top: -3.5vw; }
-
-  .promo-tab-btn { transition: all 0.25s ease-in-out; }
-  .promo-tab-btn.active { background-color: #1155CC !important; color: #ffffff !important; font-weight: 700 !important; }
-  #sticky-nav.is-scrolled { background-color: #ffffff !important; box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08) !important; }
-
-  @media (max-width: 767px) { #scroll-menu { padding-left: calc(50vw - 140px); } }
-  #scroll-hint { margin-right: 45vw; transition: all 0.3s ease-out; }
-  #scroll-hint.is-hidden { opacity: 0 !important; max-width: 0px !important; margin-right: 0px !important; padding: 0px !important; overflow: hidden !important; pointer-events: none !important; }
-
-  /* 4.5 固定背景視差樣式 (iOS Safari clip-path 相容版，避開 VS Code Linter 警告) */
-  .ios-fixed-parallax-wrapper {
-    position: relative;
-    clip-path: inset(0 0 0 0);
-    -webkit-clip-path: inset(0 0 0 0);
-  }
-
-  .ios-fixed-parallax-bg {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-image: var(--bg-mb);
-    will-change: transform;
-    z-index: -1;
-    pointer-events: none;
-  }
-
-  @media (min-width: 768px) {
-    .ios-fixed-parallax-bg {
-      background-image: var(--bg-pc);
-    }
-  }
-</style>
-
-<!-- ========================================== -->
-<!-- 1. Hero 車色圖片輪播 (自動 PNG 轉 WebP) -->
-<!-- ========================================== -->
-{{ $heroPhotos := slice }}
-{{ with $page.Params.hero_slides }}
-  {{ range . }}
-    {{ $fileName := . }}
-    {{ $imgUrl := "" }}
-    {{ $res := $page.Resources.GetMatch (printf "*%s*" $fileName) }}
-    {{ if $res }}
-      {{ $webp := $res.Process "webp" }}
-      {{ $imgUrl = $webp.RelPermalink }}
-    {{ else }}
-      {{ $imgUrl = $fileName | relURL }}
-    {{ end }}
-    {{ $heroPhotos = $heroPhotos | append $imgUrl }}
-  {{ end }}
-{{ end }}
-
-<section class="hero-viewport-height relative w-full bg-black overflow-hidden group touch-pan-y">
-    <div id="hero-slides-container" class="w-full h-full relative cursor-grab active:cursor-grabbing">
-        {{ if gt (len $heroPhotos) 0 }}
-            {{ range $idx, $imgSrc := $heroPhotos }}
-            <img src="{{ $imgSrc }}" alt="{{ $page.Title }}" class="hero-slide-img absolute inset-0 w-full h-full object-cover transition-opacity duration-700 select-none {{ if eq $idx 0 }}opacity-100 z-10{{ else }}opacity-0 z-0{{ end }}">
-            {{ end }}
-        {{ end }}
-    </div>
-
-    {{ if gt (len $heroPhotos) 1 }}
-    <button type="button" onclick="prevHeroSlide()" class="absolute left-3 md:left-32 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white w-10 h-10 md:w-12 md:h-12 rounded-full backdrop-blur-md flex items-center justify-center text-lg md:text-xl z-20 opacity-70 hover:opacity-100 transition-all shadow-md">❮</button>
-    <button type="button" onclick="nextHeroSlide()" class="absolute right-3 md:right-12 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/80 text-white w-10 h-10 md:w-auto md:h-auto md:py-2.5 md:px-4 rounded-full backdrop-blur-md flex items-center justify-center md:gap-2 z-20 opacity-85 hover:opacity-100 transition-all shadow-md group">
-        <span class="hidden md:inline text-sm font-bold tracking-wider">點擊看更多</span>
-        <span class="text-base md:text-lg transition-transform group-hover:translate-x-0.5">❯</span>
-    </button>
-    <div id="hero-dots" class="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-20"></div>
-    {{ end }}
-</section>
-
-<!-- ========================================== -->
-<!-- 2. 懸浮導覽列 -->
-<!-- ========================================== -->
-<nav id="sticky-nav" class="sticky top-[var(--header-h,50px)] z-40 bg-white border-b border-gray-200 shadow-sm transition-all duration-300">
-    <div id="scroll-menu" class="max-w-6xl mx-auto flex overflow-x-auto no-scrollbar items-center py-2 px-3 space-x-1 md:space-x-3 md:justify-center">
-        <a href="#features-gallery" class="promo-tab-btn active px-3 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">車款特色</a>
-        <a href="#reviews" class="promo-tab-btn px-3 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">好騎推推</a>
-        <span id="scroll-hint" class="md:hidden text-sm font-bold text-[#1155CC] animate-pulse whitespace-nowrap select-none inline-block">&gt;&gt;滑動看更多</span>
-        <a href="#specs" class="promo-tab-btn px-3 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">詳細規格表</a>
-        <a href="#accessories" class="promo-tab-btn px-3 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">原廠配件</a>
-        <a href="#faq" class="promo-tab-btn px-3 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">常見 QA</a>
-    </div>
-</nav>
-
-<!-- ========================================== -->
-<!-- 3. 車款特色區塊 (自動 PNG 轉 WebP) -->
-<!-- ========================================== -->
-{{ with $page.Params.features }}
-    {{ $features := . }}
-    {{ $total := len $features }}
-    {{ $lastIndex := math.Sub $total 1 }}
-    {{ $lastIsEven := eq (math.Mod $lastIndex 2) 0 }}
-    {{ $sectionBg := "bg-[#f9fcff]" }}
-    {{ if $lastIsEven }}
-        {{ $sectionBg = "bg-[#e3e7ec]" }}
-    {{ end }}
-
-    <section id="features-gallery" class="features-section-wrapper w-full overflow-hidden {{ $sectionBg }}">
-      {{ range $index, $item := $features }}
-      {{ $isEven := eq (math.Mod $index 2) 0 }}
-      {{ $isLast := eq $index $lastIndex }}
-      {{ $slopeClass := "" }}
-      {{ if $isLast }}
-          {{ if eq $total 1 }} {{ $slopeClass = "slope-last-single" }}
-          {{ else if $isEven }} {{ $slopeClass = "slope-last-even" }}
-          {{ else }} {{ $slopeClass = "slope-last-odd" }}
-          {{ end }}
-      {{ else }}
-          {{ if eq $index 0 }} {{ $slopeClass = "slope-first" }}
-          {{ else if $isEven }} {{ $slopeClass = "slope-even" }}
-          {{ else }} {{ $slopeClass = "slope-odd" }}
-          {{ end }}
-      {{ end }}
-
-      {{ $imgSrc := "" }}
-      {{ $res := $page.Resources.GetMatch (printf "*%s*" $item.image) }}
-      {{ if $res }}
-        {{ $webp := $res.Process "webp" }}
-        {{ $imgSrc = $webp.RelPermalink }}
-      {{ else }}
-        {{ $imgSrc = $item.image | relURL }}
-      {{ end }}
-  
-      <div class="relative py-20 px-6 md:px-12 transition-all {{ if $isEven }}bg-[#e3e7ec]{{ else }}bg-[#f9fcff]{{ end }} text-gray-900 {{ $slopeClass }}">
-          <div class="max-w-6xl mx-auto flex flex-col {{ if $isEven }}md:flex-row-reverse{{ else }}md:flex-row{{ end }} items-center gap-10 md:gap-14 py-4">
-              <div class="w-full md:w-5/12 space-y-4 text-left">
-                  <h3 class="text-2xl md:text-3xl font-black tracking-wider uppercase border-b pb-3 border-gray-400/40 text-gray-900">{{ $item.title }}</h3>
-                  <p class="text-base md:text-lg leading-relaxed font-light text-gray-700">{{ $item.desc }}</p>
-              </div>
-              <div class="w-full md:w-7/12 flex justify-center">
-                  <div class="w-full max-w-2xl aspect-[16/10] rounded-3xl overflow-hidden border-4 border-white/60 shadow-xl shrink-0 group">
-                      <img src="{{ $imgSrc }}" alt="{{ $item.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
-                  </div>
-              </div>
-          </div>
-      </div>
-      {{ end }}
-  </section>
-{{ end }}
-
-<!-- ========================================== -->
-<!-- 3.5 視差滾動區塊 (自動 PNG 轉 WebP) -->
-<!-- ========================================== -->
-
-{{/* 1. 解析背景圖片路徑與轉 WebP */}}
-{{ $pBgImg := "" }}
-{{ with $page.Params.parallax_bg_image }}
-  {{ $res := $page.Resources.GetMatch (printf "*%s*" .) }}
-  {{ if $res }}
-    {{ $webp := $res.Process "webp" }}
-    {{ $pBgImg = $webp.RelPermalink }}
-  {{ else }}
-    {{ $pBgImg = . | relURL }}
-  {{ end }}
-{{ end }}
-
-{{/* 2. 於 Hugo 端安全生成車色陣列與轉 WebP */}}
-{{ $parallaxDataArray := slice }}
-{{ range $page.Params.parallax_slides }}
-  {{ $sImg := .image | relURL }}
-  {{ $res := $page.Resources.GetMatch (printf "*%s*" .image) }}
-  {{ if $res }}
-    {{ $webp := $res.Process "webp" }}
-    {{ $sImg = $webp.RelPermalink }}
-  {{ end }}
-  
-  {{ $dict := dict "name" .color_name "img" $sImg "bg" (.bg_color | default "#1a2332") }}
-  {{ $parallaxDataArray = $parallaxDataArray | append $dict }}
-{{ end }}
-
-{{/* 3. 於 Hugo 端安全生成特色背景與內容陣列並轉 WebP */}}
-{{ $parallaxFeaturesArray := slice }}
-{{ range $page.Params.parallax_features }}
-  {{ $fImg := .image | relURL }}
-  {{ $res := $page.Resources.GetMatch (printf "*%s*" .image) }}
-  {{ if $res }}
-    {{ $webp := $res.Process "webp" }}
-    {{ $fImg = $webp.RelPermalink }}
-  {{ end }}
-  
-  {{ $fDict := dict "number" .number "title" .title "desc" .desc "image" $fImg "color_class" .color_class "badge_bg" .badge_bg }}
-  {{ $parallaxFeaturesArray = $parallaxFeaturesArray | append $fDict }}
-{{ end }}
-
-<section id="interactive-parallax-section" 
-         data-parallax="{{ $parallaxDataArray | jsonify }}" 
-         data-features="{{ $parallaxFeaturesArray | jsonify }}"
-         data-bg="{{ $pBgImg }}"
-         class="relative w-full h-[650vh] md:h-[500vh] bg-black">
-         
-    <div id="parallax-sticky-box" class="sticky top-[calc(var(--header-h,50px)+var(--nav-h,50px))] w-full h-[calc(100dvh-var(--header-h,50px)-var(--nav-h,50px))] min-h-[480px] overflow-hidden flex items-center justify-center z-10">
-        
-        <div id="parallax-bg-color-layer" class="absolute inset-0 transition-colors duration-700 ease-out z-0"></div>
-        <div id="parallax-bg-image-layer" class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-500 opacity-0 z-0"></div>
-        <div id="parallax-gradient-layer" class="absolute inset-0 bg-black/50 transition-opacity duration-500 opacity-0 z-0"></div>
-
-        <div class="relative z-10 w-full max-w-6xl px-3 sm:px-4 flex flex-col items-center justify-center h-full">
-            
-            <div id="color-title-box" class="absolute top-4 md:top-8 text-center transition-all duration-500 opacity-100 transform translate-y-0 z-20">
-                <span class="text-xs md:text-sm uppercase tracking-[0.3em] text-yellow-400 font-bold">COLOR COLLECTION</span>
-                <h3 id="color-name-text" class="text-2xl md:text-4xl font-black text-white mt-1 drop-shadow-md"></h3>
-            </div>
-
-            <div id="car-images-container" class="w-full h-[60vh] md:h-[70vh] relative flex items-center justify-center my-auto transition-transform duration-500 z-10">
-                {{ range $cIdx, $cItem := $page.Params.parallax_slides }}
-                {{ $sImg := .image | relURL }}
-                {{ $res := $page.Resources.GetMatch (printf "*%s*" .image) }}
-                {{ if $res }}
-                  {{ $webp := $res.Process "webp" }}
-                  {{ $sImg = $webp.RelPermalink }}
-                {{ end }}
-                <img id="parallax-car-img-{{ $cIdx }}" src="{{ $sImg }}" alt="{{ .color_name }}" class="parallax-car-img absolute inset-0 m-auto w-[95vw] sm:w-[75vw] md:w-auto md:max-w-[70vw] h-auto max-h-[62vh] md:max-h-[72vh] object-contain object-center scale-110 sm:scale-125 transition-opacity duration-700 ease-in-out select-none pointer-events-none {{ if eq $cIdx 0 }}opacity-100 z-10{{ else }}opacity-0 z-0{{ end }}">
-                {{ end }}
-            </div>
-
-            <div id="feature-callouts-container" class="absolute inset-0 pointer-events-none flex items-center justify-center z-20">
-                {{ range $fIdx, $fItem := $page.Params.parallax_features }}
-                {{ $posClass := "bottom-14 sm:bottom-20 md:bottom-28 inset-x-0 mx-auto w-[90%] sm:w-[80%] max-w-[320px] md:max-w-md text-center" }}
-                {{ if eq $fIdx 0 }}{{ $posClass = "top-12 sm:top-14 md:top-20 left-4 sm:left-12 md:left-36 w-[88%] md:w-auto max-w-[280px] md:max-w-md text-left" }}{{ end }}
-                {{ if eq $fIdx 1 }}{{ $posClass = "top-[20%] sm:top-[25%] md:top-1/3 right-4 sm:right-12 md:right-36 w-[88%] md:w-auto max-w-[280px] md:max-w-md text-left" }}{{ end }}
-                {{ if eq $fIdx 2 }}{{ $posClass = "bottom-32 sm:bottom-20 md:bottom-40 inset-x-0 mx-auto w-[90%] sm:w-[80%] max-w-[320px] md:max-w-md text-center" }}{{ end }}
-
-                <div class="feat-card-item absolute {{ $posClass }} bg-black/80 backdrop-blur-xl border border-white/20 p-3 sm:p-4 md:p-5 rounded-xl md:rounded-2xl text-white opacity-0 transform translate-y-6 transition-all duration-500 shadow-2xl pointer-events-none">
-                    <div class="flex items-center gap-1.5 md:gap-2 mb-1.5 {{ $fItem.color_class }} font-bold text-base md:text-xl {{ if eq $fIdx 2 }}justify-center{{ else }}justify-start{{ end }}">
-                        <span class="{{ $fItem.badge_bg }} text-black px-1.5 py-0.5 rounded-md text-xs md:text-sm font-black shrink-0">{{ $fItem.number }}</span>
-                        <h4 class="whitespace-nowrap font-bold">{{ $fItem.title }}</h4>
-                    </div>
-                    <p class="text-sm md:text-base text-gray-300 leading-normal md:leading-relaxed font-light {{ if eq $fIdx 2 }}text-center{{ else }}text-left{{ end }}">{{ $fItem.desc }}</p>
-                </div>
-                {{ end }}
-            </div>
-
-            <div class="absolute bottom-3 inset-x-0 mx-auto flex flex-col items-center justify-center text-center opacity-80 text-white text-xs select-none z-20 w-fit pointer-events-none">
-                <div class="animate-bounce flex flex-col items-center justify-center">
-                    <span class="text-center w-full block">繼續向下滾動探索</span>
-                    <svg class="w-4 h-4 mt-0.5 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ========================================== -->
-<!-- 4. 好騎推推區塊 (自動 PNG 轉 WebP) -->
-<!-- ========================================== -->
-<section id="reviews" class="anchor-section relative z-20 py-12 md:py-16 px-2 sm:px-6 bg-[#F1FAFF] text-gray-800 shadow-[0_-10px_30px_rgba(0,0,0,0.15)]">
-    <div class="max-w-5xl mx-auto space-y-12 md:space-y-16">
-        <div class="text-center space-y-2">
-            <h2 class="text-3xl md:text-4xl font-black text-blue-900 tracking-wide">【好騎推推】</h2>
-            <p class="text-sm md:text-base text-gray-600 font-medium">試乘體驗、專業媒體報導與車主評價推薦</p>
-        </div>
-
-        {{ with $page.Params.videos }}
-        {{ $firstVid := index . 0 }}
-        <div class="space-y-4 md:space-y-6">
-            <h3 class="text-xl md:text-2xl font-bold text-blue-800 flex items-center gap-2 px-2 sm:px-0"><span>▶</span> 精彩試乘影音</h3>
-            <div class="bg-white p-2 sm:p-4 rounded-2xl border border-blue-100 shadow-md space-y-3 sm:space-y-4">
-                <div id="main-video-box" class="relative w-full aspect-video bg-black rounded-xl overflow-hidden shadow-inner">
-                    <iframe id="main-youtube-iframe" class="w-full h-full" src="https://www.youtube.com/embed/{{ $firstVid.id }}?rel=0" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen referrerpolicy="strict-origin-when-origin"></iframe>
-                </div>
-                <div class="grid grid-cols-3 gap-2 sm:gap-3">
-                    {{ range $idx, $vid := . }}
-                    <div data-vid="{{ $vid.id }}" data-idx="{{ $idx }}" onclick="swapVideo(this.dataset.vid, Number(this.dataset.idx))" id="thumb-btn-{{ $idx }}" class="cursor-pointer aspect-video bg-black rounded-lg overflow-hidden border-2 {{ if eq $idx 0 }}border-yellow-400 opacity-100{{ else }}border-gray-300 opacity-70{{ end }} hover:opacity-100 transition-all relative">
-                        <img src="https://i.ytimg.com/vi/{{ $vid.id }}/hqdefault.jpg" data-fallback="https://i.ytimg.com/vi/{{ $vid.id }}/0.jpg" alt="{{ $vid.title }}" class="w-full h-full object-cover fallback-img">
-                    </div>
-                    {{ end }}
-                </div>
-            </div>
-        </div>
-        {{ end }}
-
-        {{ with $page.Params.ig_posts }}
-        <div class="space-y-6 px-2 sm:px-0">
-            <h3 class="text-xl md:text-2xl font-bold text-blue-800 flex items-center gap-2"><span>📸</span> 網紅推薦</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 justify-items-center">
-                {{ range . }}
-                <div class="w-full flex justify-center">
-                    <blockquote class="instagram-media" data-instgrm-permalink="{{ .url }}" data-instgrm-version="14" style="background:#FFF; border:0; border-radius:12px; box-shadow:0 0 1px 0 rgba(0,0,0,0.5),0 1px 10px 0 rgba(0,0,0,0.15); margin: 1px; max-width:540px; min-width:326px; padding:0; width:99.375%;"></blockquote>
-                </div>
-                {{ end }}
-            </div>
-        </div>
-        {{ end }}
-
-        {{ with $page.Params.reports }}
-        <div class="space-y-6 px-2 sm:px-0">
-            <h3 class="text-xl md:text-2xl font-bold text-blue-800 flex items-center gap-2"><span>📰</span> 媒體報導觀點</h3>
-            <div class="space-y-6">
-                {{ range . }}
-                {{ $rptImgSrc := "" }}
-                {{ $res := $page.Resources.GetMatch (printf "*%s*" .image) }}
-                {{ if $res }}
-                  {{ $webp := $res.Process "webp" }}
-                  {{ $rptImgSrc = $webp.RelPermalink }}
-                {{ else }}
-                  {{ $rptImgSrc = .image | relURL }}
-                {{ end }}
-                <div class="bg-white text-gray-900 rounded-2xl p-6 shadow-md border border-blue-100 flex flex-col md:flex-row gap-6 items-center hover:shadow-lg transition-shadow">
-                    <div class="w-full md:w-[40%] aspect-[4/3] rounded-xl overflow-hidden shrink-0 border border-gray-100"><img src="{{ $rptImgSrc }}" alt="{{ .source }}" class="w-full h-full object-cover" loading="lazy"></div>
-                    <div class="w-full md:w-[60%] space-y-3 text-left">
-                        <div class="flex items-baseline gap-2">
-                            <h4 class="text-xl font-bold text-gray-900">{{ .source }}</h4>
-                            {{ with .author }}<span class="text-xs text-gray-400">- by {{ . }}</span>{{ end }}
-                        </div>
-                        <p class="text-sm text-gray-600 leading-relaxed">{{ .summary }}</p>
-                        {{ with .link }}<div class="text-right pt-2"><a href="{{ . }}" target="_blank" rel="noopener noreferrer" class="text-blue-600 font-bold hover:underline text-sm inline-flex items-center gap-1">閱讀完整報導 →</a></div>{{ end }}
-                    </div>
-                </div>
-                {{ end }}
-            </div>
-        </div>
-        {{ end }}
-
-        <div class="pt-8 pb-4 flex flex-col sm:flex-row justify-center gap-4">
-            <a href="{{ "promotions/" | relURL }}" class="px-8 py-3.5 bg-yellow-400 hover:bg-yellow-500 text-black font-extrabold text-center rounded-xl transition-all shadow-xl hover:scale-105">前往主打優惠 ➔</a>
-            <a href="{{ "booking/" | absURL }}" class="px-8 py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-center rounded-xl transition-all shadow-xl hover:scale-105">預約現場試乘 ➔</a>
-        </div>
-    </div>
-</section>
-
-<!-- ========================================== -->
-<!-- 4.5 固定背景視差圖片區塊 (iOS clip-path 相容版 + 手機/電腦分離 + 解決 Linter 警告) -->
-<!-- ========================================== -->
-{{ $fixedPcSrc := "" }}
-{{ $fixedMbSrc := "" }}
-
-{{/* 解析電腦版圖片並轉檔為 WebP */}}
-{{ with $page.Params.fixed_picture_pc }}
-  {{ $res := $page.Resources.GetMatch (printf "*%s*" .) }}
-  {{ if $res }}
-    {{ $webp := $res.Process "webp" }}
-    {{ $fixedPcSrc = $webp.RelPermalink }}
-  {{ else }}
-    {{ $fixedPcSrc = . | relURL }}
-  {{ end }}
-{{ else }}
-  {{ with $page.Params.fixed_picture }}
-    {{ $res := $page.Resources.GetMatch (printf "*%s*" .) }}
-    {{ if $res }}
-      {{ $webp := $res.Process "webp" }}
-      {{ $fixedPcSrc = $webp.RelPermalink }}
-    {{ else }}
-      {{ $fixedPcSrc = . | relURL }}
-    {{ end }}
-  {{ end }}
-{{ end }}
-
-{{/* 解析手機版圖片並轉檔為 WebP */}}
-{{ with $page.Params.fixed_picture_mb }}
-  {{ $res := $page.Resources.GetMatch (printf "*%s*" .) }}
-  {{ if $res }}
-    {{ $webp := $res.Process "webp" }}
-    {{ $fixedMbSrc = $webp.RelPermalink }}
-  {{ else }}
-    {{ $fixedMbSrc = . | relURL }}
-  {{ end }}
-{{ else }}
-  {{ $fixedMbSrc = $fixedPcSrc }}
-{{ end }}
-
-<div class="ios-fixed-parallax-wrapper relative w-full h-[calc(100dvh-var(--header-h,50px)-var(--nav-h,50px))] min-h-[380px] md:h-[85vh] shadow-inner"
-     style="--bg-pc: url('{{ $fixedPcSrc }}'); --bg-mb: url('{{ $fixedMbSrc }}');">
-    <div class="ios-fixed-parallax-bg"></div>
-</div>
-
-<!-- ========================================== -->
-<!-- 5. 詳細規格數據表 (支援雙表並排 / 單表自適應) -->
-<!-- ========================================== -->
-{{ with $page.Params.specs_tables }}
-<section id="specs" class="anchor-section py-16 px-6 bg-white text-gray-800 relative z-20">
-    <div class="max-w-6xl mx-auto space-y-8">
-        <h2 class="text-2xl md:text-3xl font-black text-center text-gray-900 tracking-wide">規格表
-        </h2>
-        
-        {{/* 依表格數量自動切換：1 個全寬，2 個以上自動一列兩欄 */}}
-        <div class="grid grid-cols-1 {{ if gt (len .) 1 }}md:grid-cols-2{{ end }} gap-6 md:gap-8 items-start">
-            {{ range . }}
-            <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                {{ with .title }}
-                <div class="bg-gray-900 text-white font-bold text-center py-3.5 px-4 text-base md:text-lg tracking-wider">
-                    {{ . }}
-                </div>
-                {{ end }}
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm border-collapse">
-                        <tbody class="divide-y divide-gray-200">
-                            {{ range .specs }}
-                            <tr class="hover:bg-gray-50/80 transition-colors">
-                                <td class="p-3.5 border-r border-gray-200 font-medium bg-gray-50 text-gray-700 text-center w-5/12">{{ .label }}</td>
-                                <td class="p-3.5 text-center text-gray-900 font-semibold w-7/12">{{ .value }}</td>
-                            </tr>
-                            {{ end }}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            {{ end }}
-        </div>
-
-        <div class="space-y-1 text-xs text-gray-400 text-left font-light [&_a]:text-blue-600 [&_a]:underline [&_a]:hover:text-blue-800">
-            {{ with $page.Params.specs_notes }}{{ range . }}<p>{{ . | markdownify }}</p>{{ end }}{{ else }}<p>* 規格配備以實車為準，本公司保留修改權利。</p>{{ end }}
-        </div>
-    </div>
-</section>
-{{ end }}
-
-<!-- ========================================== -->
-<!-- 6. 原廠配件區塊 (自動 PNG 轉 WebP) -->
-<!-- ========================================== -->
-{{ with $page.Params.accessories }}
-<section id="accessories" class="anchor-section py-12 bg-white px-6 relative z-20">
-    <div class="max-w-6xl mx-auto space-y-8">
-        <h2 class="text-2xl md:text-3xl font-extrabold text-center text-gray-900 tracking-wide">專屬原廠精選配件</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {{ range . }}
-            {{ $accImgSrc := "" }}
-            {{ $res := $page.Resources.GetMatch (printf "*%s*" .image) }}
-            {{ if $res }}
-              {{ $webp := $res.Process "webp" }}
-              {{ $accImgSrc = $webp.RelPermalink }}
-            {{ else }}
-              {{ $accImgSrc = .image | relURL }}
-            {{ end }}
-            <div class="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow flex flex-col items-center">
-                <div class="w-full aspect-square rounded-xl overflow-hidden bg-gray-50 mb-3"><img src="{{ $accImgSrc }}" alt="{{ .title }}" class="w-full h-full object-cover" loading="lazy"></div>
-                <h3 class="text-lg md:text-xl font-bold text-gray-900 text-center tracking-wide mt-1">{{ .title }}</h3>
-            </div>
-            {{ end }}
-        </div>
-    </div>
-</section>
-{{ end }}
-
-<!-- ========================================== -->
-<!-- CTA 按鈕區塊 -->
-<!-- ========================================== -->
-<section class="py-10 bg-gray-900 text-white px-6 relative z-20">
-    <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
-        <a href="{{ $catalogPdf }}" target="_blank" rel="noopener noreferrer" class="py-4 px-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap"><span>📄</span> <span>電子型錄</span></a>
-        <a href="{{ $manualPdf }}" target="_blank" rel="noopener noreferrer" class="py-4 px-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap"><span>📘</span> <span>使用手冊</span></a>
-        <a href="{{ "booking/" | relURL }}" class="py-4 px-3 bg-blue-600 hover:bg-blue-500 text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap"><span>🛵</span> <span>預約試乘</span></a>
-        <a href="{{ "promotions/" | relURL }}" class="py-4 px-3 bg-yellow-400 hover:bg-yellow-300 text-black text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap"><span>🎁</span> <span>獲取優惠</span></a>
-    </div>
-</section>
-
-<!-- ========================================== -->
-<!-- 7. 常見 QA -->
-<!-- ========================================== -->
-{{ with $page.Params.faq }}
-<section id="faq" class="anchor-section py-16 px-6 bg-white text-gray-800 relative z-20">
-    <div class="max-w-3xl mx-auto space-y-6">
-        <h2 class="text-2xl font-bold text-center text-gray-900">常見問題 Q&A</h2>
-        <div class="space-y-3">
-            {{ range . }}
-            <details class="group bg-gray-50 p-4 rounded-xl border border-gray-200 cursor-pointer">
-                <summary class="font-bold text-lg text-gray-900 flex justify-between items-center">
-                    {{ .question }}
-                    <span class="text-gray-400 transition-transform group-open:rotate-180">▼</span>
-                </summary>
-                <p class="text-base text-gray-600 mt-3 leading-relaxed text-left">
-                    {{ .answer }}
-                </p>
-            </details>
-            {{ end }}
-        </div>
-    </div>
-</section>
-{{ end }}
-
-<button id="back-to-top-btn" class="fixed bottom-6 right-6 z-50 w-11 h-11 md:w-12 md:h-12 rounded-full border-2 border-blue-600 bg-white text-blue-600 shadow-lg flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-110 focus:outline-none opacity-0 pointer-events-none" title="回到頂端">
-    <svg class="w-6 h-6 stroke-current" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"/></svg>
-</button>
-
-<script async src="//www.instagram.com/embed.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    // 圖片載入失敗時備用圖片監聽
-    document.querySelectorAll(".fallback-img").forEach(function(img) {
-        img.addEventListener("error", function() {
-            if (this.dataset.fallback && this.src !== this.dataset.fallback) {
-                this.src = this.dataset.fallback;
-            }
-        }, { once: true });
-    });
-
-    function updateLayoutHeights() {
-        const topHeader = Array.from(document.querySelectorAll("header, nav, div")).find(el => {
-            if (el.id === "sticky-nav" || el.closest("#sticky-nav")) return false;
-            const style = window.getComputedStyle(el);
-            return (style.position === "fixed" || style.position === "sticky") && el.getBoundingClientRect().top <= 5;
-        });
-        const headerH = topHeader ? topHeader.offsetHeight : 50;
-        const stickyNav = document.getElementById("sticky-nav");
-        const navH = stickyNav ? stickyNav.offsetHeight : 50;
-        document.documentElement.style.setProperty("--header-h", headerH + "px");
-        document.documentElement.style.setProperty("--nav-h", navH + "px");
-    }
-    updateLayoutHeights();
-    window.addEventListener("resize", updateLayoutHeights);
-    window.addEventListener("load", updateLayoutHeights);
-
-    const scrollMenu = document.getElementById("scroll-menu");
-    const scrollHint = document.getElementById("scroll-hint");
-    if (scrollMenu && scrollHint) {
-        scrollMenu.addEventListener("scroll", () => {
-            if (scrollMenu.scrollLeft > 5) scrollHint.classList.add("is-hidden");
-            else scrollHint.classList.remove("is-hidden");
-        }, { passive: true });
-    }
-
-    // Hero 輪播
-    const slides = document.querySelectorAll(".hero-slide-img");
-    const totalSlides = slides.length;
-    let heroIdx = 0;
-    function initHeroDots() {
-        const dotsBox = document.getElementById("hero-dots");
-        if (!dotsBox || totalSlides <= 1) return;
-        dotsBox.innerHTML = "";
-        for (let i = 0; i < totalSlides; i++) {
-            const dot = document.createElement("button");
-            dot.type = "button";
-            dot.className = "w-3 h-3 rounded-full transition-all " + (i === heroIdx ? "bg-white w-8" : "bg-white/50");
-            dot.onclick = () => setHeroSlide(i);
-            dotsBox.appendChild(dot);
-        }
-    }
-    window.setHeroSlide = function(idx) {
-        if (totalSlides <= 1 || idx === heroIdx) return;
-        slides[heroIdx].classList.remove("opacity-100", "z-10");
-        slides[heroIdx].classList.add("opacity-0", "z-0");
-        heroIdx = idx;
-        slides[heroIdx].classList.remove("opacity-0", "z-0");
-        slides[heroIdx].classList.add("opacity-100", "z-10");
-        initHeroDots();
-    };
-    window.prevHeroSlide = () => { if (totalSlides > 1) setHeroSlide((heroIdx - 1 + totalSlides) % totalSlides); };
-    window.nextHeroSlide = () => { if (totalSlides > 1) setHeroSlide((heroIdx + 1) % totalSlides); };
-    initHeroDots();
-
-    const heroContainer = document.getElementById("hero-slides-container");
-    if (heroContainer) {
-        let touchStartX = 0;
-        let touchEndX = 0;
-        heroContainer.addEventListener("touchstart", e => touchStartX = e.changedTouches[0].screenX, { passive: true });
-        heroContainer.addEventListener("touchend", e => {
-            touchEndX = e.changedTouches[0].screenX;
-            if (touchStartX - touchEndX > 40) nextHeroSlide();
-            else if (touchStartX - touchEndX < -40) prevHeroSlide();
-        }, { passive: true });
-    }
-
-    /* =========================================
-       3.5 視差滾動核心邏輯 (多圖 Fade 轉換)
-       ========================================= */
-    const parallaxSec = document.getElementById("interactive-parallax-section");
-    const pDataAttr = parallaxSec ? parallaxSec.getAttribute("data-parallax") : null;
-    const pFeaturesAttr = parallaxSec ? parallaxSec.getAttribute("data-features") : null;
-    const pBgAttr = parallaxSec ? parallaxSec.getAttribute("data-bg") : null;
+<!DOCTYPE html>
+<html lang="zh-tw" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ if .Title }}{{ .Title }} - {{ end }}eMOVING 精輪山西店｜台中電動機車</title>
     
-    const parallaxData = pDataAttr ? JSON.parse(pDataAttr) : [];
-    const parallaxFeatures = pFeaturesAttr ? JSON.parse(pFeaturesAttr) : [];
-    const parallaxBgImage = pBgAttr || "";
+    <!-- 自訂瀏覽器分頁圖示 (Favicon) -->
+    <link rel="icon" type="image/png" href='{{ "images/favicon.png" | relURL }}'>
+    <link rel="apple-touch-icon" href='{{ "images/favicon.png" | relURL }}'>
 
-    if (parallaxSec && (parallaxData.length > 0 || parallaxFeatures.length > 0)) {
-        const bgLayer = document.getElementById("parallax-bg-color-layer");
-        const bgImgLayer = document.getElementById("parallax-bg-image-layer");
-        const gradientLayer = document.getElementById("parallax-gradient-layer");
-        const titleBox = document.getElementById("color-title-box");
-        const colorText = document.getElementById("color-name-text");
-        const featCards = document.querySelectorAll(".feat-card-item");
-        const carImgs = document.querySelectorAll(".parallax-car-img");
-
-        if (parallaxData.length > 0) {
-            bgLayer.style.backgroundColor = parallaxData[0].bg;
-            colorText.innerText = parallaxData[0].name;
-        }
-
-        function handleParallaxScroll() {
-            const headerH = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--header-h")) || 50;
-            const navH = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--nav-h")) || 50;
-            const topOffset = headerH + navH;
-            
-            const secStart = parallaxSec.offsetTop - topOffset;
-            const scrollableDistance = parallaxSec.offsetHeight - window.innerHeight; 
-            
-            let currentScroll = window.scrollY - secStart;
-            currentScroll = Math.max(0, Math.min(currentScroll, scrollableDistance));
-
-            let progress = scrollableDistance > 0 ? currentScroll / scrollableDistance : 0;
-
-            const totalSlides = parallaxData.length;
-            const colorShare = 0.45;
-            const featureShare = 0.55;
-
-            if (progress < colorShare && totalSlides > 0) {
-                let colorProgress = progress / colorShare;
-                let currentPhaseIdx = Math.floor(colorProgress * totalSlides);
-                if (currentPhaseIdx >= totalSlides) currentPhaseIdx = totalSlides - 1;
-
-                const currentCar = parallaxData[currentPhaseIdx];
-
-                carImgs.forEach((img, idx) => {
-                    if (idx === currentPhaseIdx) {
-                        img.classList.remove("opacity-0", "z-10");
-                        img.classList.add("opacity-100", "z-10");
-                    } else {
-                        img.classList.remove("opacity-100", "z-10");
-                        img.classList.add("opacity-0", "z-0");
-                    }
-                });
-
-                if (colorText.innerText !== currentCar.name) { 
-                    colorText.innerText = currentCar.name; 
-                }
-
-                titleBox.style.opacity = "1";
-                titleBox.style.transform = "translateY(0)";
-
-                bgImgLayer.style.opacity = "0";
-                gradientLayer.style.opacity = "0";
-                bgLayer.style.backgroundColor = currentCar.bg; 
-
-                featCards.forEach(card => {
-                    card.style.opacity = "0";
-                    card.style.transform = "translateY(24px)";
-                    card.style.pointerEvents = "none";
-                });
-
-            } else {
-                carImgs.forEach(img => {
-                    img.classList.remove("opacity-100", "z-10");
-                    img.classList.add("opacity-0", "z-0");
-                });
-                titleBox.style.opacity = "0";
-                titleBox.style.transform = "translateY(-20px)";
-
-                bgImgLayer.style.opacity = "1";
-                gradientLayer.style.opacity = "0.32";
-                bgLayer.style.backgroundColor = "#000000";
-
-                let featureProgress = (progress - colorShare) / featureShare;
-                featureProgress = Math.max(0, Math.min(featureProgress, 1));
-
-                const totalFeats = parallaxFeatures.length;
-
-                if (totalFeats > 0) {
-                    let featIdx = Math.floor(featureProgress * totalFeats);
-                    if (featIdx >= totalFeats) featIdx = totalFeats - 1;
-
-                    const currentFeat = parallaxFeatures[featIdx];
-                    if (currentFeat && currentFeat.image) {
-                        const featImgUrl = "url('" + currentFeat.image + "')";
-                        if (bgImgLayer.style.backgroundImage !== featImgUrl) {
-                            bgImgLayer.style.backgroundImage = featImgUrl;
-                        }
-                    }
-
-                    const step = 1 / totalFeats;
-                    const subProgress = (featureProgress - (featIdx * step)) / step;
-
-                    let cardOpacity = 1;
-                    let cardTranslateY = 0;
-
-                    if (subProgress < 0.15) {
-                        let factor = subProgress / 0.15;
-                        cardOpacity = factor;
-                        cardTranslateY = (1 - factor) * 20;
-                    } else if (subProgress > 0.85 && featIdx < totalFeats - 1) {
-                        let factor = (1 - subProgress) / 0.15;
-                        cardOpacity = factor;
-                        cardTranslateY = (1 - factor) * -20;
-                    } else {
-                        cardOpacity = 1;
-                        cardTranslateY = 0;
-                    }
-
-                    featCards.forEach((card, idx) => {
-                        if (idx === featIdx) {
-                            card.style.opacity = cardOpacity.toString();
-                            card.style.transform = "translateY(" + cardTranslateY + "px)";
-                            card.style.pointerEvents = "auto";
-                        } else {
-                            card.style.opacity = "0";
-                            card.style.transform = "translateY(24px)";
-                            card.style.pointerEvents = "none";
-                        }
-                    });
-                } else if (parallaxBgImage) {
-                    const bgUrl = "url('" + parallaxBgImage + "')";
-                    if (bgImgLayer.style.backgroundImage !== bgUrl) {
-                        bgImgLayer.style.backgroundImage = bgUrl;
-                    }
-                }
-            }
-        }
-        
-        window.addEventListener("scroll", handleParallaxScroll, { passive: true });
-        window.addEventListener("load", handleParallaxScroll);
-        handleParallaxScroll(); 
-    }
-
-    /* =========================================
-       選單陰影控制 & ScrollSpy (捲動監聽自動切換 Tab)
-       ========================================= */
-    const nav = document.getElementById("sticky-nav");
-    if (nav) {
-        window.addEventListener("scroll", () => {
-            if (window.scrollY > 150) nav.classList.add("is-scrolled");
-            else nav.classList.remove("is-scrolled");
-        }, { passive: true });
-    }
-
-    // 取得所有具有對應 ID 區塊的導覽列連結
-    const navLinksData = Array.from(document.querySelectorAll(".promo-tab-btn")).map(link => {
-        const href = link.getAttribute("href");
-        return {
-            link: link,
-            id: href.substring(1),
-            target: document.getElementById(href.substring(1))
-        };
-    }).filter(item => item.target);
-
-    // 負責依據目前捲動位置更新 active 的函數
-    function updateActiveTabOnScroll() {
-        const headerH = parseInt(document.documentElement.style.getPropertyValue("--header-h")) || 50;
-        const navH = parseInt(document.documentElement.style.getPropertyValue("--nav-h")) || 50;
-        const offset = headerH + navH + 150; // 增加緩衝區，讓區塊還沒完全碰到頂部時就提早切換
-        
-        let foundId = "";
-        
-        // 從下往上找，找到第一個已經超過觸發線的區塊
-        for (let i = navLinksData.length - 1; i >= 0; i--) {
-            const item = navLinksData[i];
-            const rect = item.target.getBoundingClientRect();
-            if (rect.top <= offset) {
-                foundId = item.id;
-                break;
-            }
-        }
-
-        // 如果在最頂部，預設選中第一個
-        if (!foundId && navLinksData.length > 0) {
-            foundId = navLinksData[0].id;
-        }
-
-        if (foundId) {
-            navLinksData.forEach(item => {
-                if (item.id === foundId) {
-                    item.link.classList.add("active");
-                    // 手機版自動將選單水平滾動，保持啟用中的項目在可視範圍
-                    const scrollMenu = document.getElementById("scroll-menu");
-                    if (scrollMenu && window.innerWidth < 768) {
-                        const linkLeft = item.link.offsetLeft;
-                        const linkWidth = item.link.offsetWidth;
-                        const menuWidth = scrollMenu.offsetWidth;
-                        const currentScroll = scrollMenu.scrollLeft;
-                        
-                        // 判斷是否超出畫面範圍
-                        if (linkLeft < currentScroll + 30 || (linkLeft + linkWidth) > (currentScroll + menuWidth - 30)) {
-                            scrollMenu.scrollTo({
-                                left: linkLeft - menuWidth / 2 + linkWidth / 2,
-                                behavior: "smooth"
-                            });
-                        }
-                    }
-                } else {
-                    item.link.classList.remove("active");
-                }
-            });
-        }
-    }
+    <link href="https://fonts.googleapis.com/css2?family=Anybody:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     
-    // 註冊捲動事件與畫面載入事件來初始化 ScrollSpy
-    window.addEventListener("scroll", updateActiveTabOnScroll, { passive: true });
-    window.addEventListener("load", updateActiveTabOnScroll);
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandBlue: '#1155CC',
+                        brandDarkBlue: '#0b3887',
+                        brandLightBg: '#ffffff'
+                    },
+                    fontFamily: {
+                        sans: ['Anybody', 'sans-serif']
+                    },
+                    fontSize: {
+                        'small': '10px',
+                        'regular': '15px',
+                        'subtitle': '18px',
+                        'main-title': '24px'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-brandLightBg text-[#1C1C1C] min-h-screen antialiased flex flex-col lg:flex-row m-0 p-0 overflow-x-hidden">
 
-    window.swapVideo = function(videoId, idx) {
-        if (!videoId) return;
-        const iframe = document.getElementById("main-youtube-iframe");
-        const mainBox = document.getElementById("main-video-box");
-        if (mainBox) {
-            const headerH = parseInt(document.documentElement.style.getPropertyValue("--header-h")) || 50;
-            const navH = parseInt(document.documentElement.style.getPropertyValue("--nav-h")) || 50;
-            window.scrollTo({ top: mainBox.getBoundingClientRect().top + window.scrollY - headerH - navH - 20, behavior: "smooth" });
-        }
-        if (iframe) {
-            iframe.src = "https://www.youtube.com/embed/" + videoId + "?autoplay=1&rel=0";
-        }
-        document.querySelectorAll("[id^=\"thumb-btn-\"]").forEach((btn, i) => {
-            btn.className = i === idx ? "cursor-pointer aspect-video bg-black rounded-lg overflow-hidden border-2 border-yellow-400 opacity-100 transition-all relative" : "cursor-pointer aspect-video bg-black rounded-lg overflow-hidden border-2 border-gray-300 opacity-70 hover:opacity-100 transition-all relative";
+<!-- 載入在地商家 Google SEO 結構化資料 -->
+{{ partial "seo-schema.html" . }}
+
+    <!-- ========================================== -->
+    <!-- 1. 【電腦版】左側固定導覽欄（限定首頁才會出現） -->
+    <!-- ========================================== -->
+    {{ if .IsHome }}
+    <aside class="hidden lg:flex fixed left-0 top-0 h-screen w-[260px] bg-gradient-to-b from-brandBlue to-brandDarkBlue text-white flex-col justify-between items-end p-8 z-40 border-r border-white/10">
+        <div class="w-full flex justify-end">
+            <button class="menu-open-btn w-10 h-10 flex items-center justify-center bg-white/10 rounded-lg text-white focus:outline-none hover:bg-white/20 transition-colors">
+                <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- 首頁左側錨點選單：直接使用頁面內錨點，實現順暢平滑滾動 -->
+        <nav class="flex flex-col gap-6 items-end text-right w-full my-auto">
+            <a href="#hero" class="group block text-subtitle tracking-wider text-blue-100 hover:text-white transition-all font-semibold">
+                <span class="inline-block border-b border-transparent group-hover:border-white pb-1">首頁</span>
+            </a>
+            <a href="#features" class="group block text-subtitle tracking-wider text-blue-100 hover:text-white transition-all font-semibold">
+                <span class="inline-block border-b border-transparent group-hover:border-white pb-1">專業、貼心、完善</span>
+            </a>
+            <a href="#models" class="group block text-subtitle tracking-wider text-blue-100 hover:text-white transition-all font-semibold">
+                <span class="inline-block border-b border-transparent group-hover:border-white pb-1">車款介紹</span>
+            </a>
+            <a href="#contact" class="group block text-subtitle tracking-wider text-blue-100 hover:text-white transition-all font-semibold">
+                <span class="inline-block border-b border-transparent group-hover:border-white pb-1">聯絡我們</span>
+            </a>
+        </nav>
+
+        <div class="text-small text-blue-200/40 text-right w-full">
+            © 2026 eMOVING 精輪
+        </div>
+    </aside>
+    {{ end }}
+
+    <!-- ========================================== -->
+    <!-- 2. 頂部列 Header -->
+    <!-- ========================================== -->
+    {{ if .IsHome }}
+        <!-- 首頁【手機版】頂部列：選單按鈕置左，標題接續在右邊 -->
+        <header class="lg:hidden fixed top-0 left-0 w-full bg-brandBlue text-white p-3 flex items-center gap-3 z-40 shadow-md">
+            <button class="menu-open-btn w-10 h-10 flex items-center justify-center bg-white/10 rounded-lg text-white focus:outline-none hover:bg-white/20 transition-colors shrink-0">
+                <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+            <a href='{{ site.Home.RelPermalink }}' class="font-black tracking-wider text-regular hover:text-blue-200 transition-colors">
+                eMOVING 精輪山西店
+            </a>
+        </header>
+    {{ else }}
+        <!-- 非首頁【全尺寸通用】頂部列：使用 site.Home.RelPermalink 精準返回首頁 -->
+        <header class="fixed top-0 left-0 w-full bg-brandBlue text-white p-3 md:p-3 flex justify-between items-center z-40 shadow-md">
+            <div class="flex items-center gap-3 md:gap-3">
+                <button class="menu-open-btn w-10 h-10 flex items-center justify-center bg-white/10 rounded-lg text-white focus:outline-none hover:bg-white/20 transition-colors">
+                    <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                
+                <a href='{{ site.Home.RelPermalink }}' class="flex items-center gap-2.5 md:gap-3 group">
+                    <img src='{{ "images/logo.png" | relURL }}' alt="eMOVING Logo" class="h-6 md:h-7 w-auto object-contain">
+                    <span class="text-xs md:text-regular font-semibold tracking-wide border-l border-white/30 pl-2.5 md:pl-3 py-0.5 group-hover:text-blue-200 transition-colors">
+                        山西店｜台中電動機車專賣｜精輪車業
+                    </span>
+                </a>
+            </div>
+        </header>
+    {{ end }}
+
+    <!-- ========================================== -->
+    <!-- 3. 【全站通用】全螢幕大選單 -->
+    <!-- ========================================== -->
+    <div id="global-menu-overlay" class="hidden fixed inset-0 bg-white/70 z-[100] flex items-center justify-center p-4 md:p-6 backdrop-blur-md cursor-pointer">
+        <button id="close-menu-btn" class="absolute top-6 right-6 text-[#454555] hover:opacity-70 text-3xl focus:outline-none transition-colors">✕</button>
+        
+        <div id="menu-content-card" class="max-h-[90vh] overflow-y-auto w-full max-w-sm text-center py-8 px-6 cursor-default bg-[#454555] rounded-2xl shadow-2xl flex flex-col justify-between">
+            
+            <nav class="flex flex-col gap-4 text-subtitle text-white font-bold">
+                <a href='{{ site.Home.RelPermalink }}#hero' class="menu-close-trigger hover:opacity-70 transition-opacity">首頁</a>
+                <a href='{{ "promotions/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">主打優惠</a>
+                <a href='{{ "news/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">最新消息</a>
+                <a href='{{ "customer-service/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">智慧客服</a>
+                
+                <div class="relative px-2">
+                    <button id="menu-dropdown-btn" class="w-full flex justify-center items-center gap-2 hover:opacity-70 transition-opacity focus:outline-none py-1">
+                        <span>車款介紹</span>
+                        <span id="dropdown-arrow" class="text-xs transition-transform duration-200">▼</span>
+                    </button>
+                    <div id="menu-dropdown-content" class="hidden my-2 py-2 bg-white/10 rounded-xl flex flex-col gap-2 text-regular text-white/90 border border-white/5">
+                        <a href='{{ "models/shine-bobe/" | relURL }}' class="menu-close-trigger hover:opacity-70 py-1 block px-4">免駕照 Shine / Bobe</a>
+                        <a href='{{ "models/ez1/" | relURL }}' class="menu-close-trigger hover:opacity-70 py-1 block px-4">汽車駕照可騎 EZ1</a>
+                        <a href='{{ "models/ezr/" | relURL }}' class="menu-close-trigger hover:opacity-70 py-1 block px-4">換電重型白牌 EZR</a>
+                        <a href='{{ "models/fun/" | relURL }}' class="menu-close-trigger hover:opacity-70 py-1 block px-4">換電重型白牌 fun</a>
+                        <a href='{{ "models/jinxuan125/" | relURL }}' class="menu-close-trigger hover:opacity-70 py-1 block px-4">充電重型白牌 勁炫125</a>
+                    </div>
+                </div>
+
+                <a href='{{ "subsidies/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">補助查詢</a>
+                <a href='{{ "booking/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">預約試乘</a>
+                <a href='{{ "stores/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">門市據點</a>
+                <a href='{{ "service/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">維修據點</a>
+                <a href='{{ site.Home.RelPermalink }}#contact' class="menu-close-trigger hover:opacity-70 transition-opacity">聯絡我們</a>
+            </nav>
+            
+            <div class="h-px bg-white/10 my-4 mx-8"></div>
+            
+            <div class="flex flex-wrap justify-center gap-4 text-small text-[#999999] font-medium">
+                <a href='{{ "privacy/" | relURL }}' class="menu-close-trigger hover:text-white transition-colors">隱私權</a>
+                <a href='{{ "faq/" | relURL }}' class="menu-close-trigger hover:text-white transition-colors">車輛相關Q&A</a>
+                <a href='{{ "sitemap/" | relURL }}' class="menu-close-trigger hover:text-white transition-colors">網站地圖</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主內容區塊 -->
+    <div class="flex-1 flex flex-col min-h-screen {{ if .IsHome }}lg:ml-[260px] pt-[56px] lg:pt-0{{ else }}pt-[56px] md:pt-[60px]{{ end }}">
+        {{ block "main" . }}{{ end }}
+    </div>
+
+    <script>
+        const openBtns = document.querySelectorAll('.menu-open-btn');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const menuOverlay = document.getElementById('global-menu-overlay');
+        const menuContentCard = document.getElementById('menu-content-card');
+        const dropdownBtn = document.getElementById('menu-dropdown-btn');
+        const dropdownContent = document.getElementById('menu-dropdown-content');
+        const dropdownArrow = document.getElementById('dropdown-arrow');
+        const closeTriggers = document.querySelectorAll('.menu-close-trigger');
+
+        openBtns.forEach(btn => {
+            btn.addEventListener('click', () => menuOverlay.classList.remove('hidden'));
         });
-    };
 
-    if (window.instgrm) window.instgrm.Embeds.process();
+        closeMenuBtn.addEventListener('click', () => menuOverlay.classList.add('hidden'));
 
-    const backToTopBtn = document.getElementById("back-to-top-btn");
-    if (backToTopBtn) {
-        window.addEventListener("scroll", () => {
-            if (window.scrollY > 300) { backToTopBtn.classList.remove("opacity-0", "pointer-events-none"); backToTopBtn.classList.add("opacity-100", "pointer-events-auto"); }
-            else { backToTopBtn.classList.add("opacity-0", "pointer-events-none"); backToTopBtn.classList.remove("opacity-0", "pointer-events-none"); }
-        }, { passive: true });
-        backToTopBtn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
-    }
-});
-</script>
+        menuOverlay.addEventListener('click', (e) => {
+            if (e.target === menuOverlay) {
+                menuOverlay.classList.add('hidden');
+            }
+        });
+        menuContentCard.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
 
-{{ partial "contact.html" . }}
-{{ end }}
+        dropdownBtn.addEventListener('click', () => {
+            dropdownContent.classList.toggle('hidden');
+            dropdownArrow.classList.toggle('rotate-180');
+        });
+
+        closeTriggers.forEach(trigger => {
+            trigger.addEventListener('click', () => menuOverlay.classList.add('hidden'));
+        });
+    </script>
+</body>
+</html>
