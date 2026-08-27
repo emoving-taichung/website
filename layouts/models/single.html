@@ -18,26 +18,19 @@
 <style>
   /* 全局高度 CSS 變數 */
   :root {
-    --header-h: 50px;
+    --header-h: 0px;
     --nav-h: 50px;
   }
 
-  /* 手機版 Hero 獨立高度設定 (68vh / 最小 420px)，電腦版維持 full viewport */
+  /* 手機版與電腦版 Hero 統一計算：精準填滿 Header 與 Nav 以外的可視高度 */
   .hero-viewport-height {
-  height: calc(100dvh - var(--header-h, 50px) - var(--nav-h, 50px));
-  min-height: 380px;
-}
-  @media (min-width: 768px) {
-    .hero-viewport-height {
-      height: calc(100dvh - var(--header-h, 50px) - var(--nav-h, 50px));
-      min-height: 380px;
-    }
+    height: calc(100dvh - var(--header-h, 0px) - var(--nav-h, 50px));
+    min-height: 380px;
   }
   @supports not (height: 100dvh) {
-    @media (min-width: 768px) {
-      .hero-viewport-height {
-        height: calc(100vh - var(--header-h, 50px) - var(--nav-h, 50px));
-      }
+    .hero-viewport-height {
+      height: calc(100vh - var(--header-h, 0px) - var(--nav-h, 50px));
+      min-height: 380px;
     }
   }
 
@@ -203,7 +196,7 @@
 <!-- ========================================== -->
 <!-- 2. 懸浮導覽列 -->
 <!-- ========================================== -->
-<nav id="sticky-nav" class="sticky top-[var(--header-h,50px)] z-40 bg-white border-b border-gray-200 shadow-sm transition-all duration-300">
+<nav id="sticky-nav" class="sticky top-[var(--header-h,0px)] z-40 bg-white border-b border-gray-200 shadow-sm transition-all duration-300">
     <div id="scroll-menu" class="max-w-6xl mx-auto flex overflow-x-auto no-scrollbar items-center py-2 px-3 space-x-1 md:space-x-3 md:justify-center">
         <a href="#features-gallery" class="promo-tab-btn active px-3 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">車款特色</a>
         <a href="#reviews" class="promo-tab-btn px-3 md:px-6 py-2 md:py-2.5 text-sm md:text-base font-bold text-gray-700 hover:text-[#1155CC] rounded-lg whitespace-nowrap shrink-0">好騎推推</a>
@@ -320,7 +313,7 @@
          data-bg="{{ $pBgImg }}"
          class="relative w-full h-[650vh] md:h-[500vh] bg-black">
          
-    <div id="parallax-sticky-box" class="sticky top-[calc(var(--header-h,50px)+var(--nav-h,50px))] w-full h-[calc(100dvh-var(--header-h,50px)-var(--nav-h,50px))] min-h-[480px] overflow-hidden flex items-center justify-center z-10">
+    <div id="parallax-sticky-box" class="sticky top-[calc(var(--header-h,0px)+var(--nav-h,50px))] w-full h-[calc(100dvh-var(--header-h,0px)-var(--nav-h,50px))] min-h-[480px] overflow-hidden flex items-center justify-center z-10">
         
         <div id="parallax-bg-color-layer" class="absolute inset-0 transition-colors duration-700 ease-out z-0"></div>
         <div id="parallax-bg-image-layer" class="absolute inset-0 bg-cover bg-center bg-no-repeat transition-all duration-500 opacity-0 z-0"></div>
@@ -490,7 +483,7 @@
   {{ $fixedMbSrc = $fixedPcSrc }}
 {{ end }}
 
-<div class="ios-fixed-parallax-wrapper relative w-full h-[calc(100dvh-var(--header-h,50px)-var(--nav-h,50px))] min-h-[380px] md:h-[85vh] shadow-inner"
+<div class="ios-fixed-parallax-wrapper relative w-full h-[calc(100dvh-var(--header-h,0px)-var(--nav-h,50px))] min-h-[380px] md:h-[85vh] shadow-inner"
      style="--bg-pc: url('{{ $fixedPcSrc }}'); --bg-mb: url('{{ $fixedMbSrc }}');">
     <div class="ios-fixed-parallax-bg"></div>
 </div>
@@ -620,7 +613,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const style = window.getComputedStyle(el);
             return (style.position === "fixed" || style.position === "sticky") && el.getBoundingClientRect().top <= 5;
         });
-        const headerH = topHeader ? topHeader.offsetHeight : 50;
+        const headerH = topHeader ? topHeader.offsetHeight : 0;
         const stickyNav = document.getElementById("sticky-nav");
         const navH = stickyNav ? stickyNav.offsetHeight : 50;
         document.documentElement.style.setProperty("--header-h", headerH + "px");
@@ -707,7 +700,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }
 
         function handleParallaxScroll() {
-            const headerH = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--header-h")) || 50;
+            const headerH = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--header-h")) || 0;
             const navH = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--nav-h")) || 50;
             const topOffset = headerH + navH;
             
@@ -853,7 +846,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // 負責依據目前捲動位置更新 active 的函數
     function updateActiveTabOnScroll() {
-        const headerH = parseInt(document.documentElement.style.getPropertyValue("--header-h")) || 50;
+        const headerH = parseInt(document.documentElement.style.getPropertyValue("--header-h")) || 0;
         const navH = parseInt(document.documentElement.style.getPropertyValue("--nav-h")) || 50;
         const offset = headerH + navH + 150; // 增加緩衝區，讓區塊還沒完全碰到頂部時就提早切換
         
@@ -910,7 +903,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const iframe = document.getElementById("main-youtube-iframe");
         const mainBox = document.getElementById("main-video-box");
         if (mainBox) {
-            const headerH = parseInt(document.documentElement.style.getPropertyValue("--header-h")) || 50;
+            const headerH = parseInt(document.documentElement.style.getPropertyValue("--header-h")) || 0;
             const navH = parseInt(document.documentElement.style.getPropertyValue("--nav-h")) || 50;
             window.scrollTo({ top: mainBox.getBoundingClientRect().top + window.scrollY - headerH - navH - 20, behavior: "smooth" });
         }
