@@ -9,8 +9,8 @@
     <!-- 1. 置頂標題區 (#F1FAFF 淺藍背景) -->
     <div class="w-full bg-[#F1FAFF] py-6 md:py-8 text-center">
         <div class="w-full max-w-3xl mx-auto px-4">
-            <!-- 大標題：30px -->
-            <h1 class="text-[30px] font-black tracking-wider text-[#1C1C1C] mb-2">
+            <!-- 大標題：35px -->
+            <h1 class="text-[35px] font-black tracking-wider text-[#1C1C1C] mb-2">
                 {{ .Title }}
             </h1>
             {{ if .Params.subtitle }}
@@ -109,7 +109,7 @@
                     <!-- Google 地圖動態嵌入 (改為 300px * 300px 並置中) -->
                     {{ if $store.address }}
                     <div class="mt-5 pt-2 flex justify-center">
-                        <div class="w-[300px] h-[300px] max-w-full rounded-xl overflow-hidden border border-gray-100 shadow-inner">
+                        <div class="w-[350px] h-[400px] max-w-full rounded-xl overflow-hidden border border-gray-100 shadow-inner">
                             <iframe 
                                 title="{{ $store.title }} 地圖"
                                 src="https://maps.google.com/maps?q={{ $store.address }}&output=embed" 
