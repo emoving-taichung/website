@@ -1,133 +1,147 @@
 {{ define "main" }}
-<!-- 1. 置頂標題區 (#F1FAFF 淺藍背景，上下高度收窄) -->
-<div class="bg-[#F1FAFF] py-6 md:py-8 text-center">
-    <div class="max-w-3xl mx-auto px-4">
-        <h1 class="text-2xl md:text-3xl font-black tracking-wider text-[#1C1C1C] mb-2">
-            {{ .Title }}
-        </h1>
-        {{ if .Params.subtitle }}
-        <p class="text-[#999999] text-sm md:text-base font-normal">{{ .Params.subtitle }}</p>
-        {{ end }}
-    </div>
-</div>
+<!-- 引入 Google Fonts: Anybody 字型 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anybody:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
-<div class="max-w-6xl mx-auto px-4 py-8 text-gray-800">
+<div class="font-['Anybody',sans-serif]">
 
-    <!-- 2. 區域選擇按鈕網格 (1px #1155CC 外框，字體 #1C1C1C) -->
-    <div class="max-w-2xl mx-auto mb-10">
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
-            {{ $regions := slice "北區" "西區" "南區" "東區" "中區" "屯區" "北屯區" "海線" "山線" "潭雅神" "大甲區" "豐原區" "彰化區" }}
-            {{ range $region := $regions }}
-            <button type="button"
-                    data-region="{{ $region }}"
-                    class="region-btn w-full py-2.5 px-4 bg-white border border-[#1155CC] text-[#1C1C1C] font-bold rounded-2xl text-center hover:bg-blue-50 transition-all duration-200 shadow-sm active:scale-95">
-                {{ $region }}
-            </button>
+    <!-- 1. 置頂標題區 (#F1FAFF 淺藍背景，上下高度收窄) -->
+    <div class="w-full bg-[#F1FAFF] py-6 md:py-8 text-center">
+        <div class="w-full max-w-3xl mx-auto px-4">
+            <!-- 大標題：24px -->
+            <h1 class="text-[24px] font-black tracking-wider text-[#1C1C1C] mb-2">
+                {{ .Title }}
+            </h1>
+            {{ if .Params.subtitle }}
+            <!-- 一般文字：15px -->
+            <p class="text-[#999999] text-[15px] font-normal">{{ .Params.subtitle }}</p>
             {{ end }}
         </div>
     </div>
 
-    <!-- 取得所有 YAML 據點資料 -->
-    {{ $allStores := slice }}
-    {{ if .Site.Data.stores }}
-        {{ range $file, $stores := .Site.Data.stores }}
-            {{ if reflect.IsSlice $stores }}
-                {{ range $stores }}
-                    {{ $allStores = $allStores | append . }}
+    <!-- 外層容器 -->
+    <div class="w-full max-w-6xl mx-auto px-4 py-8 text-[#1C1C1C]">
+
+        <!-- 2. 區域選擇按鈕網格 (桌面版 5 列：md:grid-cols-5，手機版 3 列：grid-cols-3) -->
+        <div class="w-full max-w-3xl mx-auto mb-10">
+            <div class="grid grid-cols-3 md:grid-cols-5 gap-2.5 md:gap-4">
+                {{ $regions := slice "北區" "北屯區" "潭子區" "西區" "西屯區" "南區" "南屯區" "神岡區" "東區" "霧峰區" "太平區" "大雅區" "大里區" "沙鹿區" "大甲區" "彰化縣" "南投縣" }}
+                {{ range $region := $regions }}
+                <!-- 按鈕文字：子標題 18px -->
+                <button type="button"
+                        data-region="{{ $region }}"
+                        class="region-btn w-full py-2 px-1 bg-white border border-[#1155CC] text-[#1C1C1C] text-[18px] font-bold rounded-2xl text-center hover:bg-blue-50 transition-all duration-200 shadow-sm active:scale-95">
+                    {{ $region }}
+                </button>
+                {{ end }}
+            </div>
+        </div>
+
+        <!-- 取得所有 YAML 據點資料 -->
+        {{ $allStores := slice }}
+        {{ if .Site.Data.stores }}
+            {{ range $file, $stores := .Site.Data.stores }}
+                {{ if reflect.IsSlice $stores }}
+                    {{ range $stores }}
+                        {{ $allStores = $allStores | append . }}
+                    {{ end }}
+                {{ end }}
+            {{ end }}
+        {{ else }}
+            {{ range $file, $stores := .Site.Data }}
+                {{ if reflect.IsSlice $stores }}
+                    {{ range $stores }}
+                        {{ $allStores = $allStores | append . }}
+                    {{ end }}
                 {{ end }}
             {{ end }}
         {{ end }}
-    {{ else }}
-        {{ range $file, $stores := .Site.Data }}
-            {{ if reflect.IsSlice $stores }}
-                {{ range $stores }}
-                    {{ $allStores = $allStores | append . }}
+
+        {{ $pageType := .Params.page_type }}
+
+        <!-- 3. 據點卡片展示區 (加上 scroll-mt-10 避免捲動時頂部過緊) -->
+        <div id="store-list-grid" class="w-full grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch scroll-mt-10">
+            {{ range $store := $allStores }}
+                {{ $isValid := false }}
+                {{ $models := slice }}
+
+                {{ if eq $pageType "sales" }}
+                    {{ if and $store.sales_models (gt (len $store.sales_models) 0) }}
+                        {{ $isValid = true }}
+                        {{ $models = $store.sales_models }}
+                    {{ end }}
+                {{ else if eq $pageType "repair" }}
+                    {{ if and $store.repair_models (gt (len $store.repair_models) 0) }}
+                        {{ $isValid = true }}
+                        {{ $models = $store.repair_models }}
+                    {{ end }}
                 {{ end }}
-            {{ end }}
-        {{ end }}
-    {{ end }}
 
-    {{ $pageType := .Params.page_type }}
+                {{ if $isValid }}
+                <div class="store-card hidden bg-white border border-gray-200 rounded-2xl pt-6 px-4 pb-4 shadow-sm hover:shadow-md transition-all flex flex-col justify-between text-center"
+                     data-district="{{ $store.district }}"
+                     data-address="{{ $store.address }}">
+                    
+                    <div class="space-y-2">
+                        <!-- 店名：子標題 18px -->
+                        <h3 class="text-[18px] font-extrabold text-[#1C1C1C] mb-3">{{ $store.title }}</h3>
 
-    <!-- 3. 據點卡片展示區 -->
-    <div id="store-list-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
-        {{ range $store := $allStores }}
-            {{ $isValid := false }}
-            {{ $models := slice }}
+                        <!-- 內容：一般文字 15px -->
+                        <div class="space-y-1 text-[15px] text-[#1C1C1C] font-normal leading-relaxed">
+                            {{ if $store.phone }}<p>電話：<a href="tel:{{ $store.phone }}" class="hover:text-[#1155CC]">{{ $store.phone }}</a></p>{{ end }}
+                            {{ if $store.address }}<p>地址：{{ $store.address }}</p>{{ end }}
+                            {{ if $store.hours }}<p class="text-[#999999]">營業時間：{{ $store.hours }}</p>{{ end }}
+                        </div>
 
-            {{ if eq $pageType "sales" }}
-                {{ if and $store.sales_models (gt (len $store.sales_models) 0) }}
-                    {{ $isValid = true }}
-                    {{ $models = $store.sales_models }}
-                {{ end }}
-            {{ else if eq $pageType "repair" }}
-                {{ if and $store.repair_models (gt (len $store.repair_models) 0) }}
-                    {{ $isValid = true }}
-                    {{ $models = $store.repair_models }}
-                {{ end }}
-            {{ end }}
-
-            {{ if $isValid }}
-            <div class="store-card hidden bg-white border border-gray-200 rounded-2xl pt-6 px-4 pb-4 shadow-sm hover:shadow-md transition-all flex flex-col justify-between text-center"
-                 data-district="{{ $store.district }}"
-                 data-address="{{ $store.address }}">
-                
-                <div class="space-y-2">
-                    <!-- 店名：子標題 #1C1C1C -->
-                    <h3 class="text-xl font-extrabold text-[#1C1C1C] mb-3">{{ $store.title }}</h3>
-
-                    <!-- 內容：一般文字 #1C1C1C -->
-                    <div class="space-y-1 text-xs md:text-sm text-[#1C1C1C] font-normal leading-relaxed">
-                        {{ if $store.phone }}<p>電話：<a href="tel:{{ $store.phone }}" class="hover:text-[#1155CC]">{{ $store.phone }}</a></p>{{ end }}
-                        {{ if $store.address }}<p>地址：{{ $store.address }}</p>{{ end }}
-                        {{ if $store.hours }}<p class="text-gray-600">營業時間：{{ $store.hours }}</p>{{ end }}
-                    </div>
-
-                    {{ if $models }}
-                    <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 pt-3">
-                        {{ range $model := $models }}
-                        <span class="inline-flex items-center gap-1 text-xs md:text-sm font-normal text-[#1C1C1C]">
-                            <span class="text-green-600 font-bold">☑</span>{{ $model }}
-                        </span>
+                        {{ if $models }}
+                        <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 pt-3">
+                            {{ range $model := $models }}
+                            <span class="inline-flex items-center gap-1 text-[15px] font-normal text-[#1C1C1C]">
+                                <!-- 小文字：10px -->
+                                <span class="text-green-600 font-bold text-[10px]">☑</span>{{ $model }}
+                            </span>
+                            {{ end }}
+                        </div>
                         {{ end }}
                     </div>
-                    {{ end }}
-                </div>
 
-                <!-- Google 地圖動態嵌入 (替代靜態圖片) -->
-                {{ if $store.address }}
-                <div class="mt-4 pt-2">
-                    <div class="w-full h-44 rounded-xl overflow-hidden border border-gray-100 shadow-inner">
-                        <iframe 
-                            title="{{ $store.title }} 地圖"
-                            src="https://maps.google.com/maps?q={{ $store.address }}&output=embed" 
-                            width="100%" 
-                            height="100%" 
-                            style="border:0;" 
-                            allowfullscreen="" 
-                            loading="lazy" 
-                            referrerpolicy="no-referrer-when-downgrade">
-                        </iframe>
+                    <!-- Google 地圖動態嵌入 (高度固定為 192px) -->
+                    {{ if $store.address }}
+                    <div class="mt-4 pt-2">
+                        <div class="w-full h-[192px] rounded-xl overflow-hidden border border-gray-100 shadow-inner">
+                            <iframe 
+                                title="{{ $store.title }} 地圖"
+                                src="https://maps.google.com/maps?q={{ $store.address }}&output=embed" 
+                                width="100%" 
+                                height="100%" 
+                                style="border:0;" 
+                                allowfullscreen="" 
+                                loading="lazy" 
+                                referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
+                        </div>
                     </div>
+                    {{ end }}
+                    
                 </div>
                 {{ end }}
-                
-            </div>
             {{ end }}
-        {{ end }}
-    </div>
+        </div>
 
-    <!-- 無結果提示 -->
-    <div id="no-results" class="hidden text-center text-gray-400 py-12 text-lg font-medium">
-        此區域目前暫無據點資料
-    </div>
+        <!-- 無結果提示 (一般文字：15px) -->
+        <div id="no-results" class="hidden text-center text-[#999999] py-12 text-[15px] font-normal scroll-mt-10">
+            此區域目前暫無據點資料
+        </div>
 
+    </div>
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const regionBtns = document.querySelectorAll(".region-btn");
     const storeCards = document.querySelectorAll(".store-card");
+    const grid = document.getElementById("store-list-grid");
     const noResults = document.getElementById("no-results");
 
     regionBtns.forEach(btn => {
@@ -142,7 +156,7 @@ document.addEventListener("DOMContentLoaded", function () {
             this.classList.remove("bg-white", "text-[#1C1C1C]", "hover:bg-blue-50");
             this.classList.add("bg-[#1155CC]", "text-white");
 
-            // 2. 切換對應區域卡片的顯示/隱藏
+            // 2. 切換對應區域卡片顯示/隱藏
             let visibleCount = 0;
             storeCards.forEach(card => {
                 const district = card.getAttribute("data-district") || "";
@@ -162,6 +176,10 @@ document.addEventListener("DOMContentLoaded", function () {
             } else {
                 noResults.classList.add("hidden");
             }
+
+            // 4. 自動平滑滾動至第一個卡片位置或提示區塊
+            const target = visibleCount > 0 ? grid : noResults;
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
         });
     });
 });
