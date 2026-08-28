@@ -1,0 +1,35 @@
+# ==========================================
+# 北區據點
+# ==========================================
+- title: "山西專賣店"
+  district: "北區"
+  address: "台中市北區山西路二段220號"
+  phone: "04-2297-8816"
+  hours: "09:00 - 20:30"
+  sales_models: ["emoving", "ez1", "ezr"]  # 銷售車款
+  repair_models: ["emoving", "ez1"]        # 維修車款
+  map_image: "https://picsum.photos/400/280?random=1"
+  map_url: "https://maps.google.com"
+
+- title: "二輪管家"
+  district: "北區"
+  address: "台中市北區中清路一段328號"
+  phone: "0906-793-165"
+  hours: "09:00 - 21:00"
+  sales_models: ["emoving", "ez1"]
+  repair_models: ["emoving"]
+  map_image: "https://picsum.photos/400/280?random=2"
+  map_url: "https://maps.google.com"
+
+# ==========================================
+# 西區據點
+# ==========================================
+- title: "西區服務中心"
+  district: "西區"
+  address: "台中市西區忠明南路 100 號"
+  phone: "04-2321-5566"
+  hours: "09:00 - 21:00"
+  sales_models: ["ez1"]
+  repair_models: []                       # 僅銷售，無維修服務
+  map_image: "https://picsum.photos/400/280?random=3"
+  map_url: "https://maps.google.com"

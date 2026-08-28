@@ -1,0 +1,139 @@
+{{ define "main" }}
+<div class="max-w-6xl mx-auto px-4 py-10 text-gray-800">
+
+    <!-- 頁面標題 -->
+    <h1 class="text-3xl md:text-4xl font-black text-center mb-10 tracking-wider text-gray-900">
+        {{ .Title }}
+    </h1>
+
+    <!-- 區域選擇按鈕網格 -->
+    <div class="max-w-3xl mx-auto mb-12">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
+            {{ $regions := slice "北區" "西區" "南區" "東區" "中區" "屯區" "北屯區" "海線" "山線" "潭雅神" "大甲區" "豐原區" "彰化區" }}
+            {{ range $index, $region := $regions }}
+            <button type="button"
+                    data-region="{{ $region }}"
+                    onclick="selectRegion(this, '{{ $region }}')"
+                    class="region-btn w-full py-2.5 px-4 bg-white border-2 border-blue-600 text-blue-700 font-bold rounded-2xl text-center hover:bg-blue-50 transition-all duration-200 shadow-sm active:scale-95 {{ if eq $index 0 }}bg-blue-600 text-white{{ end }}">
+                {{ $region }}
+            </button>
+            {{ end }}
+        </div>
+    </div>
+
+    <!-- 據點卡片展示區 -->
+    <div id="store-list-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch"></div>
+
+    <!-- 無結果提示 -->
+    <div id="no-results" class="hidden text-center text-gray-400 py-12 text-lg">
+        此區域目前暫無據點資料
+    </div>
+
+</div>
+
+<!-- 雙層迴圈：遍歷 data/stores/ 下的所有縣市 YAML 檔並進行篩選 -->
+{{ $pageType := .Params.page_type }}
+{{ $filteredStores := slice }}
+
+{{ range .Site.Data.stores }}
+    {{ range . }}
+        {{ if and (eq $pageType "sales") (gt (len .sales_models) 0) }}
+            {{ $filteredStores = $filteredStores | append . }}
+        {{ else if and (eq $pageType "repair") (gt (len .repair_models) 0) }}
+            {{ $filteredStores = $filteredStores | append . }}
+        {{ end }}
+    {{ end }}
+{{ end }}
+
+<script id="stores-data" type="application/json">
+{{ $filteredStores | jsonify }}
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const dataElem = document.getElementById("stores-data");
+    const pageType = "{{ .Params.page_type }}";
+    let stores = [];
+
+    try {
+        if (dataElem && dataElem.textContent.trim() !== "") {
+            stores = JSON.parse(dataElem.textContent);
+        }
+    } catch (err) {
+        console.error("無法解析據點 JSON 資料：", err);
+    }
+
+    let selectedRegion = "北區";
+
+    window.selectRegion = function (btnElement, regionName) {
+        selectedRegion = regionName;
+
+        const allBtns = document.querySelectorAll(".region-btn");
+        allBtns.forEach(btn => {
+            btn.classList.remove("bg-blue-600", "text-white");
+            btn.classList.add("bg-white", "text-blue-700");
+        });
+
+        btnElement.classList.remove("bg-white", "text-blue-700");
+        btnElement.classList.add("bg-blue-600", "text-white");
+
+        renderStores();
+    };
+
+    function renderStores() {
+        const grid = document.getElementById("store-list-grid");
+        const noResults = document.getElementById("no-results");
+
+        const filtered = stores.filter(store => {
+            if (!selectedRegion) return true;
+            return (store.district && store.district.includes(selectedRegion)) || 
+                   (store.address && store.address.includes(selectedRegion));
+        });
+
+        if (filtered.length === 0) {
+            grid.innerHTML = "";
+            noResults.classList.remove("hidden");
+            return;
+        }
+
+        noResults.classList.add("hidden");
+
+        grid.innerHTML = filtered.map(store => {
+            const currentModels = (pageType === "sales") ? store.sales_models : store.repair_models;
+
+            const modelsHTML = Array.isArray(currentModels)
+                ? currentModels.map(model => `<span class="inline-flex items-center gap-1 text-xs md:text-sm font-semibold text-gray-800"><span class="text-green-600 font-bold">☑</span>${model}</span>`).join(" ")
+                : "";
+
+            const mapHTML = store.map_image
+                ? `<div class="mt-4 pt-2">
+                    <a href="${store.map_url || '#'}" target="_blank" rel="noopener noreferrer" class="block rounded-lg overflow-hidden border border-gray-100 hover:opacity-90 transition-opacity">
+                        <img src="${store.map_image}" alt="${store.title} 地圖預覽" class="w-full h-44 object-cover" loading="lazy" />
+                    </a>
+                   </div>`
+                : "";
+
+            return `
+                <div class="bg-white border border-gray-200 rounded-2xl pt-6 px-4 pb-4 shadow-sm hover:shadow-md transition-all flex flex-col justify-between text-center">
+                    <div class="space-y-2">
+                        <h3 class="text-xl font-extrabold text-gray-900 mb-3">${store.title}</h3>
+
+                        <div class="space-y-1 text-xs md:text-sm text-gray-700 font-medium leading-relaxed">
+                            ${store.phone ? `<p>電話：<a href="tel:${store.phone}" class="hover:text-blue-600">${store.phone}</a></p>` : ""}
+                            ${store.address ? `<p>地址：${store.address}</p>` : ""}
+                            ${store.hours ? `<p class="text-gray-600">營業時間：${store.hours}</p>` : ""}
+                        </div>
+
+                        ${modelsHTML ? `<div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 pt-3">${modelsHTML}</div>` : ""}
+                    </div>
+
+                    ${mapHTML}
+                </div>
+            `;
+        }).join("");
+    }
+
+    renderStores();
+});
+</script>
+{{ end }}
