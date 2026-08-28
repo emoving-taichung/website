@@ -36,7 +36,7 @@ title = 'eMOVING 精輪山西店｜台中電動機車'
 
 [[menu.main]]
   name = "門市據點"
-  url = "/website/stores/"
+  url = "/website/store/"
   weight = 6
 
 [[menu.main]]
