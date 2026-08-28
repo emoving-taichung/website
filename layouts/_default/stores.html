@@ -13,14 +13,13 @@
 
 <div class="max-w-6xl mx-auto px-4 py-10 text-gray-800">
 
-    <!-- 2. 區域按鈕網格 (預設全為未點擊狀態) -->
+    <!-- 2. 區域選擇按鈕網格 (預設無選取狀態) -->
     <div class="max-w-3xl mx-auto mb-12">
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
             {{ $regions := slice "北區" "西區" "南區" "東區" "中區" "屯區" "北屯區" "海線" "山線" "潭雅神" "大甲區" "豐原區" "彰化區" }}
             {{ range $region := $regions }}
             <button type="button"
                     data-region="{{ $region }}"
-                    onclick="selectRegion(this, '{{ $region }}')"
                     class="region-btn w-full py-2.5 px-4 bg-white border-2 border-blue-600 text-blue-700 font-bold rounded-2xl text-center hover:bg-blue-50 transition-all duration-200 shadow-sm active:scale-95">
                 {{ $region }}
             </button>
@@ -38,25 +37,31 @@
 
 </div>
 
-<!-- 雙層迴圈篩選據點 -->
+<!-- Hugo 雙層迴圈過濾資料 (同時相容 data/stores/ 與 data/ 兩種目錄結構) -->
 {{ $pageType := .Params.page_type }}
 {{ $filteredStores := slice }}
 
-{{ range $file, $stores := .Site.Data.stores }}
-    {{ range $stores }}
-        {{ if eq $pageType "sales" }}
-            {{ if and .sales_models (gt (len .sales_models) 0) }}
-                {{ $filteredStores = $filteredStores | append . }}
-            {{ end }}
-        {{ else if eq $pageType "repair" }}
-            {{ if and .repair_models (gt (len .repair_models) 0) }}
-                {{ $filteredStores = $filteredStores | append . }}
+{{ $dataSources := .Site.Data.stores }}
+{{ if not $dataSources }}
+    {{ $dataSources = .Site.Data }}
+{{ end }}
+
+{{ range $file, $stores := $dataSources }}
+    {{ if reflect.IsSlice $stores }}
+        {{ range $stores }}
+            {{ if eq $pageType "sales" }}
+                {{ if and .sales_models (gt (len .sales_models) 0) }}
+                    {{ $filteredStores = $filteredStores | append . }}
+                {{ end }}
+            {{ else if eq $pageType "repair" }}
+                {{ if and .repair_models (gt (len .repair_models) 0) }}
+                    {{ $filteredStores = $filteredStores | append . }}
+                {{ end }}
             {{ end }}
         {{ end }}
     {{ end }}
 {{ end }}
 
-<!-- 將 Hugo 資料放進 JSON 標籤中，避免 VS Code Linter 誤判紅字 -->
 <script id="stores-data" type="application/json">
 {{ $filteredStores | jsonify | safeHTML }}
 </script>
@@ -72,33 +77,36 @@ document.addEventListener("DOMContentLoaded", function () {
             storesData = JSON.parse(dataElem.textContent);
         }
     } catch (err) {
-        console.error("解析據點資料失敗：", err);
+        console.error("解析據點 JSON 資料失敗：", err);
     }
 
-    let selectedRegion = ""; // 預設未點擊任何區域
+    let selectedRegion = "";
 
-    window.selectRegion = function (btnElement, regionName) {
-        selectedRegion = regionName;
+    // 綁定所有區域按鈕點擊事件
+    const regionBtns = document.querySelectorAll(".region-btn");
+    regionBtns.forEach(btn => {
+        btn.addEventListener("click", function () {
+            const regionName = this.getAttribute("data-region");
+            selectedRegion = regionName;
 
-        // 重置所有按鈕為未選取樣式（白底藍字）
-        const allBtns = document.querySelectorAll(".region-btn");
-        allBtns.forEach(btn => {
-            btn.classList.remove("bg-blue-600", "text-white");
-            btn.classList.add("bg-white", "text-blue-700", "hover:bg-blue-50");
+            // 重置所有按鈕為未選取狀態（白底藍字）
+            regionBtns.forEach(b => {
+                b.classList.remove("bg-blue-600", "text-white");
+                b.classList.add("bg-white", "text-blue-700", "hover:bg-blue-50");
+            });
+
+            // 當前按鈕切換為選取狀態（藍底白字）
+            this.classList.remove("bg-white", "text-blue-700", "hover:bg-blue-50");
+            this.classList.add("bg-blue-600", "text-white");
+
+            renderStores();
         });
-
-        // 點擊按鈕切換為選取樣式（藍底白字）
-        btnElement.classList.remove("bg-white", "text-blue-700", "hover:bg-blue-50");
-        btnElement.classList.add("bg-blue-600", "text-white");
-
-        renderStores();
-    };
+    });
 
     function renderStores() {
         const grid = document.getElementById("store-list-grid");
         const noResults = document.getElementById("no-results");
 
-        // 未選取區域時，保持畫面空白
         if (!selectedRegion) {
             grid.innerHTML = "";
             noResults.classList.add("hidden");
@@ -106,8 +114,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         const filtered = storesData.filter(store => {
-            return (store.district && store.district.includes(selectedRegion)) || 
-                   (store.address && store.address.includes(selectedRegion));
+            const matchDistrict = store.district && store.district.includes(selectedRegion);
+            const matchAddress = store.address && store.address.includes(selectedRegion);
+            return matchDistrict || matchAddress;
         });
 
         if (filtered.length === 0) {
