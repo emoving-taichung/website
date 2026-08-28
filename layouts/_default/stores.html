@@ -6,7 +6,7 @@
 
 <div class="font-['Anybody',sans-serif]">
 
-    <!-- 1. 置頂標題區 (#F1FAFF 淺藍背景，上下高度收窄) -->
+    <!-- 1. 置頂標題區 (#F1FAFF 淺藍背景) -->
     <div class="w-full bg-[#F1FAFF] py-6 md:py-8 text-center">
         <div class="w-full max-w-3xl mx-auto px-4">
             <!-- 大標題：24px -->
@@ -21,9 +21,9 @@
     </div>
 
     <!-- 外層容器 -->
-    <div class="w-full max-w-6xl mx-auto px-4 py-8 text-[#1C1C1C]">
+    <div class="w-full max-w-5xl mx-auto px-4 py-8 text-[#1C1C1C]">
 
-        <!-- 2. 區域選擇按鈕網格 (桌面版 5 列：md:grid-cols-5，手機版 3 列：grid-cols-3) -->
+        <!-- 2. 區域選擇按鈕網格 (桌面版 5 列，手機版 3 列) -->
         <div class="w-full max-w-3xl mx-auto mb-10">
             <div class="grid grid-cols-3 md:grid-cols-5 gap-2.5 md:gap-4">
                 {{ $regions := slice "北區" "北屯區" "潭子區" "西區" "西屯區" "南區" "南屯區" "神岡區" "東區" "霧峰區" "太平區" "大雅區" "大里區" "沙鹿區" "大甲區" "彰化縣" "南投縣" }}
@@ -31,7 +31,7 @@
                 <!-- 按鈕文字：子標題 18px -->
                 <button type="button"
                         data-region="{{ $region }}"
-                        class="region-btn w-full py-2 px-1 bg-white border border-[#1155CC] text-[#1C1C1C] text-[18px] font-bold rounded-2xl text-center hover:bg-blue-50 transition-all duration-200 shadow-sm active:scale-95">
+                        class="region-btn w-full py-2.5 px-1 bg-white border border-[#1155CC] text-[#1C1C1C] text-[18px] font-bold rounded-2xl text-center hover:bg-blue-50 transition-all duration-200 shadow-sm active:scale-95">
                     {{ $region }}
                 </button>
                 {{ end }}
@@ -60,8 +60,8 @@
 
         {{ $pageType := .Params.page_type }}
 
-        <!-- 3. 據點卡片展示區 (加上 scroll-mt-10 避免捲動時頂部過緊) -->
-        <div id="store-list-grid" class="w-full grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch scroll-mt-10">
+        <!-- 3. 據點卡片展示區 (改為 2 欄 md:grid-cols-2，充份放寬卡片與 192px 地圖比例) -->
+        <div id="store-list-grid" class="w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-stretch scroll-mt-10">
             {{ range $store := $allStores }}
                 {{ $isValid := false }}
                 {{ $models := slice }}
@@ -79,23 +79,23 @@
                 {{ end }}
 
                 {{ if $isValid }}
-                <div class="store-card hidden bg-white border border-gray-200 rounded-2xl pt-6 px-4 pb-4 shadow-sm hover:shadow-md transition-all flex flex-col justify-between text-center"
+                <div class="store-card hidden bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between text-center"
                      data-district="{{ $store.district }}"
                      data-address="{{ $store.address }}">
                     
-                    <div class="space-y-2">
-                        <!-- 店名：子標題 18px -->
-                        <h3 class="text-[18px] font-extrabold text-[#1C1C1C] mb-3">{{ $store.title }}</h3>
+                    <div class="space-y-3">
+                        <!-- 店名：子標題 18px (強化字重與行高，平衡視覺大小) -->
+                        <h3 class="text-[18px] font-black text-[#1C1C1C] leading-snug tracking-wide mb-3">{{ $store.title }}</h3>
 
                         <!-- 內容：一般文字 15px -->
-                        <div class="space-y-1 text-[15px] text-[#1C1C1C] font-normal leading-relaxed">
+                        <div class="space-y-1.5 text-[15px] text-[#1C1C1C] font-normal leading-relaxed">
                             {{ if $store.phone }}<p>電話：<a href="tel:{{ $store.phone }}" class="hover:text-[#1155CC]">{{ $store.phone }}</a></p>{{ end }}
                             {{ if $store.address }}<p>地址：{{ $store.address }}</p>{{ end }}
                             {{ if $store.hours }}<p class="text-[#999999]">營業時間：{{ $store.hours }}</p>{{ end }}
                         </div>
 
                         {{ if $models }}
-                        <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 pt-3">
+                        <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 pt-2">
                             {{ range $model := $models }}
                             <span class="inline-flex items-center gap-1 text-[15px] font-normal text-[#1C1C1C]">
                                 <!-- 小文字：10px -->
@@ -106,9 +106,9 @@
                         {{ end }}
                     </div>
 
-                    <!-- Google 地圖動態嵌入 (高度固定為 192px) -->
+                    <!-- Google 地圖動態嵌入 (固定高度 192px) -->
                     {{ if $store.address }}
-                    <div class="mt-4 pt-2">
+                    <div class="mt-5 pt-2">
                         <div class="w-full h-[192px] rounded-xl overflow-hidden border border-gray-100 shadow-inner">
                             <iframe 
                                 title="{{ $store.title }} 地圖"
