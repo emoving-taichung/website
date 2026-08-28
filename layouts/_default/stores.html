@@ -20,8 +20,8 @@
         </div>
     </div>
 
-    <!-- 外層容器 -->
-    <div class="w-full max-w-5xl mx-auto px-4 py-8 text-[#1C1C1C]">
+    <!-- 外層容器 (放寬至 max-w-7xl 以容納電腦版 3 列與 300px 地圖) -->
+    <div class="w-full max-w-7xl mx-auto px-4 py-8 text-[#1C1C1C]">
 
         <!-- 2. 區域選擇按鈕網格 (桌面版 5 列，手機版 3 列) -->
         <div class="w-full max-w-3xl mx-auto mb-10">
@@ -60,8 +60,8 @@
 
         {{ $pageType := .Params.page_type }}
 
-        <!-- 3. 據點卡片展示區 -->
-        <div id="store-list-grid" class="w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-stretch scroll-mt-10">
+        <!-- 3. 據點卡片展示區 (電腦版 3 列 / 手機版橫向滑動切換) -->
+        <div id="store-list-grid" class="w-full flex overflow-x-auto snap-x snap-mandatory pb-4 md:pb-0 md:grid md:grid-cols-3 gap-6 md:gap-8 items-stretch scroll-mt-10">
             {{ range $store := $allStores }}
                 {{ $isValid := false }}
                 {{ $models := slice }}
@@ -79,7 +79,7 @@
                 {{ end }}
 
                 {{ if $isValid }}
-                <div class="store-card hidden bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between text-center"
+                <div class="store-card hidden shrink-0 w-[85vw] max-w-[340px] md:w-auto md:max-w-none snap-center bg-white border border-gray-200 rounded-2xl px-4 py-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between text-center"
                      data-district="{{ $store.district }}"
                      data-address="{{ $store.address }}">
                     
@@ -106,10 +106,10 @@
                         {{ end }}
                     </div>
 
-                    <!-- Google 地圖動態嵌入 (改為 192px * 192px 並置中) -->
+                    <!-- Google 地圖動態嵌入 (改為 300px * 300px 並置中) -->
                     {{ if $store.address }}
                     <div class="mt-5 pt-2 flex justify-center">
-                        <div class="w-[192px] h-[192px] rounded-xl overflow-hidden border border-gray-100 shadow-inner">
+                        <div class="w-[300px] h-[300px] max-w-full rounded-xl overflow-hidden border border-gray-100 shadow-inner">
                             <iframe 
                                 title="{{ $store.title }} 地圖"
                                 src="https://maps.google.com/maps?q={{ $store.address }}&output=embed" 
@@ -177,7 +177,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 noResults.classList.add("hidden");
             }
 
-            // 4. 自動平滑滾動至第一個卡片位置或提示區塊
+            // 4. 自動平滑滾動至第一個卡片位置（重置手機版橫向滑動位置）
+            grid.scrollLeft = 0;
             const target = visibleCount > 0 ? grid : noResults;
             target.scrollIntoView({ behavior: "smooth", block: "start" });
         });
