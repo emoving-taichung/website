@@ -1,26 +1,27 @@
 {{ define "main" }}
-<div class="max-w-6xl mx-auto px-4 py-10 text-gray-800">
-
-    <!-- 頁面標題區 (新增副標題以符合附圖設計) -->
-    <div class="text-center mb-10">
+<!-- 1. 置頂標題區 (#F1FAFF 淺藍背景) -->
+<div class="bg-[#F1FAFF] py-10 md:py-12 text-center">
+    <div class="max-w-6xl mx-auto px-4">
         <h1 class="text-3xl md:text-4xl font-black tracking-wider text-gray-900 mb-3">
             {{ .Title }}
         </h1>
         {{ if .Params.subtitle }}
-        <p class="text-gray-500 text-[15px] md:text-base">{{ .Params.subtitle }}</p>
+        <p class="text-gray-600 text-base md:text-lg font-medium">{{ .Params.subtitle }}</p>
         {{ end }}
     </div>
+</div>
 
-    <!-- 區域選擇按鈕網格 -->
+<div class="max-w-6xl mx-auto px-4 py-10 text-gray-800">
+
+    <!-- 2. 區域按鈕網格 (預設全為未點擊狀態) -->
     <div class="max-w-3xl mx-auto mb-12">
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 md:gap-4">
             {{ $regions := slice "北區" "西區" "南區" "東區" "中區" "屯區" "北屯區" "海線" "山線" "潭雅神" "大甲區" "豐原區" "彰化區" }}
-            {{ range $index, $region := $regions }}
+            {{ range $region := $regions }}
             <button type="button"
                     data-region="{{ $region }}"
                     onclick="selectRegion(this, '{{ $region }}')"
-                    class="region-btn w-full py-2.5 px-4 border-2 border-blue-600 font-bold rounded-2xl text-center transition-all duration-200 shadow-sm active:scale-95 
-                    {{ if eq $region "北區" }}bg-blue-600 text-white{{ else }}bg-white text-blue-700 hover:bg-blue-50{{ end }}">
+                    class="region-btn w-full py-2.5 px-4 bg-white border-2 border-blue-600 text-blue-700 font-bold rounded-2xl text-center hover:bg-blue-50 transition-all duration-200 shadow-sm active:scale-95">
                 {{ $region }}
             </button>
             {{ end }}
@@ -31,31 +32,31 @@
     <div id="store-list-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch"></div>
 
     <!-- 無結果提示 -->
-    <div id="no-results" class="hidden text-center text-gray-400 py-12 text-lg">
+    <div id="no-results" class="hidden text-center text-gray-400 py-12 text-lg font-medium">
         此區域目前暫無據點資料
     </div>
 
 </div>
 
-<!-- 雙層迴圈與防呆過濾 -->
+<!-- 雙層迴圈篩選據點 -->
 {{ $pageType := .Params.page_type }}
 {{ $filteredStores := slice }}
 
 {{ range $file, $stores := .Site.Data.stores }}
     {{ range $stores }}
         {{ if eq $pageType "sales" }}
-            {{ if .sales_models }}
+            {{ if and .sales_models (gt (len .sales_models) 0) }}
                 {{ $filteredStores = $filteredStores | append . }}
             {{ end }}
         {{ else if eq $pageType "repair" }}
-            {{ if .repair_models }}
+            {{ if and .repair_models (gt (len .repair_models) 0) }}
                 {{ $filteredStores = $filteredStores | append . }}
             {{ end }}
         {{ end }}
     {{ end }}
 {{ end }}
 
-<!-- 必須加上 safeHTML，防止 Hugo 把引號轉義導致 JS 無法解析 -->
+<!-- 將 Hugo 資料放進 JSON 標籤中，避免 VS Code Linter 誤判紅字 -->
 <script id="stores-data" type="application/json">
 {{ $filteredStores | jsonify | safeHTML }}
 </script>
@@ -64,27 +65,29 @@
 document.addEventListener("DOMContentLoaded", function () {
     const dataElem = document.getElementById("stores-data");
     const pageType = "{{ .Params.page_type }}";
-    let stores = [];
+    let storesData = [];
 
     try {
         if (dataElem && dataElem.textContent.trim() !== "") {
-            stores = JSON.parse(dataElem.textContent);
+            storesData = JSON.parse(dataElem.textContent);
         }
     } catch (err) {
-        console.error("無法解析據點 JSON 資料：", err);
+        console.error("解析據點資料失敗：", err);
     }
 
-    let selectedRegion = "北區";
+    let selectedRegion = ""; // 預設未點擊任何區域
 
     window.selectRegion = function (btnElement, regionName) {
         selectedRegion = regionName;
 
+        // 重置所有按鈕為未選取樣式（白底藍字）
         const allBtns = document.querySelectorAll(".region-btn");
         allBtns.forEach(btn => {
             btn.classList.remove("bg-blue-600", "text-white");
             btn.classList.add("bg-white", "text-blue-700", "hover:bg-blue-50");
         });
 
+        // 點擊按鈕切換為選取樣式（藍底白字）
         btnElement.classList.remove("bg-white", "text-blue-700", "hover:bg-blue-50");
         btnElement.classList.add("bg-blue-600", "text-white");
 
@@ -95,8 +98,14 @@ document.addEventListener("DOMContentLoaded", function () {
         const grid = document.getElementById("store-list-grid");
         const noResults = document.getElementById("no-results");
 
-        const filtered = stores.filter(store => {
-            if (!selectedRegion) return true;
+        // 未選取區域時，保持畫面空白
+        if (!selectedRegion) {
+            grid.innerHTML = "";
+            noResults.classList.add("hidden");
+            return;
+        }
+
+        const filtered = storesData.filter(store => {
             return (store.district && store.district.includes(selectedRegion)) || 
                    (store.address && store.address.includes(selectedRegion));
         });
@@ -143,9 +152,6 @@ document.addEventListener("DOMContentLoaded", function () {
             `;
         }).join("");
     }
-
-    // 初始化載入
-    renderStores();
 });
 </script>
 {{ end }}
