@@ -1,10 +1,15 @@
 {{ define "main" }}
 <div class="max-w-6xl mx-auto px-4 py-10 text-gray-800">
 
-    <!-- 頁面標題 -->
-    <h1 class="text-3xl md:text-4xl font-black text-center mb-10 tracking-wider text-gray-900">
-        {{ .Title }}
-    </h1>
+    <!-- 頁面標題區 (新增副標題以符合附圖設計) -->
+    <div class="text-center mb-10">
+        <h1 class="text-3xl md:text-4xl font-black tracking-wider text-gray-900 mb-3">
+            {{ .Title }}
+        </h1>
+        {{ if .Params.subtitle }}
+        <p class="text-gray-500 text-[15px] md:text-base">{{ .Params.subtitle }}</p>
+        {{ end }}
+    </div>
 
     <!-- 區域選擇按鈕網格 -->
     <div class="max-w-3xl mx-auto mb-12">
@@ -14,7 +19,8 @@
             <button type="button"
                     data-region="{{ $region }}"
                     onclick="selectRegion(this, '{{ $region }}')"
-                    class="region-btn w-full py-2.5 px-4 bg-white border-2 border-blue-600 text-blue-700 font-bold rounded-2xl text-center hover:bg-blue-50 transition-all duration-200 shadow-sm active:scale-95 {{ if eq $index 0 }}bg-blue-600 text-white{{ end }}">
+                    class="region-btn w-full py-2.5 px-4 border-2 border-blue-600 font-bold rounded-2xl text-center transition-all duration-200 shadow-sm active:scale-95 
+                    {{ if eq $region "北區" }}bg-blue-600 text-white{{ else }}bg-white text-blue-700 hover:bg-blue-50{{ end }}">
                 {{ $region }}
             </button>
             {{ end }}
@@ -31,22 +37,27 @@
 
 </div>
 
-<!-- 雙層迴圈：遍歷 data/stores/ 下的所有縣市 YAML 檔並進行篩選 -->
+<!-- 雙層迴圈與防呆過濾 -->
 {{ $pageType := .Params.page_type }}
 {{ $filteredStores := slice }}
 
-{{ range .Site.Data.stores }}
-    {{ range . }}
-        {{ if and (eq $pageType "sales") (gt (len .sales_models) 0) }}
-            {{ $filteredStores = $filteredStores | append . }}
-        {{ else if and (eq $pageType "repair") (gt (len .repair_models) 0) }}
-            {{ $filteredStores = $filteredStores | append . }}
+{{ range $file, $stores := .Site.Data.stores }}
+    {{ range $stores }}
+        {{ if eq $pageType "sales" }}
+            {{ if .sales_models }}
+                {{ $filteredStores = $filteredStores | append . }}
+            {{ end }}
+        {{ else if eq $pageType "repair" }}
+            {{ if .repair_models }}
+                {{ $filteredStores = $filteredStores | append . }}
+            {{ end }}
         {{ end }}
     {{ end }}
 {{ end }}
 
+<!-- 必須加上 safeHTML，防止 Hugo 把引號轉義導致 JS 無法解析 -->
 <script id="stores-data" type="application/json">
-{{ $filteredStores | jsonify }}
+{{ $filteredStores | jsonify | safeHTML }}
 </script>
 
 <script>
@@ -71,10 +82,10 @@ document.addEventListener("DOMContentLoaded", function () {
         const allBtns = document.querySelectorAll(".region-btn");
         allBtns.forEach(btn => {
             btn.classList.remove("bg-blue-600", "text-white");
-            btn.classList.add("bg-white", "text-blue-700");
+            btn.classList.add("bg-white", "text-blue-700", "hover:bg-blue-50");
         });
 
-        btnElement.classList.remove("bg-white", "text-blue-700");
+        btnElement.classList.remove("bg-white", "text-blue-700", "hover:bg-blue-50");
         btnElement.classList.add("bg-blue-600", "text-white");
 
         renderStores();
@@ -133,6 +144,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }).join("");
     }
 
+    // 初始化載入
     renderStores();
 });
 </script>
