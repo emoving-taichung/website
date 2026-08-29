@@ -5,33 +5,33 @@
   district: "北區"
   address: "台中市北區山西路二段220號"
   phone: "04-2297-8816"
-  hours: "週一至週五 09:00 - 20:30 / 週六 09:00 - 17:00"
-  sales_models: ["emoving", "ez1", "勁炫125", "ezr"]
+  hours: "週一至週五 09:00 ~ 20:30 / 週六 09:00 ~ 17:00"
+  sales_models: ["微電", "ez1", "勁炫125", "EZR"]
   repair_models: []
 
 - title: "羿嘉車業"
   district: "北區"
   address: "台中市北區山西路二段135號"
   phone: "04-2291-6766"
-  hours: "週一至週六 09:00 - 20:30"
+  hours: "周一至周六 09:00 ~ 20:30"
   sales_models: []
-  repair_models: ["emoving", "ez1", "勁炫125", "ezr"]
+  repair_models: ["微電/EM50/80", "ez1", "勁炫125", "EZR"]
 
 - title: "二輪管家"
   district: "北區"
   address: "台中市北區中清路一段328號"
   phone: "0906-793-165"
-  hours: "週一至週日 09:00 - 21:00"
-  sales_models: ["emoving", "ez1", "勁炫125", "ezr"]
-  repair_models: ["emoving", "ez1", "勁炫125", "ezr"]
+  hours: "周一至周日 09:00～21:00"
+  sales_models: ["微電", "ez1", "勁炫125", "EZR"]
+  repair_models: ["微電/EM50/80", "ez1", "勁炫125", "EZR"]
 
 - title: "昇益輪車行"
   district: "北區"
   address: "台中市北區育強街82號1樓"
   phone: "04-2237-2059"
-  hours: "週一至週六 09:00 - 21:00"
-  sales_models: ["emoving", "勁炫125"]
-  repair_models: ["emoving", "勁炫125"]
+  hours: "周一至周六 09:00～21:00"
+  sales_models: ["微電", "勁炫125"]
+  repair_models: ["微電/EM50/80", "勁炫125"]
 
 # ==========================================
 # 北屯區據點
@@ -40,32 +40,32 @@
   district: "北屯區"
   address: "台中市北屯區大連路二段251號"
   phone: "04-2245-0338"
-  hours: "週一至週六 09:00 - 21:00"
-  sales_models: ["emoving"]
+  hours: "周一至周六 09:00 ~ 21:00"
+  sales_models: ["微電"]
   repair_models: []
 
 - title: "群太車業"
   district: "北屯區"
   address: "台中市北屯區興安路一段305號"
   phone: "04-2243-0080"
-  hours: "週一至週六 10:00 - 21:30"
+  hours: "周一至周六 10:00 ~ 21:30"
   sales_models: []
-  repair_models: ["emoving"]
+  repair_models: ["微電/EM50/80"]
 
 - title: "坤益機車行"
   district: "北屯區"
   address: "台中市北屯區大連路三段72號"
   phone: "04-2243-4163"
-  hours: "週一至週日 09:00 - 22:00"
-  sales_models: ["emoving"]
+  hours: "周一至周日 09:00 ~ 22:00"
+  sales_models: ["微電"]
   repair_models: []
 
 - title: "永發車業"
   district: "北屯區"
   address: "台中市北屯區中清路二段203號"
   phone: "04-2296-1889"
-  hours: "週一至週六 09:00 - 21:00"
-  sales_models: ["emoving"]
+  hours: "周一至周六 09:00 ~ 21:00"
+  sales_models: ["微電"]
   repair_models: []
 
 # ==========================================
@@ -75,17 +75,17 @@
   district: "西屯區"
   address: "台中市西屯區中工二路230號"
   phone: "04-2358-8111"
-  hours: "週一至週六 10:00 - 20:00"
-  sales_models: ["emoving", "勁炫125"]
-  repair_models: ["emoving", "勁炫125"]
+  hours: "周一至周六 10:00～20:00"
+  sales_models: ["微電", "勁炫125"]
+  repair_models: ["微電/EM50/80", "勁炫125"]
 
 - title: "西屯SQ"
   district: "西屯區"
   address: "台中市西屯區西屯路二段269-40號"
   phone: "04-2452-2131"
-  hours: "週一至週日 09:30 - 21:00"
-  sales_models: ["emoving", "勁炫125"]
-  repair_models: ["emoving", "勁炫125"]
+  hours: "周一至周日 09:30~21:00"
+  sales_models: ["微電", "勁炫125"]
+  repair_models: ["微電/EM50/80", "勁炫125"]
 
 # ==========================================
 # 西區據點
@@ -102,17 +102,17 @@
   district: "西區"
   address: "台中市西區忠誠街55號"
   phone: "04-2321-2345"
-  hours: "週一至週六 11:00 - 21:30"
-  sales_models: ["emoving", "ez1", "勁炫125"]
-  repair_models: ["emoving", "勁炫125"]
+  hours: "周一至周六 11:00 ~ 21:30"
+  sales_models: ["微電", "ez1", "勁炫125"]
+  repair_models: ["微電/EM50/80", "勁炫125"]
 
 - title: "南順機車行"
   district: "西區"
   address: "台中市西區五權五街108號"
   phone: "04-2375-0027"
-  hours: "週一至週六 09:00 - 21:00"
-  sales_models: ["emoving"]
-  repair_models: ["emoving"]
+  hours: "周一至周六 09:00～21:00"
+  sales_models: ["微電"]
+  repair_models: ["微電/EM50/80"]
 
 # ==========================================
 # 南屯區據點
@@ -121,9 +121,9 @@
   district: "南屯區"
   address: "台中市南屯區東興路二段24號"
   phone: "04-2473-6268"
-  hours: "週一至週六 10:00 - 20:00"
-  sales_models: ["emoving", "ez1", "勁炫125", "ezr"]
-  repair_models: ["emoving", "ez1", "勁炫125", "ezr"]
+  hours: "周一至周六 10:00 ~ 20:00"
+  sales_models: ["微電", "ez1", "勁炫125", "EZR"]
+  repair_models: ["微電/EM50/80", "ez1", "勁炫125", "EZR"]
 
 # ==========================================
 # 南區據點
@@ -132,9 +132,9 @@
   district: "南區"
   address: "台中市南區大慶街二段1之7號"
   phone: "04-2263-0575"
-  hours: "週一至週日 10:00 - 21:00"
+  hours: "周一至周日 10:00 ~ 21:00"
   sales_models: []
-  repair_models: ["emoving", "ez1", "勁炫125", "ezr"]
+  repair_models: ["微電/EM50/80", "ez1", "勁炫125", "EZR"]
 
 # ==========================================
 # 神岡區據點
@@ -143,17 +143,17 @@
   district: "神岡區"
   address: "臺中市神岡區五權路94號"
   phone: "04-2526-4260"
-  hours: "週一至週日 10:00 - 21:00"
-  sales_models: ["emoving", "ez1", "勁炫125", "ezr"]
-  repair_models: ["emoving", "ez1", "勁炫125", "ezr"]
+  hours: "周一至周日 10:00 ~ 21:00"
+  sales_models: ["微電", "ez1", "勁炫125", "EZR"]
+  repair_models: ["微電/EM50/80", "ez1", "勁炫125", "EZR"]
 
 - title: "正宇車業"
   district: "神岡區"
   address: "臺中市豐原區圓環東路151號"
   phone: "04-2527-4928"
-  hours: "週一至週日 10:00 - 21:00"
-  sales_models: ["emoving", "ez1"]
-  repair_models: ["emoving", "ez1"]
+  hours: "周一至周日 10:00 ~ 21:00"
+  sales_models: ["微電", "ez1"]
+  repair_models: ["微電/EM50/80", "ez1"]
 
 # ==========================================
 # 太平區據點
@@ -162,23 +162,23 @@
   district: "太平區"
   address: "台中市太平區太平路378號"
   phone: "04-2278-7574"
-  hours: "週一至週六 10:00 - 20:00"
-  sales_models: ["emoving", "勁炫125"]
-  repair_models: ["emoving", "勁炫125"]
+  hours: "周一至周六 10:00～20:00"
+  sales_models: ["微電", "勁炫125"]
+  repair_models: ["微電/EM50/80", "勁炫125"]
 
 - title: "佳大車業"
   district: "太平區"
   address: "台中市太平區中山路一段269號"
   phone: "04-2392-8798"
-  hours: "週一至週六 09:30 - 20:30"
-  sales_models: ["emoving"]
+  hours: "周一至周六 09:30 ~ 20:30"
+  sales_models: ["微電"]
   repair_models: []
 
 - title: "振武機車行"
   district: "太平區"
   address: "台中市太平區振武路10號"
   phone: "04-2395-2358"
-  hours: "週一至週六 09:00 - 21:30"
+  hours: "周一至周六 09:00 - 21:30"
   sales_models: []
   repair_models: ["勁炫125"]
 
@@ -189,16 +189,16 @@
   district: "大雅區"
   address: "台中市大雅區民生路一段145號"
   phone: "04-2568-9459"
-  hours: "週一至週六 10:00 - 20:00"
-  sales_models: ["emoving"]
-  repair_models: ["emoving", "勁炫125"]
+  hours: "周一至周六 10:00～20:00"
+  sales_models: ["微電"]
+  repair_models: ["微電/EM50/80", "勁炫125"]
 
 - title: "明峰車業"
   district: "大雅區"
   address: "台中市大雅區神林南路118號"
   phone: "04-2560-3398"
-  hours: "週一至週六 10:00 - 20:00"
-  sales_models: ["emoving"]
+  hours: "周一至周六 10:00～20:00"
+  sales_models: ["微電"]
   repair_models: []
 
 # ==========================================
@@ -208,9 +208,9 @@
   district: "大里區"
   address: "台中市大里區大智路617號之5號"
   phone: "04-2487-6818"
-  hours: "週一至週日 09:00 - 18:00"
-  sales_models: ["emoving"]
-  repair_models: ["emoving", "勁炫125"]
+  hours: "周一至周日 09:00 ~ 18:00"
+  sales_models: ["微電"]
+  repair_models: ["微電/EM50/80", "勁炫125"]
 
 # ==========================================
 # 東區據點
@@ -219,25 +219,25 @@
   district: "東區"
   address: "臺中市東區精武路138號"
   phone: "04-2360-3988"
-  hours: "週一至週六 12:00 - 21:00"
-  sales_models: []
-  repair_models: ["emoving"]
+  hours: "周一至周六 12:00 ~ 21:00"
+  sales_models: ["微電", "ez1", "勁炫125", "EZR"]
+  repair_models: ["微電/EM50/80"]
 
 - title: "智盛機車行"
   district: "東區"
   address: "臺中市東區大智路447號"
   phone: "04-2283-1808"
-  hours: "週一至週六 08:00 - 20:00"
-  sales_models: []
-  repair_models: ["emoving"]
+  hours: "周一至周六 08:00 ~ 20:00"
+  sales_models: ["微電"]
+  repair_models: ["微電/EM50/80"]
 
 - title: "一平車行"
   district: "東區"
   address: "臺中市東區進化路246號"
   phone: "04-2360-3924"
-  hours: "週一至週六 10:00 - 22:00"
-  sales_models: []
-  repair_models: ["emoving"]
+  hours: "周一至周六 10:00 ~ 22:00"
+  sales_models: ["微電"]
+  repair_models: ["微電/EM50/80"]
 
 # ==========================================
 # 沙鹿區據點
@@ -246,9 +246,9 @@
   district: "沙鹿區"
   address: "台中市沙鹿區鎮南路二段81號"
   phone: "04-2636-8823"
-  hours: "週日至週五 09:00 - 12:00 / 13:00 - 19:00"
-  sales_models: ["emoving", "勁炫125"]
-  repair_models: ["emoving", "勁炫125"]
+  hours: "週日至周五 09:00 ~ 12:00；13:00 ~ 19:00"
+  sales_models: ["微電", "勁炫125"]
+  repair_models: ["微電/EM50/80", "勁炫125"]
 
 # ==========================================
 # 大甲區據點
@@ -257,9 +257,9 @@
   district: "大甲區"
   address: "台中市大甲區忠孝街129號"
   phone: "04-2676-4997"
-  hours: "週一至週六 10:00 - 20:00"
-  sales_models: ["emoving", "ez1", "勁炫125", "ezr"]
-  repair_models: ["emoving", "ez1", "勁炫125", "ezr"]
+  hours: "周一至周六 10:00～20:00"
+  sales_models: ["微電", "ez1", "勁炫125", "EZR"]
+  repair_models: ["微電/EM50/80", "ez1", "勁炫125", "EZR"]
 
 # ==========================================
 # 南投縣據點
@@ -268,22 +268,22 @@
   district: "南投縣"
   address: "南投縣埔里鎮忠孝路272號"
   phone: "049-2999-709"
-  hours: "週一至週六 10:00 - 20:00"
+  hours: "週一至週六 10:00-20:00"
   sales_models: []
-  repair_models: ["emoving", "ez1", "勁炫125", "ezr"]
+  repair_models: ["微電/EM50/80", "ez1", "勁炫125", "EZR"]
 
 - title: "南投先手利聯合"
   district: "南投縣"
   address: "南投縣南投市建國路166號"
   phone: "049-2236-520"
-  hours: "週一至週五 09:00 - 17:30 (六日、例假日請先預約)"
+  hours: "維修請先預約，週一至週五 09:00~17:30 中午休息(六、日、例假日請先預約)"
   sales_models: []
-  repair_models: ["emoving", "ez1", "勁炫125", "ezr"]
+  repair_models: ["微電/EM50/80", "ez1", "勁炫125", "EZR"]
 
 - title: "竹山宏德車行"
   district: "南投縣"
   address: "南投縣竹山鎮集山路三段928號"
   phone: "049-2645-739"
-  hours: "週一至週六 10:00 - 20:00 (週日公休)"
+  hours: "週一至週六 10:00~20:00 週日公休"
   sales_models: []
-  repair_models: ["emoving", "勁炫125"]
+  repair_models: ["微電/EM50/80", "勁炫125"]
