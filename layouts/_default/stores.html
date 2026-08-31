@@ -9,26 +9,37 @@
     <!-- 1. 置頂標題區 (#F1FAFF 淺藍背景) -->
     <div class="w-full bg-[#F1FAFF] py-6 md:py-8 text-center">
         <div class="w-full max-w-3xl mx-auto px-4">
-            <!-- 大標題：35px -->
             <h1 class="text-[35px] font-black tracking-wider text-[#1C1C1C] mb-2">
                 {{ .Title }}
             </h1>
             {{ if .Params.subtitle }}
-            <!-- 一般文字：15px -->
             <p class="text-[#999999] text-[15px] font-normal">{{ .Params.subtitle }}</p>
             {{ end }}
         </div>
     </div>
 
-    <!-- 外層容器 (放寬至 max-w-7xl 以容納電腦版 3 列與 300px 地圖) -->
+    <!-- 外層容器 -->
     <div class="w-full max-w-7xl mx-auto px-4 py-8 text-[#1C1C1C]">
 
-        <!-- 2. 區域選擇按鈕網格 (桌面版 5 列，手機版 3 列) -->
+        <!-- 2. 主頁籤切換：門市據點 vs 維修據點 -->
+        <div class="w-full max-w-md mx-auto mb-8 flex justify-center gap-3">
+            <button type="button"
+                    data-type="sales"
+                    class="type-btn flex-1 py-3 px-4 rounded-2xl text-[18px] font-bold border transition-all duration-200 shadow-sm active:scale-95 text-center">
+                🛒 門市據點
+            </button>
+            <button type="button"
+                    data-type="repair"
+                    class="type-btn flex-1 py-3 px-4 rounded-2xl text-[18px] font-bold border transition-all duration-200 shadow-sm active:scale-95 text-center">
+                🔧 維修據點
+            </button>
+        </div>
+
+        <!-- 3. 區域選擇按鈕網格 (桌面版 5 列，手機版 3 列) -->
         <div class="w-full max-w-3xl mx-auto mb-10">
             <div class="grid grid-cols-3 md:grid-cols-5 gap-2.5 md:gap-4">
                 {{ $regions := slice "北區" "北屯區" "潭子區" "西區" "西屯區" "南區" "南屯區" "神岡區" "東區" "霧峰區" "太平區" "大雅區" "大里區" "沙鹿區" "大甲區" "彰化縣" "南投縣" }}
                 {{ range $region := $regions }}
-                <!-- 按鈕文字：子標題 18px -->
                 <button type="button"
                         data-region="{{ $region }}"
                         class="region-btn w-full py-2.5 px-1 bg-white border border-[#1155CC] text-[#1C1C1C] text-[18px] font-bold rounded-2xl text-center hover:bg-blue-50 transition-all duration-200 shadow-sm active:scale-95">
@@ -58,58 +69,56 @@
             {{ end }}
         {{ end }}
 
-        {{ $pageType := .Params.page_type }}
-
-        <!-- 3. 據點卡片展示區 (電腦版 3 列 / 手機版橫向滑動切換) -->
+        <!-- 4. 據點卡片展示區 -->
         <div id="store-list-grid" class="w-full flex overflow-x-auto snap-x snap-mandatory pb-4 md:pb-0 md:grid md:grid-cols-3 gap-6 md:gap-8 items-stretch scroll-mt-10">
             {{ range $store := $allStores }}
-                {{ $isValid := false }}
-                {{ $models := slice }}
+                {{ $hasSales := and $store.sales_models (gt (len $store.sales_models) 0) }}
+                {{ $hasRepair := and $store.repair_models (gt (len $store.repair_models) 0) }}
 
-                {{ if eq $pageType "sales" }}
-                    {{ if and $store.sales_models (gt (len $store.sales_models) 0) }}
-                        {{ $isValid = true }}
-                        {{ $models = $store.sales_models }}
-                    {{ end }}
-                {{ else if eq $pageType "repair" }}
-                    {{ if and $store.repair_models (gt (len $store.repair_models) 0) }}
-                        {{ $isValid = true }}
-                        {{ $models = $store.repair_models }}
-                    {{ end }}
-                {{ end }}
-
-                {{ if $isValid }}
                 <div class="store-card hidden shrink-0 w-[85vw] max-w-[340px] md:w-auto md:max-w-none snap-center bg-white border border-gray-200 rounded-2xl px-3 py-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between text-center"
                      data-district="{{ $store.district }}"
-                     data-address="{{ $store.address }}">
+                     data-address="{{ $store.address }}"
+                     data-has-sales="{{ if $hasSales }}true{{ else }}false{{ end }}"
+                     data-has-repair="{{ if $hasRepair }}true{{ else }}false{{ end }}">
                     
                     <div class="space-y-3">
-                        <!-- 店名：24px -->
+                        <!-- 店名 -->
                         <h3 class="text-[24px] font-bold text-[#1C1C1C] leading-snug tracking-wide mb-3">{{ $store.title }}</h3>
 
-                        <!-- 內容：一般文字 18px -->
+                        <!-- 基本聯絡資訊 -->
                         <div class="space-y-1.5 text-[18px] text-[#1C1C1C] font-normal leading-relaxed">
                             {{ if $store.phone }}<p>電話：<a href="tel:{{ $store.phone }}" class="hover:text-[#1155CC]">{{ $store.phone }}</a></p>{{ end }}
                             {{ if $store.address }}<p>地址：{{ $store.address }}</p>{{ end }}
                             {{ if $store.hours }}<p class="text-[#999999]">營業時間：{{ $store.hours }}</p>{{ end }}
                         </div>
 
-                        {{ if $models }}
-                        <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 pt-2">
-                            {{ range $model := $models }}
+                        <!-- 販售車款標籤區塊 -->
+                        {{ if $hasSales }}
+                        <div class="sales-models-box flex flex-wrap items-center justify-center gap-x-3 gap-y-1 pt-2">
+                            {{ range $model := $store.sales_models }}
                             <span class="inline-flex items-center gap-1 text-[15px] font-normal text-[#1C1C1C]">
-                                <!-- 小文字：12px -->
                                 <span class="text-green-600 font-bold text-[12px]">✅</span>{{ $model }}
+                            </span>
+                            {{ end }}
+                        </div>
+                        {{ end }}
+
+                        <!-- 維修車款標籤區塊 -->
+                        {{ if $hasRepair }}
+                        <div class="repair-models-box flex flex-wrap items-center justify-center gap-x-3 gap-y-1 pt-2 hidden">
+                            {{ range $model := $store.repair_models }}
+                            <span class="inline-flex items-center gap-1 text-[15px] font-normal text-[#1C1C1C]">
+                                <span class="text-blue-600 font-bold text-[12px]">🔧</span>{{ $model }}
                             </span>
                             {{ end }}
                         </div>
                         {{ end }}
                     </div>
 
-                    <!-- Google 地圖動態嵌入 (改為 300px * 300px 並置中) -->
+                    <!-- Google 地圖動態嵌入 -->
                     {{ if $store.address }}
                     <div class="mt-5 pt-2 flex justify-center">
-                        <div class="w-[350px] h-[400px] max-w-full rounded-xl overflow-hidden border border-gray-100 shadow-inner">
+                        <div class="w-[350px] h-[300px] max-w-full rounded-xl overflow-hidden border border-gray-100 shadow-inner">
                             <iframe 
                                 title="{{ $store.title }} 地圖"
                                 src="https://maps.google.com/maps?q={{ $store.address }}&output=embed" 
@@ -125,13 +134,12 @@
                     {{ end }}
                     
                 </div>
-                {{ end }}
             {{ end }}
         </div>
 
-        <!-- 無結果提示 (一般文字：15px) -->
+        <!-- 無結果提示 -->
         <div id="no-results" class="hidden text-center text-[#999999] py-12 text-[15px] font-normal scroll-mt-10">
-            此區域目前暫無據點資料
+            該類別在此區域目前暫無據點資料
         </div>
 
     </div>
@@ -139,50 +147,103 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+    const typeBtns = document.querySelectorAll(".type-btn");
     const regionBtns = document.querySelectorAll(".region-btn");
     const storeCards = document.querySelectorAll(".store-card");
     const grid = document.getElementById("store-list-grid");
     const noResults = document.getElementById("no-results");
 
-    regionBtns.forEach(btn => {
-        btn.addEventListener("click", function () {
-            const selectedRegion = this.getAttribute("data-region");
+    // 1. 解析 URL 參數 (例如 /store/?type=repair 時自動切換至維修據點)
+    const urlParams = new URLSearchParams(window.location.search);
+    let currentType = urlParams.get("type") === "repair" ? "repair" : "sales";
+    let currentRegion = "北區";
 
-            // 1. 切換按鈕選取狀態 (#1155CC 藍底白字 vs 白底 #1C1C1C 字)
-            regionBtns.forEach(b => {
-                b.classList.remove("bg-[#1155CC]", "text-white");
-                b.classList.add("bg-white", "text-[#1C1C1C]", "hover:bg-blue-50");
-            });
-            this.classList.remove("bg-white", "text-[#1C1C1C]", "hover:bg-blue-50");
-            this.classList.add("bg-[#1155CC]", "text-white");
-
-            // 2. 切換對應區域卡片顯示/隱藏
-            let visibleCount = 0;
-            storeCards.forEach(card => {
-                const district = card.getAttribute("data-district") || "";
-                const address = card.getAttribute("data-address") || "";
-
-                if (district.includes(selectedRegion) || address.includes(selectedRegion)) {
-                    card.classList.remove("hidden");
-                    visibleCount++;
-                } else {
-                    card.classList.add("hidden");
-                }
-            });
-
-            // 3. 無資料狀態判斷
-            if (visibleCount === 0) {
-                noResults.classList.remove("hidden");
+    // 2. 更新主頁籤按鈕樣式 (門市 / 維修)
+    function updateTypeBtnsUI() {
+        typeBtns.forEach(btn => {
+            const type = btn.getAttribute("data-type");
+            if (type === currentType) {
+                btn.classList.remove("bg-white", "text-[#1155CC]", "border-gray-300");
+                btn.classList.add("bg-[#1155CC]", "text-white", "border-[#1155CC]");
             } else {
-                noResults.classList.add("hidden");
+                btn.classList.remove("bg-[#1155CC]", "text-white", "border-[#1155CC]");
+                btn.classList.add("bg-white", "text-[#1155CC]", "border-gray-300");
             }
+        });
+    }
 
-            // 4. 自動平滑滾動至第一個卡片位置（重置手機版橫向滑動位置）
-            grid.scrollLeft = 0;
-            const target = visibleCount > 0 ? grid : noResults;
-            target.scrollIntoView({ behavior: "smooth", block: "start" });
+    // 3. 更新行政區按鈕樣式
+    function updateRegionBtnsUI() {
+        regionBtns.forEach(btn => {
+            const region = btn.getAttribute("data-region");
+            if (region === currentRegion) {
+                btn.classList.remove("bg-white", "text-[#1C1C1C]", "hover:bg-blue-50");
+                btn.classList.add("bg-[#1155CC]", "text-white");
+            } else {
+                btn.classList.remove("bg-[#1155CC]", "text-white");
+                btn.classList.add("bg-white", "text-[#1C1C1C]", "hover:bg-blue-50");
+            }
+        });
+    }
+
+    // 4. 核心據點篩選與車款標籤切換 logic
+    function filterStores() {
+        let visibleCount = 0;
+
+        storeCards.forEach(card => {
+            const hasSales = card.getAttribute("data-has-sales") === "true";
+            const hasRepair = card.getAttribute("data-has-repair") === "true";
+            const district = card.getAttribute("data-district") || "";
+            const address = card.getAttribute("data-address") || "";
+
+            const matchesType = (currentType === "sales" && hasSales) || (currentType === "repair" && hasRepair);
+            const matchesRegion = district.includes(currentRegion) || address.includes(currentRegion);
+
+            if (matchesType && matchesRegion) {
+                card.classList.remove("hidden");
+                visibleCount++;
+
+                // 切換顯示該據點相對應的車款標籤
+                const salesBox = card.querySelector(".sales-models-box");
+                const repairBox = card.querySelector(".repair-models-box");
+
+                if (salesBox) salesBox.classList.toggle("hidden", currentType !== "sales");
+                if (repairBox) repairBox.classList.toggle("hidden", currentType !== "repair");
+            } else {
+                card.classList.add("hidden");
+            }
+        });
+
+        if (visibleCount === 0) {
+            noResults.classList.remove("hidden");
+        } else {
+            noResults.classList.add("hidden");
+        }
+
+        grid.scrollLeft = 0;
+    }
+
+    // 5. 綁定按鈕點擊事件
+    typeBtns.forEach(btn => {
+        btn.addEventListener("click", function () {
+            currentType = this.getAttribute("data-type");
+            updateTypeBtnsUI();
+            filterStores();
         });
     });
+
+    regionBtns.forEach(btn => {
+        btn.addEventListener("click", function () {
+            currentRegion = this.getAttribute("data-region");
+            updateRegionBtnsUI();
+            filterStores();
+        });
+    });
+
+    // 初始化頁面
+    updateTypeBtnsUI();
+    updateRegionBtnsUI();
+    filterStores();
 });
 </script>
 {{ end }}
