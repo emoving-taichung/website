@@ -35,74 +35,120 @@
         }
     </script>
 </head>
-<body class="bg-brandLightBg text-[#1C1C1C] min-h-screen antialiased flex flex-col m-0 p-0 overflow-x-hidden">
+<body class="bg-brandLightBg text-[#1C1C1C] min-h-screen antialiased flex flex-col lg:flex-row m-0 p-0 overflow-x-hidden">
 
 <!-- 載入在地商家 Google SEO 結構化資料 -->
 {{ partial "seo-schema.html" . }}
 
     <!-- ========================================== -->
-    <!-- 1. 頂部列 Header (全尺寸通用設計) -->
+    <!-- 1. 【電腦版】左側固定導覽欄（限定首頁維持原樣） -->
     <!-- ========================================== -->
-    <header class="fixed top-0 left-0 w-full bg-brandBlue text-white p-3 md:p-3 flex justify-between items-center z-40 shadow-md">
-        
-        <!-- 左側：Logo 與店名 -->
-        <a href='{{ site.Home.RelPermalink }}' class="flex items-center gap-2.5 md:gap-3 group">
-            <img src='{{ "images/logo.png" | relURL }}' alt="eMOVING Logo" class="h-6 md:h-7 w-auto object-contain">
-            <span class="text-xs md:text-regular font-semibold tracking-wide border-l border-white/30 pl-2.5 md:pl-3 py-0.5 group-hover:text-blue-200 transition-colors">
-                {{ if .IsHome }}台中山西店｜精輪車業{{ else }}台中山西店｜台中電動機車｜精輪車業{{ end }}
-            </span>
-        </a>
-
-        <!-- 右側：電腦版選單 & 手機版漢堡按鈕 -->
-        <div class="flex items-center gap-4">
-            
-            <!-- 【電腦版】橫向導覽選單 (大於 md 尺寸時顯示) -->
-            <nav class="hidden md:flex items-center gap-5 text-sm lg:text-regular font-semibold">
-                {{ if .IsHome }}
-                    <!-- 首頁專用錨點選單 -->
-                    <a href="#hero" class="hover:text-blue-200 transition-colors">首頁</a>
-                    <a href="#features" class="hover:text-blue-200 transition-colors">專業、貼心、完善</a>
-                    <a href="#models" class="hover:text-blue-200 transition-colors">車款介紹</a>
-                    <a href="#contact" class="hover:text-blue-200 transition-colors">聯絡我們</a>
-                {{ else }}
-                    <!-- 內頁專用連結選單 -->
-                    <a href='{{ site.Home.RelPermalink }}' class="hover:text-blue-200 transition-colors">首頁</a>
-                    <a href='{{ "promotions/" | relURL }}' class="hover:text-blue-200 transition-colors">主打優惠</a>
-                    <a href='{{ "news/" | relURL }}' class="hover:text-blue-200 transition-colors">最新消息</a>
-                    
-                    <!-- 電腦版：車款介紹下拉選單 (Hover觸發) -->
-                    <div class="relative group">
-                        <button class="flex items-center gap-1 hover:text-blue-200 transition-colors focus:outline-none py-2">
-                            車款介紹 ▼
-                        </button>
-                        <div class="absolute left-1/2 -translate-x-1/2 top-full mt-2 w-48 bg-white text-[#1C1C1C] rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 flex flex-col py-2 border border-gray-100">
-                            <a href='{{ "models/shine-bobe/" | relURL }}' class="hover:bg-blue-50 px-4 py-2 transition-colors">Shine / Bobe</a>
-                            <a href='{{ "models/ez1/" | relURL }}' class="hover:bg-blue-50 px-4 py-2 transition-colors">EZ1</a>
-                            <a href='{{ "models/ezr/" | relURL }}' class="hover:bg-blue-50 px-4 py-2 transition-colors">EZR</a>
-                            <a href='{{ "models/fun/" | relURL }}' class="hover:bg-blue-50 px-4 py-2 transition-colors">fun</a>
-                            <a href='{{ "models/jinxuan125/" | relURL }}' class="hover:bg-blue-50 px-4 py-2 transition-colors">勁炫125</a>
-                        </div>
-                    </div>
-                    
-                    <a href='{{ "subsidies/" | relURL }}' class="hover:text-blue-200 transition-colors">補助查詢</a>
-                    <a href='{{ "booking/" | relURL }}' class="hover:text-blue-200 transition-colors">預約試乘</a>
-                    <a href='{{ "stores/" | relURL }}' class="hover:text-blue-200 transition-colors">門市據點</a>
-                {{ end }}
-            </nav>
-
-            <!-- 【手機版】漢堡按鈕 (md 以上尺寸隱藏) -->
-            <button class="md:hidden menu-open-btn w-10 h-10 flex items-center justify-center bg-white/10 rounded-lg text-white focus:outline-none hover:bg-white/20 transition-colors shrink-0">
+    {{ if .IsHome }}
+    <aside class="hidden lg:flex fixed left-0 top-0 h-screen w-[260px] bg-gradient-to-b from-brandBlue to-brandDarkBlue text-white flex-col justify-between items-end p-8 z-40 border-r border-white/10">
+        <div class="w-full flex justify-end">
+            <button class="menu-open-btn w-10 h-10 flex items-center justify-center bg-white/10 rounded-lg text-white focus:outline-none hover:bg-white/20 transition-colors">
                 <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
             </button>
         </div>
-    </header>
+
+        <!-- 首頁左側錨點選單 -->
+        <nav class="flex flex-col gap-6 items-end text-right w-full my-auto">
+            <a href="#hero" class="group block text-subtitle tracking-wider text-blue-100 hover:text-white transition-all font-semibold">
+                <span class="inline-block border-b border-transparent group-hover:border-white pb-1">首頁</span>
+            </a>
+            <a href="#features" class="group block text-subtitle tracking-wider text-blue-100 hover:text-white transition-all font-semibold">
+                <span class="inline-block border-b border-transparent group-hover:border-white pb-1">專業、貼心、完善</span>
+            </a>
+            <a href="#models" class="group block text-subtitle tracking-wider text-blue-100 hover:text-white transition-all font-semibold">
+                <span class="inline-block border-b border-transparent group-hover:border-white pb-1">車款介紹</span>
+            </a>
+            <a href="#contact" class="group block text-subtitle tracking-wider text-blue-100 hover:text-white transition-all font-semibold">
+                <span class="inline-block border-b border-transparent group-hover:border-white pb-1">聯絡我們</span>
+            </a>
+        </nav>
+
+        <div class="text-small text-blue-200/40 text-right w-full">
+            © 2026 eMOVING 精輪
+        </div>
+    </aside>
+    {{ end }}
 
     <!-- ========================================== -->
-    <!-- 2. 【手機版專用】全螢幕大選單 -->
+    <!-- 2. 頂部列 Header -->
     <!-- ========================================== -->
-    <div id="global-menu-overlay" class="hidden fixed inset-0 bg-white/70 z-[100] flex items-center justify-center p-4 backdrop-blur-md cursor-pointer md:hidden">
+    {{ if .IsHome }}
+        <!-- 首頁【手機版】頂部列：維持原樣不要變動 -->
+        <header class="lg:hidden fixed top-0 left-0 w-full bg-brandBlue text-white p-3 flex items-center gap-3 z-40 shadow-md">
+            <button class="menu-open-btn w-10 h-10 flex items-center justify-center bg-white/10 rounded-lg text-white focus:outline-none hover:bg-white/20 transition-colors shrink-0">
+                <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+            <a href='{{ site.Home.RelPermalink }}' class="flex items-center gap-2 group">
+                <img src='{{ "images/logo.png" | relURL }}' alt="eMOVING Logo" class="h-6 w-auto object-contain">
+                <span class="font-black tracking-wider text-regular group-hover:text-blue-200 transition-colors">
+                    台中山西店｜精輪車業
+                </span>
+            </a>
+        </header>
+    {{ else }}
+        <!-- 非首頁【全尺寸頂部列】：電腦版選單在同列右側，手機版維持漢堡按鈕 -->
+        <header class="fixed top-0 left-0 w-full bg-brandBlue text-white px-4 py-3 md:px-8 flex justify-between items-center z-40 shadow-md">
+            
+            <!-- 左側：Logo與店名 -->
+            <a href='{{ site.Home.RelPermalink }}' class="flex items-center gap-2.5 md:gap-3 group shrink-0">
+                <img src='{{ "images/logo.png" | relURL }}' alt="eMOVING Logo" class="h-6 md:h-7 w-auto object-contain">
+                <span class="text-xs md:text-regular font-semibold tracking-wide border-l border-white/30 pl-2.5 md:pl-3 py-0.5 group-hover:text-blue-200 transition-colors">
+                    山西店｜台中電動機車｜精輪車業
+                </span>
+            </a>
+
+            <!-- 右側區域：電腦版選單 + 手機版漢堡鈕 -->
+            <div class="flex items-center gap-6">
+                <!-- 【電腦版導覽列】(md 尺寸以上顯示，與 Logo 同列置右) -->
+                <nav class="hidden md:flex items-center gap-5 text-regular font-medium">
+                    <a href='{{ site.Home.RelPermalink }}' class="hover:text-blue-200 transition-colors">首頁</a>
+                    <a href='{{ "promotions/" | relURL }}' class="hover:text-blue-200 transition-colors">主打優惠</a>
+                    <a href='{{ "news/" | relURL }}' class="hover:text-blue-200 transition-colors">最新消息</a>
+                    
+                    <!-- 電腦版下拉選單：車款介紹 -->
+                    <div class="relative group">
+                        <button class="flex items-center gap-1 hover:text-blue-200 transition-colors py-2 focus:outline-none">
+                            <span>車款介紹</span>
+                            <span class="text-xs">▼</span>
+                        </button>
+                        <div class="absolute right-0 top-full hidden group-hover:flex flex-col bg-brandDarkBlue rounded-lg shadow-xl py-2 w-48 border border-white/10 text-sm">
+                            <a href='{{ "models/shine-bobe/" | relURL }}' class="px-4 py-2 hover:bg-white/10 transition-colors">免駕照 Shine / Bobe</a>
+                            <a href='{{ "models/ez1/" | relURL }}' class="px-4 py-2 hover:bg-white/10 transition-colors">汽車駕照可騎 EZ1</a>
+                            <a href='{{ "models/ezr/" | relURL }}' class="px-4 py-2 hover:bg-white/10 transition-colors">換電重型白牌 EZR</a>
+                            <a href='{{ "models/fun/" | relURL }}' class="px-4 py-2 hover:bg-white/10 transition-colors">換電重型白牌 fun</a>
+                            <a href='{{ "models/jinxuan125/" | relURL }}' class="px-4 py-2 hover:bg-white/10 transition-colors">充電重型白牌 勁炫125</a>
+                        </div>
+                    </div>
+
+                    <a href='{{ "subsidies/" | relURL }}' class="hover:text-blue-200 transition-colors">補助查詢</a>
+                    <a href='{{ "booking/" | relURL }}' class="hover:text-blue-200 transition-colors">預約試乘</a>
+                    <a href='{{ "stores/" | relURL }}' class="hover:text-blue-200 transition-colors">門市據點</a>
+                    <a href='{{ "service/" | relURL }}' class="hover:text-blue-200 transition-colors">維修據點</a>
+                    <a href='{{ site.Home.RelPermalink }}#contact' class="hover:text-blue-200 transition-colors">聯絡我們</a>
+                </nav>
+
+                <!-- 【手機版漢堡按鈕】(md 尺寸以上隱藏) -->
+                <button class="md:hidden menu-open-btn w-10 h-10 flex items-center justify-center bg-white/10 rounded-lg text-white focus:outline-none hover:bg-white/20 transition-colors shrink-0">
+                    <svg class="w-5 h-5 stroke-current" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+            </div>
+        </header>
+    {{ end }}
+
+    <!-- ========================================== -->
+    <!-- 3. 【全站通用】全螢幕大選單 (手機版點擊漢堡按鈕彈出) -->
+    <!-- ========================================== -->
+    <div id="global-menu-overlay" class="hidden fixed inset-0 bg-white/70 z-[100] flex items-center justify-center p-4 md:p-6 backdrop-blur-md cursor-pointer">
         <button id="close-menu-btn" class="absolute top-6 right-6 text-[#454555] hover:opacity-70 text-3xl focus:outline-none transition-colors">✕</button>
         
         <div id="menu-content-card" class="max-h-[90vh] overflow-y-auto w-full max-w-sm text-center py-8 px-6 cursor-default bg-[#454555] rounded-2xl shadow-2xl flex flex-col justify-between">
@@ -145,7 +191,7 @@
     </div>
 
     <!-- 主內容區塊 -->
-    <div class="flex-1 flex flex-col min-h-screen pt-[56px] md:pt-[60px]">
+    <div class="flex-1 flex flex-col min-h-screen {{ if .IsHome }}lg:ml-[260px] pt-[56px] lg:pt-0{{ else }}pt-[56px] md:pt-[60px]{{ end }}">
         {{ block "main" . }}{{ end }}
     </div>
 
