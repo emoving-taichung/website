@@ -30,7 +30,7 @@ ig_posts:
 
 # 2. 車款特色 (已改為 .png)
 features:
-  - title: " \ 魚是 變可愛 /"
+  - title: "\ 魚是 變可愛 /"
     desc: "美的事物讓生活 變得更簡單"
     image: "feature_1.png"
   - title: "26.5L大容量置物箱"

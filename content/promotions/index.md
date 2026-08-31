@@ -76,12 +76,12 @@ models:
     line_link: "https://lihi1.me/8LpPy?ref=line_join"
     features:
       - image: "fun-feat-1.png"
-        title: "高科技全彩 LCD 液晶儀表"
+        title: "26.5L大容量置物箱"
       - image: "fun-feat-2.png"
-        title: "CBS 重型機車級雙碟煞系統"
+        title: "內嵌式雙前置物空間"
       - image: "fun-feat-3.png"
-        title: "人體工學跑車級舒適座墊"
-    youtube_id: "JEKf9fqM2C0"
+        title: "低座高"
+    youtube_id: "s_2gbzvvlzY"
 
   # ==========================================
   # 第四款車：勁炫 
