@@ -109,9 +109,9 @@
                             </div>
 
                             <div>
-                                <a href="{{ $model.store_cta_link | default "/stores/" | relURL }}" 
+                                <a href="{{ $model.store_cta_link | default "store/" | relURL }}" 
                                    class="inline-flex items-center gap-2 bg-[#1155CC] hover:bg-blue-700 text-white font-semibold text-[18px] py-3.5 px-6 rounded-xl shadow-md transition-all">
-                                    {{ $model.store_cta_text | default "📍 查詢附近門市與換電據點" }}
+                                    {{ $model.store_cta_text | default "📍 查詢附近門市" }}
                                 </a>
                             </div>
                         </div>
@@ -179,7 +179,7 @@
                             💬 加入官方 LINE 諮詢
                         </a>
 
-                        <a href="{{ $model.store_cta_link | default "/stores/" | relURL }}"
+                        <a href="{{ $model.store_cta_link | default "store/" | relURL }}"
                            class="flex items-center justify-center gap-2 bg-[#FFFE4F] hover:bg-yellow-300 text-[#1C1C1C] font-black text-[18px] py-4 px-6 rounded-xl border-2 border-[#FFFE4F] shadow-md transition-all text-center">
                             🏢 前往門市據點
                         </a>

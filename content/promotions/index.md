@@ -19,9 +19,8 @@ models:
     description: "EZ1 採用 Gogoro Network 智慧換電系統，全台數千座電池交換站一換就走！超輕量化車身搭配軟Q舒適座墊，前置雙杯架與 USB 充電孔。"
     # 本月優惠亮點（重點數字突顯強調）
     highlights:
-      - '本月限定：加碼送 <span class="highlight-num">$5,000</span> 購車金'
-      - '首年原廠月租資費優惠 <span class="highlight-num">$169</span> /月起'
-      - '分期購車享 <span class="highlight-num">24</span> 期 <span class="highlight-num">0</span> 利率'
+      - '本月限定：開學獎學金 <span class="highlight-num">$8,900</span> '
+      - '分期購車享 <span class="highlight-num">12</span> 期 <span class="highlight-num">0</span> 利率'
     car_page_link: "models/ez1/"
     line_link: "https://lihi1.me/8LpPy?ref=line_join"
     store_cta_link: "pbgn-store/"  # 👈 新增：EZ1 專屬據點網址
