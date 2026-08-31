@@ -22,9 +22,9 @@
                 
                 <!-- 手機版 (預設)：顯示直圖 -->
                 {{ if $imgMobile }}
-                    <img src="{{ $imgMobile.RelPermalink }}" alt="{{ $.Title }}" class="w-full h-full object-cover md:object-contain mx-auto block">
+                    <img src="{{ $imgMobile.RelPermalink }}" alt="{{ $.Title }}" class="w-full h-full object-cover  mx-auto block">
                 {{ else if $imgDesktop }}
-                    <img src="{{ $imgDesktop.RelPermalink }}" alt="{{ $.Title }}" class="w-full h-full object-cover md:object-contain mx-auto block">
+                    <img src="{{ $imgDesktop.RelPermalink }}" alt="{{ $.Title }}" class="w-full h-full object-cover  mx-auto block">
                 {{ end }}
             </picture>
         {{ else }}
