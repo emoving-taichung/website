@@ -1,0 +1,116 @@
+{{ define "main" }}
+<!-- 引入 Google Fonts: Anybody 字型 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anybody:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+<div class="font-['Anybody',sans-serif]">
+
+    <!-- 1. 置頂標題區 (#F1FAFF 淺藍背景) -->
+    <div class="w-full bg-[#F1FAFF] py-8 md:py-12 text-center">
+        <div class="w-full max-w-4xl mx-auto px-4">
+            <h1 class="text-[32px] md:text-[40px] font-black tracking-wider text-[#1C1C1C] mb-2">
+                {{ .Title | default "隱私權保護政策" }}
+            </h1>
+            <p class="text-[#999999] text-[15px] md:text-[16px] font-normal">
+                {{ .Params.subtitle | default "台鈴工業股份有限公司個人資料保護與 Cookie 使用聲明" }}
+            </p>
+        </div>
+    </div>
+
+    <!-- 2. 主要文章卡片區塊 -->
+    <div class="w-full max-w-4xl mx-auto px-4 py-8 md:py-12 text-[#1C1C1C]">
+        <div class="bg-white border border-gray-200 rounded-3xl p-6 md:p-10 shadow-sm space-y-8 leading-relaxed text-[16px] text-gray-700">
+
+            <!-- 前言導言區塊 -->
+            <div class="p-5 md:p-6 bg-blue-50/60 border-l-4 border-[#1155CC] rounded-r-2xl">
+                <h2 class="text-[20px] md:text-[22px] font-bold text-[#1C1C1C] mb-2">
+                    台鈴工業蒐集個人資料聲明
+                </h2>
+                <p class="text-[15px] md:text-[16px] text-gray-700">
+                    我們承諾將依個人資料保護原則來使用、保管您的個人資料，並維護您的隱私權。請詳細閱讀以下隱私權保護條款。
+                </p>
+            </div>
+
+            <!-- 第一點：個人資料蒐集 -->
+            <section class="space-y-3">
+                <h3 class="text-[18px] md:text-[20px] font-bold text-[#1C1C1C] flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 bg-[#1155CC] rounded-full inline-block"></span>
+                    個人資料蒐集
+                </h3>
+                <div class="pl-4 space-y-2 text-gray-700">
+                    <p>
+                        個人資料是指得以識別您的身分且未公開的資料，如姓名、地址、電子郵件地址或電話號碼等。
+                    </p>
+                    <p>
+                        我們係依據「個人資料保護法」之規定，於您使用台鈴工業相關產品及服務時，經您同意蒐集您的個人資料。
+                    </p>
+                    <p class="text-[#1155CC] font-medium">
+                        ※ 關於本網站會使用的 Cookie 及網頁追蹤技術，請參照「我們蒐集電子資訊的方式」說明。
+                    </p>
+                    <ul class="list-disc pl-5 space-y-1 text-gray-600 text-[15px] pt-1">
+                        <li>如果您有提供我們任何他人個人資料，請確保您已取得他們同意。</li>
+                        <li>您有權要求更改您的個人資料，以及訂正任何錯誤資訊。</li>
+                    </ul>
+                </div>
+            </section>
+
+            <hr class="border-gray-100">
+
+            <!-- 第二點：我們蒐集電子資訊的方式 -->
+            <section class="space-y-3">
+                <h3 class="text-[18px] md:text-[20px] font-bold text-[#1C1C1C] flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 bg-[#1155CC] rounded-full inline-block"></span>
+                    我們蒐集電子資訊的方式
+                </h3>
+                <div class="pl-4 space-y-3 text-gray-700">
+                    <p>
+                        當您造訪我們網站上的特定網頁時，我們的伺服器會傳送「 Cookie 」。 Cookie 協助我們取得您使用我們網站時的非個人資料的資訊，包括您上次造訪網站的日期、造訪的頁面、下載的檔案，以及您使用的瀏覽器類型。
+                    </p>
+                    <p>
+                        整體而言，這些資訊能協助我們判斷造訪網站的人數，以及造訪的頻率。 Cookie 也能讓我們個人化內容、回應您對產品及服務的相關要求，並通知您新產品的資訊。如此一來，我們便可以提升網站及服務的品質。
+                    </p>
+                    <div class="bg-gray-50 border border-gray-200 rounded-2xl p-4 text-[15px] text-gray-600">
+                        <strong class="text-[#1C1C1C]">如何停用 Cookie：</strong><br>
+                        如果您不想收到 Cookie，您可以在大部分網頁瀏覽器的工具列上，找到「說明 / Help」功能，「說明」會教您如何防止瀏覽器接受新的 Cookie、如何讓瀏覽器在收到新 Cookie 時通知您，以及如何停用 Cookie。
+                    </div>
+                </div>
+            </section>
+
+            <hr class="border-gray-100">
+
+            <!-- 第三點：我們使用個人資訊的方式 -->
+            <section class="space-y-3">
+                <h3 class="text-[18px] md:text-[20px] font-bold text-[#1C1C1C] flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 bg-[#1155CC] rounded-full inline-block"></span>
+                    我們使用個人資訊的方式
+                </h3>
+                <div class="pl-4 space-y-3 text-gray-700">
+                    <p>
+                        本網站所取得的個人資料，都僅供台鈴工業於其內部、依照原來所說明的使用目的和範圍，除非事先說明、或依照相關法律規定，否則台鈴工業不會將資料提供給第三人、或移作其他目的使用。
+                    </p>
+                    <p>
+                        您的資訊由台鈴工業的員工管理，您可以利用郵件、電話，或使用網站上的「聯繫我們」部分，隨時與客服部門聯繫。如有需要，客服代表可能會連絡您以確認或修正您提供的個人資訊。
+                    </p>
+                </div>
+            </section>
+
+            <hr class="border-gray-100">
+
+            <!-- 第四點：網站對外的相關連結 -->
+            <section class="space-y-3">
+                <h3 class="text-[18px] md:text-[20px] font-bold text-[#1C1C1C] flex items-center gap-2">
+                    <span class="w-2.5 h-2.5 bg-[#1155CC] rounded-full inline-block"></span>
+                    網站對外的相關連結
+                </h3>
+                <div class="pl-4 space-y-2 text-gray-700">
+                    <p>
+                        您可經由本網站所提供的其他網站的網路連結，點選進入其他網站。但該連結網站不適用本網站的隱私權保護政策，您必須參考該連結網站中的隱私權保護政策。
+                    </p>
+                </div>
+            </section>
+
+        </div>
+    </div>
+</div>
+{{ end }}
