@@ -22,9 +22,9 @@
                 
                 <!-- 手機版 (預設)：顯示直圖 -->
                 {{ if $imgMobile }}
-                    <img src="{{ $imgMobile.RelPermalink }}" alt="{{ $.Title }}" class="w-full h-full object-cover  mx-auto block">
+                    <img src="{{ $imgMobile.RelPermalink }}" alt="{{ $.Title }}" class="w-full h-full object-cover mx-auto block">
                 {{ else if $imgDesktop }}
-                    <img src="{{ $imgDesktop.RelPermalink }}" alt="{{ $.Title }}" class="w-full h-full object-cover  mx-auto block">
+                    <img src="{{ $imgDesktop.RelPermalink }}" alt="{{ $.Title }}" class="w-full h-full object-cover mx-auto block">
                 {{ end }}
             </picture>
         {{ else }}
@@ -117,15 +117,15 @@
                         </div>
                     </div>
 
-                    <!-- 車款特色（圖片尺寸 1280 * 800） -->
+                    <!-- 車款特色（手機版 3:4，電腦版 1280 * 800） -->
                     <div class="space-y-6">
                         <h3 class="text-[24px] font-black text-[#1C1C1C] text-left border-l-4 border-[#1155CC] pl-3 leading-none">
                             車款特色
                         </h3>
                         
                         <div class="carousel-container relative w-full bg-white rounded-2xl border border-gray-200 shadow-md p-4 group">
-                            <!-- 1280 * 800 比例容器 -->
-                            <div class="w-full aspect-[1280/800] relative overflow-hidden rounded-xl bg-gray-50">
+                            <!-- 手機版 3:4，電腦版 1280/800 比例容器 -->
+                            <div class="w-full aspect-[3/4] md:aspect-[1280/800] relative overflow-hidden rounded-xl bg-gray-50">
                                 {{ range $sIndex, $feat := $model.features }}
                                 <div class="slide-item absolute inset-0 w-full h-full transition-opacity duration-500 opacity-0 pointer-events-none flex flex-col" data-slide-index="{{ $sIndex }}">
                                     <div class="w-full h-full relative">
@@ -136,8 +136,9 @@
                                         {{ end }}
                                     </div>
                                     
-                                    <div class="absolute bottom-0 inset-x-0 bg-white/90 backdrop-blur-sm py-3 px-4 text-center border-t border-gray-100">
-                                        <span class="inline-flex items-center justify-center gap-2 text-[18px] font-bold text-[#1C1C1C]">
+                                    <!-- 調整特色文字為手機版 14px、電腦版 18px -->
+                                    <div class="absolute bottom-0 inset-x-0 bg-white/90 backdrop-blur-sm py-2.5 px-3 md:py-3 md:px-4 text-center border-t border-gray-100">
+                                        <span class="inline-flex items-center justify-center gap-1.5 md:gap-2 text-[14px] md:text-[18px] font-bold text-[#1C1C1C]">
                                             <span class="text-green-600">✅</span>
                                             <span>{{ $feat.title }}</span>
                                         </span>
@@ -169,7 +170,7 @@
 
                     <!-- 三個 CTA 按鈕 -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 pt-6">
-                        <a href="{{ $model.car_page_link  | relURL}}" 
+                        <a href="{{ $model.car_page_link | relURL}}" 
                            class="flex items-center justify-center gap-2 bg-[#f9fcff] hover:bg-blue-50 text-[#1C1C1C] font-bold text-[18px] py-4 px-6 rounded-xl border-2 border-[#1155CC] shadow-sm transition-all text-center">
                             🏍️ 車款介紹主頁
                         </a>
