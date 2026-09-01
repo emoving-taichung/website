@@ -4,7 +4,14 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anybody:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
-<div class="font-['Anybody',sans-serif]">
+<style>
+    /* 避免單引號造成 VS Code 語法誤判，改用標準 CSS 載入字型 */
+    .custom-font-anybody {
+        font-family: Anybody, sans-serif;
+    }
+</style>
+
+<div class="custom-font-anybody">
 
     <!-- 1. 置頂標題區 (#F1FAFF 淺藍背景) -->
     <div class="w-full bg-[#F1FAFF] py-8 md:py-12 text-center">
