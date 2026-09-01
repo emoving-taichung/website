@@ -5,7 +5,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Anybody:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
 <style>
-    /* 避免 VS Code 誤判單引號，改用標準 CSS 載入字型 */
+    /* 避免 VS Code 誤判單引號與 Hugo 語法，採用標準 CSS 定義字型 */
     .custom-font-anybody {
         font-family: Anybody, sans-serif;
     }
@@ -88,12 +88,12 @@
     <!-- 外層容器 -->
     <div class="w-full max-w-6xl mx-auto px-4 py-8 md:py-12 text-[#1C1C1C]">
 
-        <!-- 2. 動態生成分類按鈕區塊 -->
-        <div class="w-full mx-auto mb-10">
-            <div id="category-buttons-container" class="flex flex-wrap justify-center gap-2.5 md:gap-3">
+        <!-- 2. 動態生成分類按鈕區塊 (手機板 3 列、桌面板 5 列) -->
+        <div class="w-full max-w-4xl mx-auto mb-10">
+            <div id="category-buttons-container" class="grid grid-cols-3 md:grid-cols-5 gap-2.5 md:gap-3">
                 <button type="button"
                         data-category="all"
-                        class="category-btn py-2.5 px-4 bg-[#1155CC] text-white border border-[#1155CC] text-[15px] md:text-[16px] font-bold rounded-2xl transition-all duration-200 shadow-sm active:scale-95">
+                        class="category-btn py-2.5 px-2 md:px-4 bg-[#1155CC] text-white border border-[#1155CC] text-[14px] md:text-[16px] font-bold rounded-2xl transition-all duration-200 shadow-sm active:scale-95 text-center truncate">
                     全部問題
                 </button>
             </div>
@@ -193,14 +193,14 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     });
-    flushCurrentFAQ(); // 處理最後一個問題
+    flushCurrentFAQ();
 
     // 2. 依據 Markdown 中出現的分類動態生成分類選單按鈕
     categoriesSet.forEach(cat => {
         const btn = document.createElement("button");
         btn.type = "button";
         btn.setAttribute("data-category", cat);
-        btn.className = "category-btn py-2.5 px-4 bg-white text-[#1C1C1C] border border-gray-200 hover:border-[#1155CC] hover:text-[#1155CC] text-[15px] md:text-[16px] font-bold rounded-2xl transition-all duration-200 shadow-sm active:scale-95";
+        btn.className = "category-btn py-2.5 px-2 md:px-4 bg-white text-[#1C1C1C] border border-gray-200 hover:border-[#1155CC] hover:text-[#1155CC] text-[14px] md:text-[16px] font-bold rounded-2xl transition-all duration-200 shadow-sm active:scale-95 text-center truncate";
         btn.textContent = cat;
         categoryButtonsContainer.appendChild(btn);
     });
