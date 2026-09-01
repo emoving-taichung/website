@@ -5,17 +5,14 @@
 <link href="https://fonts.googleapis.com/css2?family=Anybody:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
 <style>
-    /* 避免 VS Code 誤判單引號與 Hugo 語法，採用標準 CSS 定義字型 */
-    .custom-font-anybody {
-        font-family: Anybody, sans-serif;
-    }
-
-    /* 針對 FAQ 答案內文 Markdown 元素設定樣式 */
+    /* 針對 FAQ 答案內文 Markdown 元素設定標準 CSS 樣式 (避免於內部使用 Hugo {{ }} 變數或 CSS url 語法) */
     .faq-markdown-content table {
         width: 100%;
         border-collapse: collapse;
         margin-top: 1rem;
         margin-bottom: 1rem;
+        border-radius: 0.5rem;
+        overflow: hidden;
     }
     .faq-markdown-content th, 
     .faq-markdown-content td {
@@ -32,6 +29,7 @@
         color: #1155CC;
         text-decoration: underline;
         font-weight: 600;
+        word-break: break-all;
     }
     .faq-markdown-content a:hover {
         color: #0b3d91;
@@ -42,7 +40,7 @@
         border-radius: 0.75rem;
         margin-top: 1rem;
         margin-bottom: 1rem;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     }
     .faq-markdown-content ul {
         list-style-type: disc;
@@ -58,7 +56,7 @@
     }
 </style>
 
-<div class="custom-font-anybody">
+<div class="font-['Anybody',sans-serif]">
 
     <!-- 1. 置頂標題區 (#F1FAFF 淺藍背景) -->
     <div class="w-full bg-[#F1FAFF] py-8 md:py-12 text-center">
@@ -88,12 +86,12 @@
     <!-- 外層容器 -->
     <div class="w-full max-w-6xl mx-auto px-4 py-8 md:py-12 text-[#1C1C1C]">
 
-        <!-- 2. 動態生成分類按鈕區塊 (手機板 3 列、桌面板 5 列) -->
-        <div class="w-full max-w-4xl mx-auto mb-10">
-            <div id="category-buttons-container" class="grid grid-cols-3 md:grid-cols-5 gap-2.5 md:gap-3">
+        <!-- 2. 動態生成分類按鈕區塊 -->
+        <div class="w-full mx-auto mb-10">
+            <div id="category-buttons-container" class="flex flex-wrap justify-center gap-2.5 md:gap-3">
                 <button type="button"
                         data-category="all"
-                        class="category-btn py-2.5 px-2 md:px-4 bg-[#1155CC] text-white border border-[#1155CC] text-[14px] md:text-[16px] font-bold rounded-2xl transition-all duration-200 shadow-sm active:scale-95 text-center truncate">
+                        class="category-btn py-2.5 px-4 bg-[#1155CC] text-white border border-[#1155CC] text-[15px] md:text-[16px] font-bold rounded-2xl transition-all duration-200 shadow-sm active:scale-95">
                     全部問題
                 </button>
             </div>
@@ -117,52 +115,63 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    const rawContainer = document.getElementById("faq-raw-content");
-    const listContainer = document.getElementById("faq-list-container");
-    const categoryButtonsContainer = document.getElementById("category-buttons-container");
-    const searchInput = document.getElementById("faq-search");
-    const noResults = document.getElementById("no-results");
+    var rawContainer = document.getElementById("faq-raw-content");
+    var listContainer = document.getElementById("faq-list-container");
+    var categoryButtonsContainer = document.getElementById("category-buttons-container");
+    var searchInput = document.getElementById("faq-search");
+    var noResults = document.getElementById("no-results");
 
     if (!rawContainer) return;
 
-    let currentCategory = "all";
-    let currentKeyword = "";
-    const categoriesSet = new Set();
+    var currentCategory = "all";
+    var currentKeyword = "";
+    var categoriesSet = new Set();
 
     // 1. 解析原始 DOM，將 # (H1) 轉為分類，## (H2) 轉為問題與答案區塊
-    const children = Array.from(rawContainer.children);
-    let activeCategory = "未分類";
-    let activeQuestionTitle = "";
-    let activeAnswerNodes = [];
+    var children = Array.from(rawContainer.children);
+    var activeCategory = "未分類";
+    var activeQuestionTitle = "";
+    var activeAnswerNodes = [];
 
     function flushCurrentFAQ() {
         if (!activeQuestionTitle) return;
 
-        const itemDiv = document.createElement("div");
+        var itemDiv = document.createElement("div");
         itemDiv.className = "faq-item border border-gray-200 rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-all duration-200";
         itemDiv.setAttribute("data-category", activeCategory);
 
         // 建立問題按鈕
-        const toggleBtn = document.createElement("button");
+        var toggleBtn = document.createElement("button");
         toggleBtn.type = "button";
         toggleBtn.className = "faq-toggle w-full px-6 py-5 flex justify-between items-center text-left text-[17px] md:text-[18px] font-bold text-[#1C1C1C] hover:text-[#1155CC] transition-colors focus:outline-none";
-        toggleBtn.innerHTML = `
-            <span class="pr-4 flex items-center gap-2.5 flex-wrap">
-                <span class="inline-block px-2.5 py-0.5 text-[12px] font-bold bg-blue-50 text-[#1155CC] rounded-lg shrink-0">
-                    ${activeCategory}
-                </span>
-                <span>${activeQuestionTitle}</span>
-            </span>
-            <span class="faq-icon text-[#1155CC] text-2xl font-light transform transition-transform duration-200 shrink-0">+</span>
-        `;
+        toggleBtn.innerHTML = 
+            '<span class="pr-4 flex items-center gap-2.5 flex-wrap">' +
+                '<span class="inline-block px-2.5 py-0.5 text-[12px] font-bold bg-blue-50 text-[#1155CC] rounded-lg shrink-0">' +
+                    activeCategory +
+                '</span>' +
+                '<span>' + activeQuestionTitle + '</span>' +
+            '</span>' +
+            '<span class="faq-icon text-[#1155CC] text-2xl font-light transform transition-transform duration-200 shrink-0">+</span>';
 
         // 建立答案容器
-        const answerDiv = document.createElement("div");
+        var answerDiv = document.createElement("div");
         answerDiv.className = "faq-answer hidden px-6 pb-6 pt-2 text-[15px] md:text-[16px] text-gray-700 leading-relaxed border-t border-gray-100 faq-markdown-content";
         
-        let answerPlainText = "";
-        activeAnswerNodes.forEach(node => {
-            answerDiv.appendChild(node.cloneNode(true));
+        var answerPlainText = "";
+        activeAnswerNodes.forEach(function (node) {
+            var clonedNode = node.cloneNode(true);
+
+            // 自動處理 Leaf Bundle 內的 PDF 檔案超連結 (加上 target="_blank")
+            var links = clonedNode.querySelectorAll ? clonedNode.querySelectorAll("a") : [];
+            links.forEach(function (a) {
+                var href = a.getAttribute("href") || "";
+                if (href.endsWith(".pdf") || href.startsWith("http")) {
+                    a.setAttribute("target", "_blank");
+                    a.setAttribute("rel", "noopener noreferrer");
+                }
+            });
+
+            answerDiv.appendChild(clonedNode);
             answerPlainText += " " + (node.textContent || "");
         });
 
@@ -177,8 +186,8 @@ document.addEventListener("DOMContentLoaded", function () {
         activeAnswerNodes = [];
     }
 
-    children.forEach(node => {
-        const tagName = node.tagName ? node.tagName.toLowerCase() : "";
+    children.forEach(function (node) {
+        var tagName = node.tagName ? node.tagName.toLowerCase() : "";
 
         if (tagName === "h1") {
             flushCurrentFAQ();
@@ -193,31 +202,31 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     });
-    flushCurrentFAQ();
+    flushCurrentFAQ(); // 處理最後一個問題
 
     // 2. 依據 Markdown 中出現的分類動態生成分類選單按鈕
-    categoriesSet.forEach(cat => {
-        const btn = document.createElement("button");
+    categoriesSet.forEach(function (cat) {
+        var btn = document.createElement("button");
         btn.type = "button";
         btn.setAttribute("data-category", cat);
-        btn.className = "category-btn py-2.5 px-2 md:px-4 bg-white text-[#1C1C1C] border border-gray-200 hover:border-[#1155CC] hover:text-[#1155CC] text-[14px] md:text-[16px] font-bold rounded-2xl transition-all duration-200 shadow-sm active:scale-95 text-center truncate";
+        btn.className = "category-btn py-2.5 px-4 bg-white text-[#1C1C1C] border border-gray-200 hover:border-[#1155CC] hover:text-[#1155CC] text-[15px] md:text-[16px] font-bold rounded-2xl transition-all duration-200 shadow-sm active:scale-95";
         btn.textContent = cat;
         categoryButtonsContainer.appendChild(btn);
     });
 
-    const categoryBtns = document.querySelectorAll(".category-btn");
-    const faqItems = document.querySelectorAll(".faq-item");
+    var categoryBtns = document.querySelectorAll(".category-btn");
+    var faqItems = document.querySelectorAll(".faq-item");
 
     // 3. 核心過濾功能 (分類 + 關鍵字搜尋)
     function filterFAQs() {
-        let visibleCount = 0;
+        var visibleCount = 0;
 
-        faqItems.forEach(item => {
-            const itemCategory = item.getAttribute("data-category") || "";
-            const itemSearchText = item.getAttribute("data-search-text") || "";
+        faqItems.forEach(function (item) {
+            var itemCategory = item.getAttribute("data-category") || "";
+            var itemSearchText = item.getAttribute("data-search-text") || "";
 
-            const matchesCategory = (currentCategory === "all") || (itemCategory === currentCategory);
-            const matchesKeyword = !currentKeyword || itemSearchText.includes(currentKeyword.toLowerCase());
+            var matchesCategory = (currentCategory === "all") || (itemCategory === currentCategory);
+            var matchesKeyword = !currentKeyword || itemSearchText.includes(currentKeyword.toLowerCase());
 
             if (matchesCategory && matchesKeyword) {
                 item.classList.remove("hidden");
@@ -241,12 +250,12 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // 分類按鈕點擊事件
-    categoryBtns.forEach(btn => {
+    categoryBtns.forEach(function (btn) {
         btn.addEventListener("click", function () {
             currentCategory = this.getAttribute("data-category");
 
-            categoryBtns.forEach(b => {
-                if (b === this) {
+            categoryBtns.forEach(function (b) {
+                if (b === btn) {
                     b.classList.remove("bg-white", "text-[#1C1C1C]", "border-gray-200");
                     b.classList.add("bg-[#1155CC]", "text-white", "border-[#1155CC]");
                 } else {
@@ -261,14 +270,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 4. 折疊手風琴點擊開關
     document.addEventListener("click", function (e) {
-        const toggleBtn = e.target.closest(".faq-toggle");
+        var toggleBtn = e.target.closest(".faq-toggle");
         if (!toggleBtn) return;
 
-        const item = toggleBtn.closest(".faq-item");
-        const answer = item.querySelector(".faq-answer");
-        const icon = item.querySelector(".faq-icon");
+        var item = toggleBtn.closest(".faq-item");
+        var answer = item.querySelector(".faq-answer");
+        var icon = item.querySelector(".faq-icon");
 
-        const isOpen = !answer.classList.contains("hidden");
+        var isOpen = !answer.classList.contains("hidden");
 
         if (isOpen) {
             answer.classList.add("hidden");

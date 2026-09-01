@@ -31,8 +31,8 @@ models:
       - image_desktop: "ez1-feat-2-pc.png"
         image_mobile: "ez1-feat-2-mb.png"
         title: "前置雙杯架與 USB 充電孔"
-      - image_desktop: "ez1-feat-2-pc.png"
-        image_mobile: "ez1-feat-2-mb.png"
+      - image_desktop: "ez1-feat-3-pc.png"
+        image_mobile: "ez1-feat-3-mb.png"
         title: "智慧感應卡解鎖"
     youtube_id: "X75kLrpiaM0"   # 如果沒有影片，這行可以移除或留空
 
