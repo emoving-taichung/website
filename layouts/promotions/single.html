@@ -117,7 +117,7 @@
                         </div>
                     </div>
 
-                    <!-- 車款特色（手機版 3:4，電腦版 1280 * 800） -->
+                    <!-- 車款特色（支援桌面與手機雙圖設定） -->
                     <div class="space-y-6">
                         <h3 class="text-[24px] font-black text-[#1C1C1C] text-left border-l-4 border-[#1155CC] pl-3 leading-none">
                             車款特色
@@ -129,14 +129,29 @@
                                 {{ range $sIndex, $feat := $model.features }}
                                 <div class="slide-item absolute inset-0 w-full h-full transition-opacity duration-500 opacity-0 pointer-events-none flex flex-col" data-slide-index="{{ $sIndex }}">
                                     <div class="w-full h-full relative">
-                                        {{ with $.Resources.GetMatch $feat.image }}
-                                            <img src="{{ .RelPermalink }}" alt="{{ $feat.title }}" class="w-full h-full object-cover">
+                                        {{ $featImgMobile := $.Resources.GetMatch (default $feat.image $feat.image_mobile) }}
+                                        {{ $featImgDesktop := $.Resources.GetMatch (default $feat.image $feat.image_desktop) }}
+                                        
+                                        {{ if or $featImgMobile $featImgDesktop }}
+                                            <picture class="w-full h-full flex items-center justify-center">
+                                                <!-- 電腦版 (>= 768px)：顯示桌面圖 -->
+                                                {{ if $featImgDesktop }}
+                                                    <source media="(min-width: 768px)" srcset="{{ $featImgDesktop.RelPermalink }}">
+                                                {{ end }}
+                                                
+                                                <!-- 手機版 (預設)：顯示手機圖 -->
+                                                {{ if $featImgMobile }}
+                                                    <img src="{{ $featImgMobile.RelPermalink }}" alt="{{ $feat.title }}" class="w-full h-full object-cover">
+                                                {{ else if $featImgDesktop }}
+                                                    <img src="{{ $featImgDesktop.RelPermalink }}" alt="{{ $feat.title }}" class="w-full h-full object-cover">
+                                                {{ end }}
+                                            </picture>
                                         {{ else }}
-                                            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">【特色圖檔：{{ $feat.image }}】</div>
+                                            <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">【特色圖檔未符合：{{ $feat.title }}】</div>
                                         {{ end }}
                                     </div>
                                     
-                                    <!-- 調整特色文字為手機版 14px、電腦版 18px -->
+                                    <!-- 特色標題文字 -->
                                     <div class="absolute bottom-0 inset-x-0 bg-white/90 backdrop-blur-sm py-2.5 px-3 md:py-3 md:px-4 text-center border-t border-gray-100">
                                         <span class="inline-flex items-center justify-center gap-1.5 md:gap-2 text-[14px] md:text-[18px] font-bold text-[#1C1C1C]">
                                             <span class="text-green-600">✅</span>
