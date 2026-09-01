@@ -5,6 +5,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Anybody:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
 <style>
+    /* 避免 VS Code 誤判單引號，改用標準 CSS 載入字型 */
+    .custom-font-anybody {
+        font-family: Anybody, sans-serif;
+    }
+
     /* 針對 FAQ 答案內文 Markdown 元素設定樣式 */
     .faq-markdown-content table {
         width: 100%;
@@ -53,7 +58,7 @@
     }
 </style>
 
-<div class="font-['Anybody',sans-serif]">
+<div class="custom-font-anybody">
 
     <!-- 1. 置頂標題區 (#F1FAFF 淺藍背景) -->
     <div class="w-full bg-[#F1FAFF] py-8 md:py-12 text-center">
