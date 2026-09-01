@@ -4,6 +4,7 @@ region: "東部"       # 必須精準填寫：中部、北部、南部、東部�
 phone: "03-9901529"
 website_url: "https://moto.ilepb.gov.tw/01_news.asp"
 doc_url: "https://emoto.ilepb.gov.tw/Apply/Information"
-query_url: ""    # 若無此項，前台會自動隱藏該按鈕
+query_url: "https://emoto.ilepb.gov.tw/Apply/apply"    # 若無此項，前台會自動隱藏該按鈕
+query_label: "線上申請"
 image: "115.png" # 填入您的圖片路徑
 ---
