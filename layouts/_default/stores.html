@@ -25,24 +25,24 @@
         <div class="w-full max-w-md mx-auto mb-8 flex justify-center gap-3">
             <button type="button"
                     data-type="sales"
-                    class="type-btn flex-1 py-3 px-4 rounded-2xl text-[18px] font-bold border transition-all duration-200 shadow-sm active:scale-95 text-center bg-white text-[#1155CC] border-gray-300">
+                    class="type-btn flex-1 py-3 px-4 rounded-2xl text-[18px] font-bold border transition-all duration-200 shadow-sm active:scale-95 text-center">
                 門市據點
             </button>
             <button type="button"
                     data-type="repair"
-                    class="type-btn flex-1 py-3 px-4 rounded-2xl text-[18px] font-bold border transition-all duration-200 shadow-sm active:scale-95 text-center bg-white text-[#1155CC] border-gray-300">
+                    class="type-btn flex-1 py-3 px-4 rounded-2xl text-[18px] font-bold border transition-all duration-200 shadow-sm active:scale-95 text-center">
                 維修據點
             </button>
         </div>
 
-        <!-- 3. 區域選擇按鈕網格 (初始整體隱藏，選擇類別後展開) -->
-        <div id="region-container" class="w-full max-w-3xl mx-auto mb-10 hidden">
+        <!-- 3. 區域選擇按鈕網格 (桌面版 5 列，手機版 3 列) -->
+        <div class="w-full max-w-3xl mx-auto mb-10">
             <div class="grid grid-cols-3 md:grid-cols-5 gap-2.5 md:gap-4">
                 {{ $regions := slice "北區" "北屯區" "潭子區" "西區" "西屯區" "南區" "南屯區" "神岡區" "東區" "霧峰區" "太平區" "大雅區" "大里區" "沙鹿區" "大甲區" "彰化縣" "南投縣" }}
                 {{ range $region := $regions }}
                 <button type="button"
                         data-region="{{ $region }}"
-                        class="region-btn hidden w-full py-2.5 px-1 bg-white border border-[#1155CC] text-[#1C1C1C] text-[18px] font-bold rounded-2xl text-center hover:bg-blue-50 transition-all duration-200 shadow-sm active:scale-95">
+                        class="region-btn w-full py-2.5 px-1 bg-white border border-[#1155CC] text-[#1C1C1C] text-[18px] font-bold rounded-2xl text-center hover:bg-blue-50 transition-all duration-200 shadow-sm active:scale-95">
                     {{ $region }}
                 </button>
                 {{ end }}
@@ -115,9 +115,18 @@
                         {{ end }}
                     </div>
 
-                    <!-- Google 地圖動態嵌入 -->
+                    <!-- Google 地圖區塊 & 前往門市按鈕 -->
                     {{ if $store.address }}
-                    <div class="mt-5 pt-2 flex justify-center">
+                    <div class="mt-5 pt-2 flex flex-col items-center gap-3">
+                        <!-- 前往門市按鈕 (背景 #FFFE4F、文字 #FFFFFF) -->
+                        <a href="https://www.google.com/maps/search/?api=1&query={{ $store.address | urlquery }}"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="w-[350px] max-w-full py-2.5 px-4 bg-[#FFFE4F] text-white font-bold text-[16px] rounded-xl shadow-sm hover:opacity-90 transition-opacity text-center block">
+                            📍 前往門市
+                        </a>
+
+                        <!-- Google 地圖動態嵌入 -->
                         <div class="w-[350px] h-[300px] max-w-full rounded-xl overflow-hidden border border-gray-100 shadow-inner">
                             <iframe 
                                 title="{{ $store.title }} 地圖"
@@ -148,17 +157,17 @@
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const typeBtns = document.querySelectorAll(".type-btn");
-    const regionContainer = document.getElementById("region-container");
     const regionBtns = document.querySelectorAll(".region-btn");
     const storeCards = document.querySelectorAll(".store-card");
     const grid = document.getElementById("store-list-grid");
     const noResults = document.getElementById("no-results");
 
-    // 初始狀態設為 null（預設不選擇任何類型與地區）
-    let currentType = null;
-    let currentRegion = null;
+    // 1. 解析 URL 參數 (例如 /store/?type=repair 時自動切換至維修據點)
+    const urlParams = new URLSearchParams(window.location.search);
+    let currentType = urlParams.get("type") === "repair" ? "repair" : "sales";
+    let currentRegion = "北區";
 
-    // 1. 更新主頁籤按鈕樣式 (門市 / 維修)
+    // 2. 更新主頁籤按鈕樣式 (門市 / 維修)
     function updateTypeBtnsUI() {
         typeBtns.forEach(btn => {
             const type = btn.getAttribute("data-type");
@@ -172,48 +181,11 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // 2. 依據選擇的據點類別，動態計算並僅顯示有對應據點的行政區按鈕
-    function updateAvailableRegions() {
-        if (!currentType) {
-            regionContainer.classList.add("hidden");
-            return;
-        }
-
-        regionContainer.classList.remove("hidden");
-
-        regionBtns.forEach(btn => {
-            const region = btn.getAttribute("data-region");
-            let hasMatchingStore = false;
-
-            storeCards.forEach(card => {
-                const hasSales = card.getAttribute("data-has-sales") === "true";
-                const hasRepair = card.getAttribute("data-has-repair") === "true";
-                const district = card.getAttribute("data-district") || "";
-                const address = card.getAttribute("data-address") || "";
-
-                const matchesType = (currentType === "sales" && hasSales) || (currentType === "repair" && hasRepair);
-                const matchesRegion = district.includes(region) || address.includes(region);
-
-                if (matchesType && matchesRegion) {
-                    hasMatchingStore = true;
-                }
-            });
-
-            if (hasMatchingStore) {
-                btn.classList.remove("hidden");
-            } else {
-                btn.classList.add("hidden");
-            }
-        });
-
-        updateRegionBtnsUI();
-    }
-
-    // 3. 更新行政區按鈕 Focus/Active 樣式
+    // 3. 更新行政區按鈕樣式
     function updateRegionBtnsUI() {
         regionBtns.forEach(btn => {
             const region = btn.getAttribute("data-region");
-            if (currentRegion && region === currentRegion) {
+            if (region === currentRegion) {
                 btn.classList.remove("bg-white", "text-[#1C1C1C]", "hover:bg-blue-50");
                 btn.classList.add("bg-[#1155CC]", "text-white");
             } else {
@@ -223,14 +195,8 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // 4. 據點卡片過濾邏輯 (必須同時選定「類別」與「行政區」才會顯示卡片)
+    // 4. 核心據點篩選與車款標籤切換 logic
     function filterStores() {
-        if (!currentType || !currentRegion) {
-            storeCards.forEach(card => card.classList.add("hidden"));
-            noResults.classList.add("hidden");
-            return;
-        }
-
         let visibleCount = 0;
 
         storeCards.forEach(card => {
@@ -246,6 +212,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 card.classList.remove("hidden");
                 visibleCount++;
 
+                // 切換顯示該據點相對應的車款標籤
                 const salesBox = card.querySelector(".sales-models-box");
                 const repairBox = card.querySelector(".repair-models-box");
 
@@ -265,18 +232,15 @@ document.addEventListener("DOMContentLoaded", function () {
         grid.scrollLeft = 0;
     }
 
-    // 5. 綁定類別按鈕點擊事件
+    // 5. 綁定按鈕點擊事件
     typeBtns.forEach(btn => {
         btn.addEventListener("click", function () {
             currentType = this.getAttribute("data-type");
-            currentRegion = null; // 切換門市/維修時重置行政區，保持下方卡片區空白
             updateTypeBtnsUI();
-            updateAvailableRegions();
             filterStores();
         });
     });
 
-    // 6. 綁定行政區按鈕點擊事件
     regionBtns.forEach(btn => {
         btn.addEventListener("click", function () {
             currentRegion = this.getAttribute("data-region");
@@ -285,9 +249,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // 7. 初始化：預設保持完全空白
+    // 初始化頁面
     updateTypeBtnsUI();
-    updateAvailableRegions();
+    updateRegionBtnsUI();
     filterStores();
 });
 </script>

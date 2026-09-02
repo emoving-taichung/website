@@ -263,6 +263,13 @@
             mode: 'no-cors'
         })
         .then(() => {
+            // 🎯【新增】發送 GTM 自訂事件 (代表預約成功轉換)
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                'event': 'form_booking_success',
+                'booking_vehicle': formObj.vehicle,
+                'booking_store': formObj.store_name
+            });
             document.getElementById('booking-form').classList.add('hidden');
             document.getElementById('success-msg').classList.remove('hidden');
         })
