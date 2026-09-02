@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <!-- 補上這行 Canonical 標籤（Hugo 會自動帶入該頁面最乾淨的標準網址） -->
+    <link rel="canonical" href="{{ .Permalink }}" />
+
     <!-- 1. Google Search Console (GSC) 驗證碼 -->
     <meta name="google-site-verification" content="d7sf4qOyc8rADlF7V72-RdFTQa6X7Wlz_sKqJgoHRSE" />
 
@@ -14,6 +17,8 @@
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-KD5NXGRG');</script>
     <!-- End Google Tag Manager -->
+
+    
 
     <title>{{ if .Title }}{{ .Title }} - {{ end }}eMOVING 精輪山西店｜台中電動機車</title>
     
