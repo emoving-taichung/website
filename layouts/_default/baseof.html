@@ -4,13 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- 補上這行 Canonical 標籤（Hugo 會自動帶入該頁面最乾淨的標準網址） -->
-    <link rel="canonical" href="{{ .Permalink }}" />
-
     <!-- 1. Google Search Console (GSC) 驗證碼 -->
     <meta name="google-site-verification" content="d7sf4qOyc8rADlF7V72-RdFTQa6X7Wlz_sKqJgoHRSE" />
 
-    <!-- Google Tag Manager -->
+    <!-- 2. Google Consent Mode v2 預設設定 (必須放在 GTM 之前！) -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+
+      // 預設狀態：全數允許（適用於台灣在地市場）
+      gtag('consent', 'default', {
+        'ad_storage': 'granted',
+        'analytics_storage': 'granted',
+        'ad_user_data': 'granted',
+        'ad_personalization': 'granted',
+        'functionality_storage': 'granted'
+      });
+    </script>
+
+    <!-- 3. Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -18,14 +30,11 @@
     })(window,document,'script','dataLayer','GTM-KD5NXGRG');</script>
     <!-- End Google Tag Manager -->
 
-    
-
     <title>{{ if .Title }}{{ .Title }} - {{ end }}eMOVING 精輪山西店｜台中電動機車</title>
     
-    <!-- 自訂瀏覽器分頁圖示 (Favicon) -->
+    <!-- Favicon & Styles -->
     <link rel="icon" type="image/png" href='{{ "images/favicon.png" | relURL }}'>
     <link rel="apple-touch-icon" href='{{ "images/favicon.png" | relURL }}'>
-
     <link href="https://fonts.googleapis.com/css2?family=Anybody:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     

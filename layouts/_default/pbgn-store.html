@@ -82,12 +82,12 @@
                     <!-- Google 地圖區塊 & 前往門市按鈕 -->
                     {{ if $store.address }}
                     <div class="mt-5 pt-2 flex flex-col items-center gap-3">
-                        <!-- 前往門市按鈕 (背景 #FFFE4F、文字 #FFFFFF) -->
+                        <!-- 前往門市按鈕 -->
                         <a href="https://www.google.com/maps/search/?api=1&query={{ $store.address | urlquery }}"
-                        data-store-name="{{ $store.title }}"   
-                        target="_blank"
+                           data-store-name="{{ $store.title }}"   
+                           target="_blank"
                            rel="noopener noreferrer"
-                           class="w-[350px] max-w-full py-2.5 px-4 bg-[#FFFE4F] text-#1C1C1C font-bold text-[16px] rounded-xl shadow-sm hover:opacity-90 transition-opacity text-center block">
+                           class="w-[350px] max-w-full py-2.5 px-4 bg-[#FFFE4F] text-[#1C1C1C] font-bold text-[16px] rounded-xl shadow-sm hover:opacity-90 transition-opacity text-center block">
                             📍 前往門市
                         </a>
 
@@ -114,4 +114,21 @@
 
     </div>
 </div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // 儲存門市偏好的函式 (寫入 Cookie 30 天)
+    function setStorePreference(storeName) {
+        document.cookie = `preferred_store=${encodeURIComponent(storeName)}; max-age=${30 * 24 * 60 * 60}; path=/`;
+    }
+
+    // 監聽門市卡片點擊事件
+    document.querySelectorAll(".store-card").forEach(card => {
+        card.addEventListener("click", function() {
+            const storeName = this.querySelector("h3") ? this.querySelector("h3").innerText : "";
+            if (storeName) setStorePreference(storeName);
+        });
+    });
+});
+</script>
 {{ end }}
