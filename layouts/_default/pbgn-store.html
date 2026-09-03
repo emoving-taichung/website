@@ -84,7 +84,8 @@
                     <div class="mt-5 pt-2 flex flex-col items-center gap-3">
                         <!-- 前往門市按鈕 (背景 #FFFE4F、文字 #FFFFFF) -->
                         <a href="https://www.google.com/maps/search/?api=1&query={{ $store.address | urlquery }}"
-                           target="_blank"
+                        data-store-name="{{ $store.title }}"   
+                        target="_blank"
                            rel="noopener noreferrer"
                            class="w-[350px] max-w-full py-2.5 px-4 bg-[#FFFE4F] text-#1C1C1C font-bold text-[16px] rounded-xl shadow-sm hover:opacity-90 transition-opacity text-center block">
                             📍 前往門市
