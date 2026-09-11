@@ -1,5 +1,5 @@
 ---
-title: "eMOVING 勁炫125"
+title: "勁炫125 充電白牌重型"
 description: "免月租 首當騎充"
 
 # 0. 頁首輪播圖 (新增此區塊，統一使用 .png)

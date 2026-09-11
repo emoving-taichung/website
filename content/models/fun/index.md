@@ -1,5 +1,5 @@
 ---
-title: "eReady Fun"
+title: "eReady Fun 換電白牌重型"
 description: "Fun 新生活"
 
 # 0. 頁首輪播圖 (新增此區塊，統一使用 .png)

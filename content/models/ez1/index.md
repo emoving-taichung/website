@@ -1,5 +1,5 @@
 ---
-title: "eMOVING EZ1"
+title: "EZ1 綠牌輕型"
 description: "輕巧好騎，城市通勤首選"
 
 # 0. 頁首輪播圖 (新增此區塊，統一使用 .png)

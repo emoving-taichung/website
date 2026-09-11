@@ -1,5 +1,5 @@
 ---
-title: "eMOVING Shine Bobe"
+title: "Shine Bobe 免駕照微電"
 description: "免駕照 自由行動不受限"
 
 # 0. 頁首輪播圖 (新增此區塊，統一使用 .png)
