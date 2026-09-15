@@ -1,6 +1,7 @@
 ---
 title: "EZR 換電白牌重型"
 description: "旗艦動力，混血再勁化"
+price: 89900
 
 # 0. 頁首輪播圖 (新增此區塊，統一使用 .png)
 hero_slides_pc:

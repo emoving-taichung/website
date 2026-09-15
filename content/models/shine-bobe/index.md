@@ -1,6 +1,7 @@
 ---
 title: "Shine Bobe 免駕照微電"
 description: "免駕照 自由行動不受限"
+price: 39900
 
 # 0. 頁首輪播圖 (新增此區塊，統一使用 .png)
 hero_slides_pc:

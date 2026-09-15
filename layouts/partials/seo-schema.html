@@ -18,18 +18,27 @@
   }
   </script>
   
-  <!-- 2. 如果是車款介紹頁，自動追加 Product 結構 -->
-  {{ if eq .Section "models" }}
+  <!-- 2. 如果是車款介紹單頁，自動追加動態價格的 Product 結構 -->
+  {{ if and (eq .Section "models") .IsPage }}
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "Product",
-    "name": "{{ .Title }}",
-    "image": "{{ .Params.image | absURL }}",
-    "description": "{{ .Description }}",
+    "name": "{{ .Title | plainify }}",
+    "image": "{{ if .Params.image }}{{ .Params.image | absURL }}{{ else }}{{ "images/logo.png" | absURL }}{{ end }}",
+    "description": "{{ with .Description }}{{ . | plainify }}{{ else }}{{ .Summary | plainify }}{{ end }}",
     "brand": {
       "@type": "Brand",
       "name": "eMOVING"
+    },
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "TWD",
+      "price": "{{ with .Params.price }}{{ . }}{{ else }}0{{ end }}",
+      "priceValidUntil": "2026-12-31",
+      "itemCondition": "https://schema.org/NewCondition",
+      "availability": "https://schema.org/InStock",
+      "url": "{{ .Permalink }}"
     }
   }
   </script>
@@ -49,7 +58,7 @@
     },{
       "@type": "ListItem",
       "position": 2,
-      "name": "{{ .Title }}",
+      "name": "{{ .Title | plainify }}",
       "item": "{{ .Permalink }}"
     }]
   }
