@@ -5,5 +5,5 @@ phone: "03-5368920#2014 "
 website_url: "https://www.hccepb.gov.tw/news-01.php"
 doc_url: "https://www.hccepb.gov.tw/service/file/FileDownload/20260306141059-1.pdf"
 query_url: ""    # 若無此項，前台會自動隱藏該按鈕
-image: "115.png" # 填入您的圖片路徑
+image: "115.webp" # 填入您的圖片路徑
 ---

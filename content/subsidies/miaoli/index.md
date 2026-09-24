@@ -5,5 +5,5 @@ phone: "03-7558558"
 website_url: "https://www.mlepb.gov.tw/"
 doc_url: ""
 query_url: ""    # 若無此項，前台會自動隱藏該按鈕
-image: "115.png" # 填入您的圖片路徑
+image: "115.webp" # 填入您的圖片路徑
 ---

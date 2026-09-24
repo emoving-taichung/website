@@ -3,16 +3,16 @@ title: "EZR 換電白牌重型"
 description: "旗艦動力，混血再勁化"
 price: 89900
 
-# 0. 頁首輪播圖 (新增此區塊，統一使用 .png)
+# 0. 頁首輪播圖 (新增此區塊，統一使用 .webp)
 hero_slides_pc:
-  - "hero_1_pc.png"
-  - "hero_2_pc.png"
-  - "hero_3_pc.png"
+  - "hero_1_pc.webp"
+  - "hero_2_pc.webp"
+  - "hero_3_pc.webp"
 
 hero_slides_mb:
-  - "hero_1_mb.png"
-  - "hero_2_mb.png"
-  - "hero_3_mb.png"
+  - "hero_1_mb.webp"
+  - "hero_2_mb.webp"
+  - "hero_3_mb.webp"
 
 # 1. 精彩試乘影片
 videos:
@@ -34,32 +34,32 @@ ig_posts:
   - url: "https://www.instagram.com/p/C8J0sSjyM7W/?utm_source=ig_embed&ig_rid=AyfxWrZpEg3qHXgL4xmraLA"
 
 
-# 2. 車款特色 (已改為 .png)
+# 2. 車款特色 (已改為 .webp)
 features:
   - title: "電車快感 油車體感"
     desc: "感受飛馳與精準操控的集合，車身均衡重量配置，展現絕佳指向性與操控表現。"
-    image: "feature_1.png"
+    image: "feature_1.webp"
   - title: "雲端鑰匙 - 獨家專利"
     desc: "輸入專屬密碼，即可開機騎乘。"
-    image: "feature_2.png"
+    image: "feature_2.webp"
   - title: "超大置物空間"
     desc: "同級最大置物空間，輕鬆放入全罩安全帽或電腦後盃包。"
-    image: "feature_3.png"  
+    image: "feature_3.webp"  
   - title: "定速巡航"
     desc: "輕輕一按，降低長距離騎乘帶來的疲憊。"
-    image: "feature_4.png"
+    image: "feature_4.webp"
   - title: "車身均衡重量配置"
     desc: "參考乘坐者位置進行重量配置，展現絕佳指向性與操控表現。"
-    image: "feature_5.png"
+    image: "feature_5.webp"
   - title: "美國 Gates皮帶 ABS煞車系統"
     desc: "22mm碳纖材質皮帶，享受強勁扭力的同時，守護你的安全，輪胎不飄移。"
-    image: "feature_6.png"          
+    image: "feature_6.webp"          
   - title: "手機也能當鑰匙"
     desc: "利用「FUN心騎 App」可以當備用鑰匙。"
-    image: "feature_7.png"  
+    image: "feature_7.webp"  
   - title: "使用Gogoro電池 6秒換電"
     desc: "截至2026年8月已佈建2,738個電池交換站，騎到哪換到哪。"
-    image: "feature_8.png"  
+    image: "feature_8.webp"  
 
 
 # 3. 詳細規格數據表注意事項（可依車款新增多條）
@@ -183,38 +183,38 @@ specs_tables:
     value: "189度"
 
 
-# 4. 媒體報導觀點 (已改為 .png)
+# 4. 媒體報導觀點 (已改為 .webp)
 reports:
   - source: "Mobile01"
     author: "ecmeel"
-    image: "report_1.png"
+    image: "report_1.webp"
     summary: "emoving中華電動二輪，在加盟PBGN先推出EZ-1單電池綠牌電動車款，終於推出第一台雙電池白牌動力車款：開發代號EZ-2、正式上市名稱為EZ-R！宣傳口號「混血再勁化」（「混血」意指融合油車及電車的優點） 。EZ-R加速起步輸出相當舒適，即使是BOOSTER模式下也不至於有猛暴的拉扯感，除了能源部分採用GoStation電池之外，其它的部分皆為中華自主研發。有油車轉換電車需求的車友，尤其是每天數十公里的長途通勤。 . . . .  "
     link: "https://www.mobile01.com/topicdetail.php?f=753&t=6831373"
 
   - source: "購車趣"
     author: "黃振源"
-    image: "report_2.png"
+    image: "report_2.webp"
     summary: "電動機車品牌中華eMOVING於2025年8月15日宣布，攜手國立故宮博物院，共同推出「EZ-R限量聯名車款」，為故宮自2024年起啟動的「100+ 院慶」系列活動增添一抹時尚移動色彩。本次合作將三件故宮經典文物化為車身設計靈感，並於8月12日至8月26日，在故宮限定展出三款特仕EZ-R。EZ-R作為eMOVING旗下主力白牌電動車款，搭載全新開發馬達與高強度支撐碳纖皮帶傳動系統，結合ABS+TCS 雙安全防護科技，兼顧加速性能與行車穩定性，在同級市場中以高性價比著稱。為慶祝故宮百年院慶，即日起至8月 . . . . "
     link: "https://cars.tvbs.com.tw/car-news/272539"
 
   - source: "U-CAR"
     author: "何聖堯"
-    image: "report_3.png"
+    image: "report_3.webp"
     summary: "中華 eMoving 在 2023 年 8 月中旬時發表鎖定年輕族群的全新電動機車 EZ-R，而近期 eMoving 也宣布推出新年式 EZ-R，新車除了搭載「雲端鑰匙」外，另外也新增車色「青釉藍」。新年式 EZ-R 搭載獨家專利「雲端鑰匙」，只要預先設定密碼，不用鑰匙或手機即可啟動車輛，同時車輛也配備 Gates 高張力碳纖皮帶、汽車等級 Class D 等級頭燈，以及 27.4 公升的車廂空間，頂規再搭載 ABS 防鎖死煞車及 TCS 循跡防滑系統，不論是緊急煞車或是道路行進間，透過系統介入偵測並調控， . . . . "
     link: "https://motor.u-car.com.tw/motor/article/78105"
 
-# 5. 專屬原廠配件 (已改為 .png)
+# 5. 專屬原廠配件 (已改為 .webp)
 accessories:
   - title: "舒適後靠背座"
-    image: "acc_1.png"
+    image: "acc_1.webp"
   - title: "金屬踏板組"
-    image: "acc_2.png"
+    image: "acc_2.webp"
   - title: "後置物架+後置物箱"
-    image: "acc_3.png"
+    image: "acc_3.webp"
   - title: "鋁合金手機架"
-    image: "acc_4.png"
+    image: "acc_4.webp"
   - title: "專屬實體鑰匙圈"
-    image: "acc_5.png"
+    image: "acc_5.webp"
 
 # 6. 常見問題解答
 faq:
@@ -271,13 +271,13 @@ manual_url: "manual/ezr.pdf"
 
 # 1. 視差車色去背圖、名稱與背景色配對
 parallax_slides:
-  - image: "ezr-blue.png"
+  - image: "ezr-blue.webp"
     color_name: "青釉藍"
     bg_color: "#1875C7"
-  - image: "ezr-black.png"
+  - image: "ezr-black.webp"
     color_name: "曜石黑"
     bg_color: "#112F4A"
-  - image: "ezr-white.png"
+  - image: "ezr-white.webp"
     color_name: "鈦金白"
     bg_color: "#F7F7F7"
 
@@ -286,26 +286,26 @@ parallax_features:
   - number: "01"
     title: "Class D LED 頭燈"
     desc: "汽車等級 Class D LED 頭燈，確保最佳清晰視野。"
-    image: "feature-bg-01.png"
+    image: "feature-bg-01.webp"
     color_class: "text-yellow-400"
     badge_bg: "bg-yellow-400"
 
   - number: "02"
     title: "超人造型尾燈"
     desc: "打造360度兇猛的電動機車，連背後也殺。"
-    image: "feature-bg-02.png"
+    image: "feature-bg-02.webp"
     color_class: "text-cyan-400"
     badge_bg: "bg-cyan-400"
 
   - number: "03"
     title: "全新研發馬達"
     desc: "搭配性能提升方案，0-50km/h 僅 3.7秒，起步不落人後。"
-    image: "feature-bg-03.png"
+    image: "feature-bg-03.webp"
     color_class: "text-emerald-400"
     badge_bg: "bg-emerald-400"
 
 # 視差固定背景圖片
-fixed_picture_pc: "fixed_bg_desktop.png" # 電腦版 (橫圖, 如 1920x1080)
-fixed_picture_mb: "fixed_bg_mobile.png"  # 手機版 (直圖, 如 800x1200)
+fixed_picture_pc: "fixed_bg_desktop.webp" # 電腦版 (橫圖, 如 1920x1080)
+fixed_picture_mb: "fixed_bg_mobile.webp"  # 手機版 (直圖, 如 800x1200)
 
 ---

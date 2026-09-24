@@ -10,8 +10,8 @@
 <section class="w-full h-[calc(100dvh-108px)] md:h-[calc(100dvh-116px)] bg-[#6eade3] flex flex-col justify-center items-center relative shrink-0 p-0 overflow-hidden">
     <div class="w-full h-full flex justify-center items-center my-auto">
         <!-- 預設值與變數讀取 -->
-        {{ $imgMobile := .Resources.GetMatch (default "banner_mobile.png" .Params.hero_image_mobile) }}
-        {{ $imgDesktop := .Resources.GetMatch (default "banner_desktop.png" .Params.hero_image_desktop) }}
+        {{ $imgMobile := .Resources.GetMatch (default "banner_mobile.webp" .Params.hero_image_mobile) }}
+        {{ $imgDesktop := .Resources.GetMatch (default "banner_desktop.webp" .Params.hero_image_desktop) }}
         
         {{ if or $imgMobile $imgDesktop }}
             <picture class="w-full h-full flex items-center justify-center text-center">
@@ -82,10 +82,10 @@
                     <div class="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center bg-[#F1FAFF] p-6 md:p-10 rounded-2xl border border-blue-100 shadow-sm">
                         <!-- 左欄：40% 封面圖 -->
                         <div class="w-full lg:w-[40%] aspect-[4/3] rounded-xl overflow-hidden bg-white border border-blue-100 shrink-0 shadow-inner">
-                            {{ with $.Resources.GetMatch (default "cover.png" $model.cover_image) }}
+                            {{ with $.Resources.GetMatch (default "cover.webp" $model.cover_image) }}
                                 <img src="{{ .RelPermalink }}" alt="{{ $model.name }}" class="w-full h-full object-cover">
                             {{ else }}
-                                <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">【封面圖：{{ $model.cover_image | default "cover.png" }}】</div>
+                                <div class="w-full h-full flex items-center justify-center text-gray-400 text-xs">【封面圖：{{ $model.cover_image | default "cover.webp" }}】</div>
                             {{ end }}
                         </div>
 

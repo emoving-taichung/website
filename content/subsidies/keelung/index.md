@@ -5,5 +5,5 @@ phone: "02-24660327"
 website_url: "https://www.klepb.klcg.gov.tw/tw/klepb1/"
 doc_url: "https://www.klepb.klcg.gov.tw/tw/klepb1/3894-313305.html"
 query_url: ""    # 若無此項，前台會自動隱藏該按鈕
-image: "115.png" # 填入您的圖片路徑
+image: "115.webp" # 填入您的圖片路徑
 ---

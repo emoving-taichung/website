@@ -3,14 +3,14 @@ title: "eReady Fun 換電白牌重型"
 description: "Fun 新生活"
 price: 74980
 
-# 0. 頁首輪播圖 (新增此區塊，統一使用 .png)
+# 0. 頁首輪播圖 (新增此區塊，統一使用 .webp)
 hero_slides_pc:
-  - "hero_1_pc.png"
-  - "hero_2_pc.png"
+  - "hero_1_pc.webp"
+  - "hero_2_pc.webp"
 
 hero_slides_mb:
-  - "hero_1_mb.png"
-  - "hero_2_mb.png"
+  - "hero_1_mb.webp"
+  - "hero_2_mb.webp"
   
 # 1. 精彩試乘影片
 videos:
@@ -29,29 +29,29 @@ ig_posts:
   - url: "https://www.instagram.com/p/CuqgPI_SADh/?utm_source=ig_embed&ig_rid=A0fE2J8tTJm228p1WXCsO9m"
   
 
-# 2. 車款特色 (已改為 .png)
+# 2. 車款特色 (已改為 .webp)
 features:
   - title: "\ 魚是 變可愛 /"
     desc: "美的事物讓生活 變得更簡單"
-    image: "feature_1.png"
+    image: "feature_1.webp"
   - title: "26.5L大容量置物箱"
     desc: "所有騎乘隨身必需品，全罩安全帽都能容納，讓你說走就走，無需多慮"
-    image: "feature_2.png"
+    image: "feature_2.webp"
   - title: "內嵌式雙前置物空間"
     desc: "以直覺式設計，打造一體成型的雙側深度空間，穩定容納所有隨身杯器，預先為你的需要，做好準備。"
-    image: "feature_3.png"  
+    image: "feature_3.webp"  
   - title: "前置USB插槽"
     desc: "前置獨立USB插槽，解鎖後只要順手一接，邊騎乘邊充電，貼心防水蓋設計，各種天候盡享移動不受限。"
-    image: "feature_4.png"
+    image: "feature_4.webp"
   - title: "低座高"
     desc: "不論身高高低，都能享受騎乘 fun 的舒適度。"
-    image: "feature_5.png"
+    image: "feature_5.webp"
   - title: "省力駐車架"
     desc: "透過專業調校技術，讓停好車的瞬間，即刻秒立在停靠時，給你最穩固的支撐。"
-    image: "feature_6.png"          
+    image: "feature_6.webp"          
   - title: "使用Gogoro電池 6秒換電"
     desc: "截至2026年8月已佈建2,738個電池交換站，騎到哪換到哪。"
-    image: "feature_7.png"  
+    image: "feature_7.webp"  
 
 
 
@@ -104,30 +104,30 @@ specs_tables:
         value: "189度"
 
 
-# 4. 媒體報導觀點 (已改為 .png)
+# 4. 媒體報導觀點 (已改為 .webp)
 reports:
   - source: "U-CAR"
     author: "蘇佑倫"
-    image: "report_1.png"
+    image: "report_1.webp"
     summary: "eReady 電動車事業部總監林進賢表示：「eReady 品牌創立的立基點，是以電動車經營的『四大差異化』來做出市場區隔。從『品牌』面向來看，台鈴工業 40 多年來累積起國際級造車工藝技術，進而成為 eReady 品牌奠基,並且在『情感』、『產品』、『店鋪』等面向，打造全方位的顧客消費旅程 (Customer Journey)。」在 Gogoro 車系的架構下，eReady Fun 因應電池與馬達模組化零件，針對懸吊系統、動力傳動系統與煞車系統進行最適化調校，散熱系統也透過研發改良，讓效率提升約 23%。動力部分，則是搭載與 Gogoro 3 車系相同的 G2 鋁合金水冷永磁同步馬達， . . . .  "
     link: "https://motor.u-car.com.tw/motor/article/63277"
 
   - source: "2gamesome"
     author: "編輯部"
-    image: "report_2.png"
+    image: "report_2.webp"
     summary: "eReadyFun 因應電池與馬達模組化零件，不僅調校出最適的懸吊系統、動力傳動系統與煞車系統，散熱系統也透過研發改良，讓車輛散熱效率提升約 23%，將動能效率最大化以達到行駛的靈活性與穩定性。並且深入了解到台灣車主的用車需求，包含 CBS 連動式煞車、五段可調雙槍後避震、內嵌式雙前置物空間、前置 USB 專屬插槽、26.5L 大容量置物空間、與 12 吋輕量鋁合金輪圈等優質配備規格，並且針對省力駐車架改良設計，讓省力效果優於同級 . . . . "
     link: "https://2gamesome.com.tw/article/view/1241"
 
   - source: "Mobile01"
     author: "RICK"
-    image: "report_3.png"
+    image: "report_3.webp"
     summary: "台鈴選擇將燃油車與電動車分開銷售，並在電動車的展間以新態度打造「新美好移動體驗」，而作為 eReady 首輛與 Powered By Gogoro Network 合作的車款 Fun，採用 G2L 水冷馬達與 12 吋輪組，搭配超輕巧的車身設計與比起同級距更好的制動規格，Fun 在配備上給得不手軟，同時前方雙置物空間更是為了都會通勤實用性而生，eReady 想要賣的不只是車，而是無微不至的車輛設計理念。  . . . . "
     link: "https://www.mobile01.com/topicdetail.php?f=622&t=6221974"
 
-# 5. 專屬原廠配件 (已改為 .png)
+# 5. 專屬原廠配件 (已改為 .webp)
 accessories:
   - title: "鋁合金手機架"
-    image: "acc_1.png"
+    image: "acc_1.webp"
 
 
 # 6. 常見問題解答
@@ -173,10 +173,10 @@ manual_url: "manual/fun.pdf"
 
 # 1. 視差車色去背圖、名稱與背景色配對
 parallax_slides:
-  - image: "fun-black.png"
+  - image: "fun-black.webp"
     color_name: "夜鈦黑"
     bg_color: "#383A3B"
-  - image: "fun-white.png"
+  - image: "fun-white.webp"
     color_name: "帕瑪森白"
     bg_color: "#F7F7F7"
 
@@ -185,26 +185,26 @@ parallax_features:
   - number: "01"
     title: "LED鑽彩魚眼頭燈"
     desc: "外圈環繞碎鑽造型，增加照明。整體搭載CNC精密雕刻的加工燈罩凹凸設計，讓LED燈透過殼面漫射，讓你在移動中，散發獨樹一格的科技鋒芒。"
-    image: "feature-bg-01.png"
+    image: "feature-bg-01.webp"
     color_class: "text-yellow-400"
     badge_bg: "bg-yellow-400"
 
   - number: "02"
     title: "星辰式LED尾燈"
     desc: "採用與頂級豪華轎車同級的極線式LED尾燈設計，結合方向指示燈的獨特領結外型，不只有效提高安全辨識，更能同時提高外型的質感與品味。"
-    image: "feature-bg-02.png"
+    image: "feature-bg-02.webp"
     color_class: "text-cyan-400"
     badge_bg: "bg-cyan-400"
 
   - number: "03"
     title: "雙槍式五段可調後避震"
     desc: "五段變化，隨需求自由調整，緩和因路面不平的震動不適 讓安心，與你一路隨行。"
-    image: "feature-bg-03.png"
+    image: "feature-bg-03.webp"
     color_class: "text-emerald-400"
     badge_bg: "bg-emerald-400"
 
 # 視差固定背景圖片
-fixed_picture_pc: "fixed_bg_desktop.png" # 電腦版 (橫圖, 如 1920x1080)
-fixed_picture_mb: "fixed_bg_mobile.png"  # 手機版 (直圖, 如 800x1200)
+fixed_picture_pc: "fixed_bg_desktop.webp" # 電腦版 (橫圖, 如 1920x1080)
+fixed_picture_mb: "fixed_bg_mobile.webp"  # 手機版 (直圖, 如 800x1200)
 
 ---

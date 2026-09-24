@@ -3,16 +3,16 @@ title: "Shine Bobe 免駕照微電"
 description: "免駕照 自由行動不受限"
 price: 39900
 
-# 0. 頁首輪播圖 (新增此區塊，統一使用 .png)
+# 0. 頁首輪播圖 (新增此區塊，統一使用 .webp)
 hero_slides_pc:
-  - "hero_1_pc.png"
-  - "hero_2_pc.png"
-  - "hero_3_pc.png"
+  - "hero_1_pc.webp"
+  - "hero_2_pc.webp"
+  - "hero_3_pc.webp"
 
 hero_slides_mb:
-  - "hero_1_mb.png"
-  - "hero_2_mb.png"
-  - "hero_3_mb.png"
+  - "hero_1_mb.webp"
+  - "hero_2_mb.webp"
+  - "hero_3_mb.webp"
 
 
 # 1. 精彩試乘影片
@@ -32,23 +32,23 @@ ig_posts:
 
 
 
-# 2. 車款特色 (已改為 .png)
+# 2. 車款特色 (已改為 .webp)
 features:
   - title: "微型電動二輪 免考駕照"
     desc: "台灣製造，安全性最高！年滿14歲 就能輕鬆騎"
-    image: "feature_1.png"
+    image: "feature_1.webp"
   - title: "Shine v.s Bobe - 車頭"
     desc: "Shine 為流線造型，頭燈在下方。Bobe 為復古造型，頭燈在上方。"
-    image: "feature_2.png"
+    image: "feature_2.webp"
   - title: "Shine v.s Bobe - 置物空間"
     desc: "Shine 比 Bobe 大。"
-    image: "feature_3.png"  
+    image: "feature_3.webp"  
   - title: "Shine v.s Bobe - 開啟車廂的方式"
     desc: "Shine 可於鑰匙孔開啟，Bobe 要拔鑰匙插側邊鑰匙孔。"
-    image: "feature_4.png"
+    image: "feature_4.webp"
   - title: "Shine v.s Bobe - 坐墊/座高"
     desc: "Shine 的座高較 Bobe 低，Bobe 的座墊比較接近傳統油車座墊。"
-    image: "feature_5.png"
+    image: "feature_5.webp"
  
 
 
@@ -164,36 +164,36 @@ specs_tables:
     value: "189 度"
 
 
-# 4. 媒體報導觀點 (已改為 .png)
+# 4. 媒體報導觀點 (已改為 .webp)
 reports:
   - source: "地球黃金線"
     author: "謝明翰"
-    image: "report_1.png"
+    image: "report_1.webp"
     summary: "eMOVING主打女性族群的微型電動二輪車Shine，2025年全新推出「羅蘭紫」車色，以霧面質感搭配手繪花型車貼，增添浪漫且富有層次的視覺氛圍，低調中展現獨特氣質，為日常代步增添一抹優雅。新車上市搶先促銷，. . . . "
     link: "https://cars.tvbs.com.tw/car-news/248528"
 
   - source: "Car Stuff"
     author: "Jason Hu"
-    image: "report_2.png"
+    image: "report_2.webp"
     summary: "微型電動二輪車掛牌上路，法規推行首月掛牌數開盤，eMOVING以2,735台一舉奪下領牌冠軍，市佔率達13.4%(註)。微型電動二輪車以免駕照、免電池月租、車身輕巧且容易保養等特性，近年來成為民眾「汰油轉電」之首選車種，2022年11月30日新法上路，電動自行車更名為微型電動二輪車，正式領牌納管，為鼓勵車主合法上路，. . . . "
     link: "https://www.carstuff.com.tw/motocycle/item/37526-emoving-6-000.html"
 
   - source: "Car Stuff"
     author: "陳奕宏"
-    image: "report_3.png"
+    image: "report_3.webp"
     summary: "對於無法領取駕照、不得騎乘輕型機車的族群，如年紀較大的婆婆媽媽、新住民，或者是距離學校較遠卻尚未屆滿考照年齡的族群，動力輸出並未達到電動機車的水準，卻有如同機車般便利性的電動自行車變成為了最佳的選擇。於是中華汽車於2013年便搶先推出e-moving Bobe (保庇) 電動自行車，以擴大自身在兩輪電動車的產品陣容。. . . . "
     link: "https://www.carstuff.com.tw/motocycle/item/17249-e-moving-bobe.html"
 
-# 5. 專屬原廠配件 (已改為 .png)
+# 5. 專屬原廠配件 (已改為 .webp)
 accessories:
   - title: "Shine前置物盒"
-    image: "acc_1.png"
+    image: "acc_1.webp"
   - title: "好裝菜籃"
-    image: "acc_2.png"
+    image: "acc_2.webp"
   - title: "後置物架+後置物箱"
-    image: "acc_3.png"
+    image: "acc_3.webp"
   - title: "鋁合金手機架"
-    image: "acc_4.png"
+    image: "acc_4.webp"
 
 
 # 6. 常見問題解答
@@ -238,22 +238,22 @@ manual_url: "manual/em25.pdf"
 
 # 1. 視差車色去背圖、名稱與背景色配對
 parallax_slides:
-  - image: "bobe-blue.png"
+  - image: "bobe-blue.webp"
     color_name: "BOBE 都會藍"
     bg_color: "#69D9FF"
-  - image: "bobe-white.png"
+  - image: "bobe-white.webp"
     color_name: "BOBE 簡約白"
     bg_color: "#F7F7F7"
-  - image: "shine-purple.png"
+  - image: "shine-purple.webp"
     color_name: "SHINE 羅蘭紫"
     bg_color: "#CAC2FF"
-  - image: "shine-gold.png"
+  - image: "shine-gold.webp"
     color_name: "SHINE 太妃金"
     bg_color: "#E7C16E"  
-  - image: "shine-white.png"
+  - image: "shine-white.webp"
     color_name: "SHINE 精靈白"
     bg_color: "#F7F7F7"  
-  - image: "shine-blue.png"
+  - image: "shine-blue.webp"
     color_name: "SHINE 天空藍"
     bg_color: "#69D9FF"      
 
@@ -262,26 +262,26 @@ parallax_features:
   - number: "01"
     title: "可抽取式電池"
     desc: "住公寓大樓充電免擔心，可提進家裡用110V插座充電。"
-    image: "feature-bg-01.png"
+    image: "feature-bg-01.webp"
     color_class: "text-yellow-400"
     badge_bg: "bg-yellow-400"
 
   - number: "02"
     title: "彩色液晶儀表"
     desc: "簡約直覺，電量剩多少看得到。"
-    image: "feature-bg-02.png"
+    image: "feature-bg-02.webp"
     color_class: "text-cyan-400"
     badge_bg: "bg-cyan-400"
 
   - number: "03"
     title: "寬敞置腳空間"
     desc: "連黃金獵犬也能上去，輕鬆載著出發去運動。"
-    image: "feature-bg-03.png"
+    image: "feature-bg-03.webp"
     color_class: "text-emerald-400"
     badge_bg: "bg-emerald-400"
 
 # 視差固定背景圖片
-fixed_picture_pc: "fixed_bg_desktop.png" # 電腦版 (橫圖, 如 1920x1080)
-fixed_picture_mb: "fixed_bg_mobile.png"  # 手機版 (直圖, 如 800x1200)
+fixed_picture_pc: "fixed_bg_desktop.webp" # 電腦版 (橫圖, 如 1920x1080)
+fixed_picture_mb: "fixed_bg_mobile.webp"  # 手機版 (直圖, 如 800x1200)
 
 ---

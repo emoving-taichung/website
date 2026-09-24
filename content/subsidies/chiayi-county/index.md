@@ -5,5 +5,5 @@ phone: "05-3622234"
 website_url: "https://cyepb.cyhg.gov.tw/"
 doc_url: "https://nttableware.chuangjing.com.tw/cysubside115/Home/Index"
 query_url:   # 若無此項，前台會自動隱藏該按鈕
-image: "115.png" # 填入您的圖片路徑
+image: "115.webp" # 填入您的圖片路徑
 ---

@@ -3,16 +3,16 @@ title: "EZ1 綠牌輕型"
 description: "輕巧好騎，城市通勤首選"
 price: 59900
 
-# 0. 頁首輪播圖 (新增此區塊，統一使用 .png)
+# 0. 頁首輪播圖 (新增此區塊，統一使用 .webp)
 # 電腦版 Hero 輪播圖 (橫式 16:9)
 hero_slides_pc:
-  - "hero_1_pc.png"
-  - "hero_2_pc.png"
+  - "hero_1_pc.webp"
+  - "hero_2_pc.webp"
 
 # 手機版 Hero 輪播圖 (直式 3:4，建議 1080x1440)
 hero_slides_mb:
-  - "hero_1_mb.png"
-  - "hero_2_mb.png"
+  - "hero_1_mb.webp"
+  - "hero_2_mb.webp"
 
 # 1. 精彩試乘影片
 videos:
@@ -31,32 +31,32 @@ ig_posts:
   - url: "https://www.instagram.com/p/Cbuqf6_rGMh/?utm_source=ig_embed&ig_rid=AdPpzkl6EBtwwSWgMoGuNEY"
 
 
-# 2. 車款特色 (已改為 .png)
+# 2. 車款特色 (已改為 .webp)
 features:
   - title: "極輕巧車身設計 - 只有80kg"
     desc: "專為女性與輕通勤族群設計，輕鬆牽車擺頭無負擔。"
-    image: "feature_1.png"
+    image: "feature_1.webp"
   - title: "大容量置物空間"
     desc: "車廂大置物空間，輕鬆收納日常用品與包包。"
-    image: "feature_2.png"
+    image: "feature_2.webp"
   - title: "雙杯前置物空間"
     desc: "超大前置物空間，兩杯飲料 + 手機也沒問題。"
-    image: "feature_3.png"  
+    image: "feature_3.webp"  
   - title: "低座高"
     desc: "不論身高高低，都能享受騎乘 ez1 的舒適度。"
-    image: "feature_4.png"
+    image: "feature_4.webp"
   - title: "USB充電"
     desc: "實現電量自由，騎車出遊可以多拍幾張照片或影片。"
-    image: "feature_5.png"
+    image: "feature_5.webp"
   - title: "卡片感應鑰匙"
     desc: "鑰匙變成薄博一張卡片，方便攜帶幾乎無重量。"
-    image: "feature_6.png"          
+    image: "feature_6.webp"          
   - title: "手機也能當鑰匙"
     desc: "利用「FUN心騎 App」可以當備用鑰匙。"
-    image: "feature_7.png"  
+    image: "feature_7.webp"  
   - title: "使用Gogoro電池 6秒換電"
     desc: "截至2026年8月已佈建2,738個電池交換站，騎到哪換到哪。"
-    image: "feature_8.png"  
+    image: "feature_8.webp"  
 
 
 # 3. 詳細規格數據表注意事項（可依車款新增多條）
@@ -128,36 +128,36 @@ specs_tables:
 
 
 
-# 4. 媒體報導觀點 (已改為 .png)
+# 4. 媒體報導觀點 (已改為 .webp)
 reports:
   - source: "2gamesome"
     author: "葉毓中"
-    image: "report_1.png"
+    image: "report_1.webp"
     summary: "作為第一款加入 PBGN 換電聯盟的代表，eMoving 仍走過去擅長的輕巧、女性路線，外型設計面，EZ1 與 VIVA 最大不同處，在於車頭前半部的設計，考量 VIVA 正負兩極的車頭設計評價，加上對於著裙裝女性不甚友善（易曝光）的缺點，EZ1 換上了與傳統油車較相近的前車體造型，且為了呼應品牌特色，. . . . . . "
     link: "https://2gamesome.com.tw/article/view/2335"
 
   - source: "美麗佳人"
     author: "花漾543"
-    image: "report_2.png"
+    image: "report_2.webp"
     summary: "廣受好評的EZ1電動車外型美學完全正中女生的時尚喜好，整體設計靈感融入都會女性的多種面貌，不只新穎時尚還富有俏麗的活潑感，而專為女性打造的圓潤車體外型搭配晶鑽LED的復古頭燈，更令女生驚呼超級可愛，搭配活力開朗的「芒果雪酪」全新配色，或內斂優雅的莫蘭迪色調，多變風格無論是清新學生派、都會流行風或 . . . . . . "
     link: "https://www.marieclaire.com.tw/lifestyle/news/68567"
 
   - source: "小七車觀點"
     author: "徐立軒"
-    image: "report_3.png"
+    image: "report_3.webp"
     summary: "eMOVING EZ1擁有同級車最大的前、後車箱置物空間，讓收納變得好簡單。新色「神秘霧藍」維持EZ1車系一貫的時尚概念，巧妙點綴日常生活中簡約裝扮讓圓潤車身更具特色，. . . . . . "
     link: "https://www.7car.tw/articles/read/92365"
 
-# 5. 專屬原廠配件 (已改為 .png)
+# 5. 專屬原廠配件 (已改為 .webp)
 accessories:
   - title: "舒適後靠背座"
-    image: "acc_1.png"
+    image: "acc_1.webp"
   - title: "可愛造型風鏡"
-    image: "acc_2.png"
+    image: "acc_2.webp"
   - title: "便利加倍菜籃"
-    image: "acc_3.png"
+    image: "acc_3.webp"
   - title: "鋁合金手機架"
-    image: "acc_4.png"
+    image: "acc_4.webp"
 
 # 6. 常見問題解答
 faq:
@@ -196,10 +196,10 @@ manual_url: "manual/ez1.pdf"
 
 # 1. 視差車色去背圖、名稱與背景色配對
 parallax_slides:
-  - image: "ez1-blue.png"
+  - image: "ez1-blue.webp"
     color_name: "神秘霧藍"
     bg_color: "#4378ea"
-  - image: "ez1-yellow.png"
+  - image: "ez1-yellow.webp"
     color_name: "芒果雪酪"
     bg_color: "#F4D934"
 
@@ -208,26 +208,26 @@ parallax_features:
   - number: "01"
     title: "晶鑽LED頭燈"
     desc: "時尚美型頭燈，LED省電同時優雅騎行。"
-    image: "feature-bg-01.png"
+    image: "feature-bg-01.webp"
     color_class: "text-yellow-400"
     badge_bg: "bg-yellow-400"
 
   - number: "02"
     title: "耐刮耐磨PP車殼"
     desc: "耐刮耐磨材質，遇到髒髒的，用水沖並用抹布一擦就掉。"
-    image: "feature-bg-02.png"
+    image: "feature-bg-02.webp"
     color_class: "text-cyan-400"
     badge_bg: "bg-cyan-400"
 
   - number: "03"
     title: "雙槍式後避震 / 安全前後碟煞"
     desc: "雙槍式後避震遇到不平路也舒適，前後200mm大碟盤煞車更有力。"
-    image: "feature-bg-03.png"
+    image: "feature-bg-03.webp"
     color_class: "text-emerald-400"
     badge_bg: "bg-emerald-400"
 
 # 視差固定背景圖片
-fixed_picture_pc: "fixed_bg_desktop.png" # 電腦版 (橫圖, 如 1920x1080)
-fixed_picture_mb: "fixed_bg_mobile.png"  # 手機版 (直圖, 如 800x1200)
+fixed_picture_pc: "fixed_bg_desktop.webp" # 電腦版 (橫圖, 如 1920x1080)
+fixed_picture_mb: "fixed_bg_mobile.webp"  # 手機版 (直圖, 如 800x1200)
 
 ---

@@ -5,5 +5,5 @@ phone: "02-29651501"
 website_url: "https://motor.ntpc.gov.tw/"
 doc_url: "https://motor.ntpc.gov.tw/Home/News?id=1132"
 query_url: ""    # 若無此項，前台會自動隱藏該按鈕
-image: "115.png" # 填入您的圖片路徑
+image: "115.webp" # 填入您的圖片路徑
 ---

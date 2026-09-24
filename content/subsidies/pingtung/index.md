@@ -5,5 +5,5 @@ phone: "08-7514955 "
 website_url: "https://www.ptepb.gov.tw/default.aspx"
 doc_url: "https://web3.envimac.com.tw/MST/Application/NewCase2022Check"
 query_url: ""    # 若無此項，前台會自動隱藏該按鈕
-image: "115.png" # 填入您的圖片路徑
+image: "115.webp" # 填入您的圖片路徑
 ---
