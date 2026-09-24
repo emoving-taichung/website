@@ -30,7 +30,7 @@
                 <div>
                     <label class="block text-xs font-semibold text-gray-500 mb-1">行政區 <span class="text-[#0085d9]">*</span></label>
                     <select id="district" name="district" disabled class="w-full p-3 border border-gray-200 rounded-xl text-sm focus:border-[#0085d9] focus:outline-none bg-white disabled:bg-gray-50 disabled:text-gray-400">
-                        <option value="">請先選擇車款</option>
+                        <option value="">全台門市資料載入中...</option>
                     </select>
                     <p class="text-xs text-red-500 hidden mt-1" id="err-district">請選擇行政區</p>
                 </div>
@@ -103,14 +103,16 @@
 <script>
     const GAS_URL = "https://script.google.com/macros/s/AKfycbyjLSjB8OI3aSzS5H0FIE2kL3Ihqx9_uAyvFBCcKnrQctcgi8td5NLzozb9bixZrYAb/exec";
     
+    // 初始化為 null，資料全數由後端 GAS 快取的 API 動態提供
     let globalConfig = null;
 
+    // 使用反單引號 (`) 避免 VS Code 誤判 Hugo 的範本語法
     const vehicles = [
-      { value: "Shine", name: "免駕照｜Shine", image: '{{ "images/vehicles/em25.webp" | relURL }}' },
-      { value: "EZ1",   name: "綠牌｜EZ1",   image: '{{ "images/vehicles/ez1.webp" | relURL }}' },
-      { value: "EZR",   name: "白牌｜EZR",   image: '{{ "images/vehicles/ezr.webp" | relURL }}' },
-      { value: "IE",    name: "白牌｜勁炫125", image: '{{ "images/vehicles/kg.webp" | relURL }}' },
-      { value: "FUN",   name: "白牌｜FUN",   image: '{{ "images/vehicles/fun.webp" | relURL }}' }
+      { value: "Shine", name: "免駕照｜Shine", image: `{{ "images/vehicles/em25.webp" | relURL }}` },
+      { value: "EZ1",   name: "綠牌｜EZ1",   image: `{{ "images/vehicles/ez1.webp" | relURL }}` },
+      { value: "EZR",   name: "白牌｜EZR",   image: `{{ "images/vehicles/ezr.webp" | relURL }}` },
+      { value: "IE",    name: "白牌｜勁炫125", image: `{{ "images/vehicles/kg.webp" | relURL }}` },
+      { value: "FUN",   name: "白牌｜FUN",   image: `{{ "images/vehicles/fun.webp" | relURL }}` }
     ];
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -163,19 +165,26 @@
     }
 
     function fetchInitialData() {
+        const distSelect = document.getElementById('district');
+        distSelect.innerHTML = '<option value="">全台門市資料載入中...</option>';
+
         fetch(GAS_URL + "?action=getData")
             .then(res => res.json())
             .then(res => {
-                if (res.success) globalConfig = res;
+                if (res.success) {
+                    globalConfig = res;
+                    distSelect.innerHTML = '<option value="">請先選擇車款</option>';
+                }
             })
             .catch(err => {
                 console.warn('門市資料背景載入失敗：', err);
+                distSelect.innerHTML = '<option value="">資料連線失敗，請重新整理</option>';
             });
     }
 
     function onVehicleSelect(val, el) {
         if (!globalConfig) {
-            alert('門市資料連線中，請稍候 1~2 秒再試！');
+            alert('門市資料連線中，請稍候 1 秒再試！');
             return;
         }
 
@@ -263,7 +272,6 @@
             mode: 'no-cors'
         })
         .then(() => {
-            // 🎯【新增】發送 GTM 自訂事件 (代表預約成功轉換)
             window.dataLayer = window.dataLayer || [];
             window.dataLayer.push({
                 'event': 'form_booking_success',
