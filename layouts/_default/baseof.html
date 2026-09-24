@@ -33,9 +33,14 @@
     <title>{{ if .Title }}{{ .Title }} - {{ end }}eMOVING電動機車｜台中精輪</title>
     
 <!-- Favicon & Styles -->
+<!-- 1. 現代瀏覽器優先讀取 WebP -->
+<link rel="icon" type="image/webp" href="{{ "images/favicon.webp" | relURL }}">
+
+<!-- 2. Google 爬蟲與舊版瀏覽器備援 (ico / png) -->
 <link rel="icon" href="{{ "favicon.ico" | relURL }}" sizes="any">
-<link rel="icon" type="image/png" href="{{ "images/favicon.webp" | relURL }}">
-<link rel="apple-touch-icon" href="{{ "images/favicon.webp" | relURL }}">
+<link rel="apple-touch-icon" href="{{ "images/favicon.png" | relURL }}">
+
+<!-- 字型與 Tailwind CSS -->
 <link href="https://fonts.googleapis.com/css2?family=Anybody:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 <script src="https://cdn.tailwindcss.com"></script>
     
