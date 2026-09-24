@@ -1,6 +1,6 @@
 baseURL = 'https://emoving-taichung.github.io/website/'
 locale = "zh-TW"
-title = 'eMOVING 精輪山西店｜台中電動機車'
+title = 'eMOVING 電動機車｜台中精輪'
 
 [params]
   primaryColor = "#1155CC"
