@@ -2,139 +2,190 @@
 <div class="w-full bg-[#f9fcff] text-[#1C1C1C] min-h-screen py-12 px-4 md:px-8">
     <div class="max-w-6xl mx-auto space-y-8">
         
-        <!-- 頁面標題區塊 -->
-        <div class="text-center space-y-3">
-            <h1 class="text-3xl md:text-4xl font-black text-[#1C1C1C]">
-                {{ .Title | default "最新消息" }}
-            </h1>
-            <p class="text-gray-600 text-sm md:text-base">
-                掌握 eMOVING 台中山西店最新活動與優惠資訊
-            </p>
-        </div>
-
-        <!-- 🔍 搜尋 Bar 區塊 -->
-        <div class="max-w-md mx-auto pt-2">
-            <div class="relative flex items-center">
-                <input type="text" id="news-search-input" 
-                       placeholder="搜尋最新消息或關鍵字..." 
-                       class="w-full pl-11 pr-4 py-3 bg-white border border-gray-300 rounded-full shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-[#1155CC] focus:border-transparent transition-all">
-                
-                <svg class="w-5 h-5 text-gray-400 absolute left-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                </svg>
+        <!-- ＝ 區塊 A：最新消息列表頁 (預設顯示) ＝ -->
+        <div id="news-list-view" class="space-y-8">
+            <!-- 頁面標題區塊 -->
+            <div class="text-center space-y-3">
+                <h1 class="text-3xl md:text-4xl font-black text-[#1C1C1C]">
+                    {{ .Title | default "最新消息" }}
+                </h1>
+                <p class="text-gray-600 text-sm md:text-base">
+                    掌握 eMOVING 台中山西店最新活動與優惠資訊
+                </p>
             </div>
+
+            <!-- 🔍 搜尋 Bar 區塊 -->
+            <div class="max-w-md mx-auto pt-2">
+                <div class="relative flex items-center">
+                    <input type="text" id="news-search-input" 
+                           placeholder="搜尋最新消息或關鍵字..." 
+                           class="w-full pl-11 pr-4 py-3 bg-white border border-gray-300 rounded-full shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-[#1155CC] focus:border-transparent transition-all">
+                    
+                    <svg class="w-5 h-5 text-gray-400 absolute left-4 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- 載入狀態 -->
+            <div id="news-loading" class="text-center py-12 text-gray-500">
+                <p class="text-lg font-medium animate-pulse">⏳ 最新消息載入中...</p>
+            </div>
+
+            <!-- 查無結果提示隱藏區塊 -->
+            <div id="no-search-results" class="hidden text-center py-12 text-gray-500">
+                <p class="text-lg font-medium">找不到符合關鍵字的文章 🔍</p>
+                <p class="text-sm mt-1">請嘗試輸入其他關鍵字搜尋</p>
+            </div>
+
+            <!-- 文章網格容器 -->
+            <div id="news-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4"></div>
         </div>
 
-        <!-- 載入狀態 -->
-        <div id="news-loading" class="text-center py-12 text-gray-500">
-            <p class="text-lg font-medium animate-pulse">⏳ 最新消息載入中...</p>
-        </div>
+        <!-- ＝ 區塊 B：單篇文章內頁 (預設隱藏，點擊卡片後顯示) ＝ -->
+        <div id="news-detail-view" class="hidden max-w-3xl mx-auto bg-white p-6 md:p-10 rounded-2xl border border-gray-200 shadow-sm space-y-6">
+            <!-- 返回按鈕 -->
+            <button id="back-to-list-btn" class="inline-flex items-center gap-2 text-sm font-bold text-[#1155CC] hover:text-blue-800 transition-colors cursor-pointer">
+                <span>←</span> 返回最新消息列表
+            </button>
 
-        <!-- 查無結果提示隱藏區塊 -->
-        <div id="no-search-results" class="hidden text-center py-12 text-gray-500">
-            <p class="text-lg font-medium">找不到符合關鍵字的文章 🔍</p>
-            <p class="text-sm mt-1">請嘗試輸入其他關鍵字搜尋</p>
-        </div>
+            <!-- 文章發布日期與標題 -->
+            <div class="space-y-2 border-b border-gray-100 pb-4">
+                <time id="detail-date" class="text-xs font-semibold text-gray-400"></time>
+                <h1 id="detail-title" class="text-2xl md:text-3xl font-black text-gray-900 leading-tight"></h1>
+            </div>
 
-        <!-- 文章網格容器 -->
-        <div id="news-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pt-4"></div>
+            <!-- Blogger 內文 HTML 渲染區 -->
+            <div id="detail-content" class="prose max-w-none text-gray-700 space-y-4 leading-relaxed [&_img]:rounded-xl [&_img]:mx-auto [&_img]:max-h-[600px] [&_img]:object-contain"></div>
+        </div>
 
     </div>
 </div>
 
-<!-- ⚡ 採用 JSONP 解決 CORS 跨網域存取問題 -->
+<!-- ⚡ 前端即時抓取 (JSONP 避開 CORS)、搜尋與單頁渲染 JavaScript -->
 <script>
-    // 全域 Callback 回呼函數
-    window.renderBloggerNews = function(data) {
+    document.addEventListener('DOMContentLoaded', function () {
+        const listView = document.getElementById('news-list-view');
+        const detailView = document.getElementById('news-detail-view');
         const newsGrid = document.getElementById('news-grid');
         const loadingBox = document.getElementById('news-loading');
-        
-        if (loadingBox) loadingBox.style.display = 'none';
-
-        const entries = (data && data.feed && data.feed.entry) ? data.feed.entry : [];
-
-        if (entries.length === 0) {
-            newsGrid.innerHTML = '<p class="col-span-full text-center py-12 text-gray-500 text-lg font-medium">目前尚無最新消息。</p>';
-            return;
-        }
-
-        entries.forEach(entry => {
-            const title = entry.title ? entry.title.$t : '';
-            const publishedRaw = entry.published ? entry.published.$t : '';
-            const published = publishedRaw.split('T')[0];
-
-            let link = '#';
-            if (entry.link) {
-                const alt = entry.link.find(l => l.rel === 'alternate');
-                if (alt) link = alt.href;
-            }
-
-            // 圖片解析 (自動替換高清 s1600)
-            let imgSrc = '';
-            if (entry.media$thumbnail) {
-                imgSrc = entry.media$thumbnail.url.replace(/\/s\d+[^/]*\//, '/s1600/').replace(/=w\d+-h\d+[^$]*/, '=s1600');
-            } else if (entry.content && entry.content.$t) {
-                const match = entry.content.$t.match(/<img[^>]+src="([^">]+)"/);
-                if (match) {
-                    imgSrc = match[1].replace(/\/s\d+[^/]*\//, '/s1600/').replace(/=w\d+-h\d+[^$]*/, '=s1600');
-                }
-            }
-
-            // 摘要解析 (去除 HTML 標籤)
-            let rawSummary = '';
-            if (entry.summary) rawSummary = entry.summary.$t;
-            else if (entry.content) rawSummary = entry.content.$t;
-
-            const cleanSummary = rawSummary.replace(/<[^>]*>/g, '').substring(0, 90) + '...';
-
-            // 建立 HTML 卡片
-            const card = document.createElement('a');
-            card.href = link;
-            card.target = '_blank';
-            card.rel = 'noopener noreferrer';
-            card.className = 'news-card group flex flex-col justify-between bg-white p-5 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[#1155CC] transition-all transform hover:-translate-y-1';
-            card.setAttribute('data-title', title.toLowerCase());
-            card.setAttribute('data-summary', cleanSummary.toLowerCase());
-
-            const imgContainer = imgSrc 
-                ? `<div class="w-full aspect-[4/5] overflow-hidden rounded-xl bg-gray-100"><img src="${imgSrc}" alt="${title}" loading="lazy" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"></div>`
-                : `<div class="w-full aspect-[4/5] overflow-hidden rounded-xl bg-gray-100 flex items-center justify-center text-gray-400 font-bold">eMOVING</div>`;
-
-            card.innerHTML = `
-                <div class="space-y-4">
-                    ${imgContainer}
-                    <div class="flex items-center justify-between text-xs text-gray-400">
-                        <time class="font-medium">${published}</time>
-                    </div>
-                    <h2 class="text-lg font-bold text-gray-800 group-hover:text-[#1155CC] line-clamp-2 transition-colors">${title}</h2>
-                    <p class="text-sm text-gray-600 line-clamp-3 leading-relaxed">${cleanSummary}</p>
-                </div>
-                <div class="pt-4 mt-4 border-t border-gray-100 flex items-center justify-between text-sm font-semibold text-[#1155CC]">
-                    <span>閱讀完整文章</span>
-                    <span class="transform group-hover:translate-x-1 transition-transform">➔</span>
-                </div>
-            `;
-
-            newsGrid.appendChild(card);
-        });
-    };
-
-    document.addEventListener('DOMContentLoaded', function () {
         const searchInput = document.getElementById('news-search-input');
         const noResultsMsg = document.getElementById('no-search-results');
 
-        // 動態注入 JSONP Script 標籤 (解決 CORS 限制)
-        const script = document.createElement('script');
-        script.src = 'https://emoving-taichung.blogspot.com/feeds/posts/default?alt=json-in-script&callback=renderBloggerNews&max-results=500';
-        script.onerror = function() {
-            const loadingBox = document.getElementById('news-loading');
-            const newsGrid = document.getElementById('news-grid');
-            if (loadingBox) loadingBox.style.display = 'none';
-            if (newsGrid) newsGrid.innerHTML = '<p class="col-span-full text-center py-12 text-gray-500 text-lg font-medium">無法載入最新消息，請重新整理頁面再試。</p>';
-        };
-        document.head.appendChild(script);
+        const detailTitle = document.getElementById('detail-title');
+        const detailDate = document.getElementById('detail-date');
+        const detailContent = document.getElementById('detail-content');
+        const backBtn = document.getElementById('back-to-list-btn');
 
-        // 關鍵字搜尋過濾功能
+        let postsMap = new Map(); // 儲存所有文章資料
+
+        // 1. 全域 JSONP 回呼函數 (掛載在 window 下供 Blogger 回傳呼叫)
+        window.handleBloggerFeed = function (data) {
+            if (loadingBox) loadingBox.style.display = 'none';
+            const entries = (data.feed && data.feed.entry) ? data.feed.entry : [];
+
+            if (entries.length === 0) {
+                newsGrid.innerHTML = '<p class="col-span-full text-center py-12 text-gray-500 text-lg font-medium">目前尚無最新消息。</p>';
+                return;
+            }
+
+            entries.forEach((entry, index) => {
+                const postId = 'post-' + index;
+                const title = entry.title ? entry.title.$t : '';
+                const publishedRaw = entry.published ? entry.published.$t : '';
+                const published = publishedRaw.split('T')[0];
+                const fullContent = entry.content ? entry.content.$t : (entry.summary ? entry.summary.$t : '');
+
+                postsMap.set(postId, {
+                    title: title,
+                    date: published,
+                    content: fullContent
+                });
+
+                // 圖片解析 (自動替換高清 s1600)
+                let imgSrc = '';
+                if (entry.media$thumbnail) {
+                    imgSrc = entry.media$thumbnail.url.replace(/\/s\d+[^/]*\//, '/s1600/').replace(/=w\d+-h\d+[^$]*/, '=s1600');
+                } else if (entry.content && entry.content.$t) {
+                    const match = entry.content.$t.match(/<img[^>]+src="([^">]+)"/);
+                    if (match) {
+                        imgSrc = match[1].replace(/\/s\d+[^/]*\//, '/s1600/').replace(/=w\d+-h\d+[^$]*/, '=s1600');
+                    }
+                }
+
+                // 摘要解析 (去除 HTML 標籤)
+                let rawSummary = '';
+                if (entry.summary) rawSummary = entry.summary.$t;
+                else if (entry.content) rawSummary = entry.content.$t;
+                const cleanSummary = rawSummary.replace(/<[^>]*>/g, '').substring(0, 90) + '...';
+
+                // 建立 HTML 卡片
+                const card = document.createElement('div');
+                card.className = 'news-card group flex flex-col justify-between bg-white p-5 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-[#1155CC] transition-all transform hover:-translate-y-1 cursor-pointer';
+                card.setAttribute('data-title', title.toLowerCase());
+                card.setAttribute('data-summary', cleanSummary.toLowerCase());
+
+                const imgContainer = imgSrc 
+                    ? `<div class="w-full aspect-[4/5] overflow-hidden rounded-xl bg-gray-100"><img src="${imgSrc}" alt="${title}" loading="lazy" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"></div>`
+                    : `<div class="w-full aspect-[4/5] overflow-hidden rounded-xl bg-gray-100 flex items-center justify-center text-gray-400 font-bold">eMOVING</div>`;
+
+                card.innerHTML = `
+                    <div class="space-y-4">
+                        ${imgContainer}
+                        <div class="flex items-center justify-between text-xs text-gray-400">
+                            <time class="font-medium">${published}</time>
+                        </div>
+                        <h2 class="text-lg font-bold text-gray-800 group-hover:text-[#1155CC] line-clamp-2 transition-colors">${title}</h2>
+                        <p class="text-sm text-gray-600 line-clamp-3 leading-relaxed">${cleanSummary}</p>
+                    </div>
+                    <div class="pt-4 mt-4 border-t border-gray-100 flex items-center justify-between text-sm font-semibold text-[#1155CC]">
+                        <span>閱讀完整文章</span>
+                        <span class="transform group-hover:translate-x-1 transition-transform">➔</span>
+                    </div>
+                `;
+
+                card.addEventListener('click', function () {
+                    openPostDetail(postId);
+                });
+
+                newsGrid.appendChild(card);
+            });
+        };
+
+        // 2. 動態注入 Script 標籤 (JSONP)，徹底避免 CORS 阻擋
+        const script = document.createElement('script');
+        script.src = 'https://emoving-taichung.blogspot.com/feeds/posts/default?alt=json-in-script&callback=handleBloggerFeed&max-results=500';
+        script.onerror = function () {
+            if (loadingBox) loadingBox.style.display = 'none';
+            newsGrid.innerHTML = '<p class="col-span-full text-center py-12 text-gray-500 text-lg font-medium">暫時無法載入最新消息，請稍後再試。</p>';
+        };
+        document.body.appendChild(script);
+
+        // 顯示文章內頁
+        function openPostDetail(postId) {
+            const post = postsMap.get(postId);
+            if (!post) return;
+
+            detailTitle.textContent = post.title;
+            detailDate.textContent = post.date;
+            detailContent.innerHTML = post.content;
+
+            listView.classList.add('hidden');
+            detailView.classList.remove('hidden');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 返回列表頁
+        if (backBtn) {
+            backBtn.addEventListener('click', function () {
+                detailView.classList.add('hidden');
+                listView.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
+        // 搜尋功能
         if (searchInput) {
             searchInput.addEventListener('input', function (e) {
                 const query = e.target.value.toLowerCase().trim();
