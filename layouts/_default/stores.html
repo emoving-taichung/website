@@ -51,8 +51,8 @@
 
         <!-- 取得所有 YAML 據點資料 -->
         {{ $allStores := slice }}
-        {{ if hugo.Data.stores }}
-            {{ range $file, $stores := hugo.Data.stores }}
+        {{ if .Site.Data.stores }}
+            {{ range $file, $stores := .Site.Data.stores }}
                 {{ if reflect.IsSlice $stores }}
                     {{ range $stores }}
                         {{ $allStores = $allStores | append . }}
@@ -60,7 +60,7 @@
                 {{ end }}
             {{ end }}
         {{ else }}
-            {{ range $file, $stores := hugo.Data }}
+            {{ range $file, $stores := .Site.Data }}
                 {{ if reflect.IsSlice $stores }}
                     {{ range $stores }}
                         {{ $allStores = $allStores | append . }}
