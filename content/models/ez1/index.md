@@ -76,7 +76,7 @@ specs_notes:
 
     7.本車款採用gogoro換電系統，無提供預選里程方案。<br>
 
-    車主車輛使用常見問題請參閱：<a href='https://www.e-moving.com.tw/QA' target='_blank'>https://www.e-moving.com.tw/QA</a>。"
+    車主車輛使用常見問題請參閱：[常見問題 Q&A 專區](https://emoving-taichung.github.io/website/faq/)
 
 specs_tables:
 - title: "eMOVING EZ1"

@@ -73,7 +73,7 @@ specs_notes:
 
    8. 不得擅自改裝 車輛規格及電子控制裝置含增、減或變更車輛裝置。<br>
 
-   車主車輛使用常見問題請參閱：<a href='https://www.e-moving.com.tw/QA' target='_blank'>https://www.e-moving.com.tw/QA</a>。"
+   車主車輛使用常見問題請參閱：[常見問題 Q&A 專區](https://emoving-taichung.github.io/website/faq/)
 
 specs_tables:
 - title: "SHINE"
