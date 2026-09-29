@@ -73,7 +73,7 @@ specs_notes:
 
     7.年耗電量(度)243度係以年平均行駛4,500公里除以能源效率測試值計算；表列能耗值測試方法為CNS 15819-4及其後續修正測試方法。<br>
 
-    車主車輛使用常見問題請參閱：[常見問題 Q&A 專區](https://emoving-taichung.github.io/website/faq/)
+    車主車輛使用常見問題請參閱：[常見問題 Q&A 專區](https://emoving-taichung.github.io/website/faq/)"
 
 specs_tables:
 - title: "勁炫125 超質型"

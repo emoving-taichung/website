@@ -65,7 +65,7 @@ specs_notes:
     4. 台鈴工業亦保留隨時對車款及產品出售與否或對其內容記載變更之權利。<br>
     5. 實際規格以量產為主。<br>
     6. 年耗電量(度)係以年平均行駛4,500公里除以能源效率測試值計算；表列能耗值測試方法為CNS 15819-4及其後續修正測試方法。<br>
-    車主車輛使用常見問題請參閱：[常見問題 Q&A 專區](https://emoving-taichung.github.io/website/faq/)
+    車主車輛使用常見問題請參閱：[常見問題 Q&A 專區](https://emoving-taichung.github.io/website/faq/)"
 
 specs_tables:
   - title: "eReady Fun"

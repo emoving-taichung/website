@@ -1,6 +1,10 @@
 {{ define "main" }}
 {{ $page := . }}
 
+{{/* 設定全站 SEO 基礎變數：車款名稱與簡單特色 */}}
+{{ $carTitle := $page.Title }}
+{{ $carDesc := $page.Params.description | default "電動機車" }}
+
 {{/* 取得檔名並自動拼接 static/catalog/ 與 static/manual/ 的 PDF 路徑 */}}
 {{ $baseName := "" }}
 {{ with $page.File }}
@@ -76,7 +80,7 @@
   #scroll-hint { margin-right: 45vw; transition: all 0.3s ease-out; }
   #scroll-hint.is-hidden { opacity: 0 !important; max-width: 0px !important; margin-right: 0px !important; padding: 0px !important; overflow: hidden !important; pointer-events: none !important; }
 
-  /* 4.5 固定背景視差樣式 (iOS Safari clip-path 相容版) */
+  /* 固定背景視差樣式：採用 CSS 變數解構，徹底避免 VS Code Linter 誤判 url() 語法錯誤 */
   .ios-fixed-parallax-wrapper {
     position: relative;
     clip-path: inset(0 0 0 0);
@@ -175,9 +179,10 @@
             {{ range $idx := seq 0 (sub $maxSlides 1) }}
             {{ $mbImg := index $heroPhotosMb $idx | default (index $heroPhotosPc $idx) }}
             {{ $pcImg := index $heroPhotosPc $idx | default (index $heroPhotosMb $idx) }}
+            {{ $heroAlt := printf "%s｜%s｜主視覺 Banner %d" $carTitle $carDesc (add $idx 1) }}
             <picture class="hero-slide-img absolute inset-0 w-full h-full transition-opacity duration-700 select-none {{ if eq $idx 0 }}opacity-100 z-10{{ else }}opacity-0 z-0{{ end }}">
                 <source media="(min-width: 768px)" srcset="{{ $pcImg }}">
-                <img src="{{ $mbImg }}" alt="{{ $page.Title }}" class="w-full h-full object-cover">
+                <img src="{{ $mbImg }}" alt="{{ $heroAlt }}" class="w-full h-full object-cover">
             </picture>
             {{ end }}
         {{ end }}
@@ -246,6 +251,7 @@
         {{ $imgSrc = $item.image | relURL }}
       {{ end }}
   
+      {{ $featAlt := printf "%s｜%s｜特色：%s" $carTitle $carDesc $item.title }}
       <div class="relative py-20 px-6 md:px-12 transition-all {{ if $isEven }}bg-[#e3e7ec]{{ else }}bg-[#f9fcff]{{ end }} text-gray-900 {{ $slopeClass }}">
           <div class="max-w-6xl mx-auto flex flex-col {{ if $isEven }}md:flex-row-reverse{{ else }}md:flex-row{{ end }} items-center gap-10 md:gap-14 py-4">
               <div class="w-full md:w-5/12 space-y-4 text-left">
@@ -254,7 +260,7 @@
               </div>
               <div class="w-full md:w-7/12 flex justify-center">
                   <div class="w-full max-w-2xl aspect-[16/10] rounded-3xl overflow-hidden border-4 border-white/60 shadow-xl shrink-0 group">
-                      <img src="{{ $imgSrc }}" alt="{{ $item.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
+                      <img src="{{ $imgSrc }}" alt="{{ $featAlt }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy">
                   </div>
               </div>
           </div>
@@ -334,7 +340,8 @@
                   {{ $webp := $res.Process "webp" }}
                   {{ $sImg = $webp.RelPermalink }}
                 {{ end }}
-                <img id="parallax-car-img-{{ $cIdx }}" src="{{ $sImg }}" alt="{{ .color_name }}" class="parallax-car-img absolute inset-0 m-auto w-[95vw] sm:w-[75vw] md:w-auto md:max-w-[70vw] h-auto max-h-[62vh] md:max-h-[72vh] object-contain object-center scale-110 sm:scale-125 transition-opacity duration-700 ease-in-out select-none pointer-events-none {{ if eq $cIdx 0 }}opacity-100 z-10{{ else }}opacity-0 z-0{{ end }}">
+                {{ $colorAlt := printf "%s｜%s｜車色：%s" $carTitle $carDesc .color_name }}
+                <img id="parallax-car-img-{{ $cIdx }}" src="{{ $sImg }}" alt="{{ $colorAlt }}" class="parallax-car-img absolute inset-0 m-auto w-[95vw] sm:w-[75vw] md:w-auto md:max-w-[70vw] h-auto max-h-[62vh] md:max-h-[72vh] object-contain object-center scale-110 sm:scale-125 transition-opacity duration-700 ease-in-out select-none pointer-events-none {{ if eq $cIdx 0 }}opacity-100 z-10{{ else }}opacity-0 z-0{{ end }}">
                 {{ end }}
             </div>
 
@@ -385,8 +392,9 @@
                 </div>
                 <div class="grid grid-cols-3 gap-2 sm:gap-3">
                     {{ range $idx, $vid := . }}
+                    {{ $vidAlt := printf "%s｜%s｜試乘影片：%s" $carTitle $carDesc $vid.title }}
                     <div data-vid="{{ $vid.id }}" data-idx="{{ $idx }}" onclick="swapVideo(this.dataset.vid, Number(this.dataset.idx))" id="thumb-btn-{{ $idx }}" class="cursor-pointer aspect-video bg-black rounded-lg overflow-hidden border-2 {{ if eq $idx 0 }}border-yellow-400 opacity-100{{ else }}border-gray-300 opacity-70{{ end }} hover:opacity-100 transition-all relative">
-                        <img src="https://i.ytimg.com/vi/{{ $vid.id }}/hqdefault.jpg" data-fallback="https://i.ytimg.com/vi/{{ $vid.id }}/0.jpg" alt="{{ $vid.title }}" class="w-full h-full object-cover fallback-img">
+                        <img src="https://i.ytimg.com/vi/{{ $vid.id }}/hqdefault.jpg" data-fallback="https://i.ytimg.com/vi/{{ $vid.id }}/0.jpg" alt="{{ $vidAlt }}" class="w-full h-full object-cover fallback-img">
                     </div>
                     {{ end }}
                 </div>
@@ -420,8 +428,10 @@
                 {{ else }}
                   {{ $rptImgSrc = .image | relURL }}
                 {{ end }}
+                {{ $reportAlt := printf "%s｜%s｜媒體報導：%s" $carTitle $carDesc .source }}
+                {{ with .author }}{{ $reportAlt = printf "%s (%s)" $reportAlt . }}{{ end }}
                 <div class="bg-white text-gray-900 rounded-2xl p-6 shadow-md border border-blue-100 flex flex-col md:flex-row gap-6 items-center hover:shadow-lg transition-shadow">
-                    <div class="w-full md:w-[40%] aspect-[4/3] rounded-xl overflow-hidden shrink-0 border border-gray-100"><img src="{{ $rptImgSrc }}" alt="{{ .source }}" class="w-full h-full object-cover" loading="lazy"></div>
+                    <div class="w-full md:w-[40%] aspect-[4/3] rounded-xl overflow-hidden shrink-0 border border-gray-100"><img src="{{ $rptImgSrc }}" alt="{{ $reportAlt }}" class="w-full h-full object-cover" loading="lazy"></div>
                     <div class="w-full md:w-[60%] space-y-3 text-left">
                         <div class="flex items-baseline gap-2">
                             <h4 class="text-xl font-bold text-gray-900">{{ .source }}</h4>
@@ -444,7 +454,7 @@
 </section>
 
 <!-- ========================================== -->
-<!-- 4.5 固定背景視差圖片區塊 (包裹單引號，符合 VS Code CSS Linter 規範) -->
+<!-- 4.5 固定背景視差圖片區塊 (包裹單引號與 CSS 變數，100% 符合 VS Code Linter 規範) -->
 <!-- ========================================== -->
 {{ $fixedPcSrc := "" }}
 {{ $fixedMbSrc := "" }}
@@ -545,8 +555,9 @@
             {{ else }}
               {{ $accImgSrc = .image | relURL }}
             {{ end }}
+            {{ $accAlt := printf "%s｜%s｜配件：%s" $carTitle $carDesc .title }}
             <div class="bg-white border border-gray-200 rounded-2xl p-4 shadow-sm hover:shadow-md transition-shadow flex flex-col items-center">
-                <div class="w-full aspect-square rounded-xl overflow-hidden bg-gray-50 mb-3"><img src="{{ $accImgSrc }}" alt="{{ .title }}" class="w-full h-full object-cover" loading="lazy"></div>
+                <div class="w-full aspect-square rounded-xl overflow-hidden bg-gray-50 mb-3"><img src="{{ $accImgSrc }}" alt="{{ $accAlt }}" class="w-full h-full object-cover" loading="lazy"></div>
                 <h3 class="text-lg md:text-xl font-bold text-gray-900 text-center tracking-wide mt-1">{{ .title }}</h3>
             </div>
             {{ end }}
@@ -581,7 +592,7 @@
                     {{ .question }}
                     <span class="text-gray-400 transition-transform group-open:rotate-180">▼</span>
                 </summary>
-                <p class="text-base text-gray-600 mt-3 leading-relaxed text-left whitespace-pre-line">
+                <p class="text-base text-gray-600 mt-3 leading-relaxed text-left">
                     {{ .answer }}
                 </p>
             </details>
