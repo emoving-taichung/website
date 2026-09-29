@@ -79,7 +79,7 @@ specs_tables:
 - title: "SHINE"
   specs:
   - label: "長 x 寬 x 高"
-    value: "1,560 X 655 X 1,015 mm"
+    value: "1,560 X 655 X 1,011 mm"
   - label: "重量(含電池)"
     value: "約 40kg"
   - label: "安全載重"
