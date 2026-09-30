@@ -13,7 +13,7 @@
   district: "北區"
   address: "台中市北區山西路二段135號"
   phone: "04-2291-6766"
-  hours: "周一至周六 09:00 ~ 20:30"
+  hours: "周一至周六 09:00 ~ 20:30 / 每個月第二及第四個周六公休"
   sales_models: []
   repair_models: ["微電/EM50/80", "ez1", "勁炫125", "EZR"]
 
@@ -153,7 +153,7 @@
 - title: "慶興車行"
   district: "霧峰區"
   address: "臺中市霧峰區民生路142之1號"
-  phone: "04-2339-1135"
+  phone: "0939-567-135"
   hours: "周一至周五　13:00 ~ 20:00"
   sales_models: ["微電", "ez1", "勁炫125", "EZR"]
   repair_models: ["微電/EM50/80", "ez1", "勁炫125", "EZR"]
