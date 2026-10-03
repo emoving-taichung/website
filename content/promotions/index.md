@@ -69,7 +69,7 @@ models:
   # 第三款車：FUN 
   # ==========================================
   - id: "fun"
-    enable: true # 👈 設定為 true：正常顯示；設定為 false：隱藏該車款
+    enable: false # 👈 設定為 true：正常顯示；設定為 false：隱藏該車款
     name: "Fun 白牌優雅電車"
     subtitle: "日系工藝 × 科技換電｜靈巧舒適的都會純電首選"
     cover_image: "fun-cover.webp"
@@ -123,7 +123,7 @@ models:
   # 第五款車：微電 
   # ==========================================
   - id: "shine-bobe"
-    enable: false # 👈 設定為 true：正常顯示；設定為 false：隱藏該車款
+    enable: true # 👈 設定為 true：正常顯示；設定為 false：隱藏該車款
     name: "eMoving 微型電動車 (Bobe / Shine)"
     subtitle: "免駕照輕巧代步｜短程通勤與菜籃族最佳夥伴"
     cover_image: "em25-cover.webp"
@@ -137,12 +137,12 @@ models:
     features:
       - image_desktop: "em25-feat-1-pc.webp"
         image_mobile: "em25-feat-1-mb.webp"
-        title: "高科技全彩 LCD 液晶儀表"
+        title: "輕巧鋰電池 可提進家中充電"
       - image_desktop: "em25-feat-2-pc.webp"
         image_mobile: "em25-feat-2-mb.webp"
-        title: "CBS 重型機車級雙碟煞系統"
+        title: "超寬敞置腳空間 黃金獵犬坐得下"
       - image_desktop: "em25-feat-3-pc.webp"
         image_mobile: "em25-feat-3-mb.webp"
-        title: "人體工學跑車級舒適座墊"
-    youtube_id: "JEKf9fqM2C0"
+        title: "貼心簡約電量顯示 及 防暴衝裝置"
+    youtube_id: "y8b_TQ8S2Q4"
 ---
