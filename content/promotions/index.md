@@ -132,7 +132,7 @@ models:
     highlights:
       - '本月限定：持任一駕照，送 <span class="highlight-num">$3,000</span> 購車金'
       - '可分 <span class="highlight-num">24</span> 期'
-    car_page_link: "models/em25/"
+    car_page_link: "models/shine-bobe/"
     line_link: "https://lihi1.me/8LpPy?ref=line_join"
     features:
       - image_desktop: "em25-feat-1-pc.webp"
