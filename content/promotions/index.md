@@ -108,6 +108,7 @@ models:
       - '分期購車享 <span class="highlight-num">24</span> 期 <span class="highlight-num">0</span> 利率'
     car_page_link: "models/kg/"
     line_link: "https://lihi1.me/8LpPy?ref=line_join"
+    store_cta_link: "charge-store/"
     features:
       - image_desktop: "kg-feat-1-pc.webp"
         image_mobile: "kg-feat-1-mb.webp"
@@ -134,6 +135,7 @@ models:
       - '可分 <span class="highlight-num">24</span> 期'
     car_page_link: "models/shine-bobe/"
     line_link: "https://lihi1.me/8LpPy?ref=line_join"
+    store_cta_link: "charge-store/"
     features:
       - image_desktop: "em25-feat-1-pc.webp"
         image_mobile: "em25-feat-1-mb.webp"

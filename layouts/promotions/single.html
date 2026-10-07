@@ -4,37 +4,37 @@
 <div class="w-full bg-[#f9fcff] text-[#1C1C1C] min-h-screen flex flex-col justify-between relative">
 
     <div>
-    <!-- ========================================== -->
-<!-- 1. 廣宣圖 Banner (全面滿版設計：移除圓角與內距，完美貼齊選單與視窗) -->
-<!-- ========================================== -->
-<section class="w-full h-[calc(100dvh-108px)] md:h-[calc(100dvh-116px)] bg-[#6eade3] flex flex-col justify-center items-center relative shrink-0 p-0 overflow-hidden">
-    <div class="w-full h-full flex justify-center items-center my-auto">
-        <!-- 預設值與變數讀取 -->
-        {{ $imgMobile := .Resources.GetMatch (default "banner_mobile.webp" .Params.hero_image_mobile) }}
-        {{ $imgDesktop := .Resources.GetMatch (default "banner_desktop.webp" .Params.hero_image_desktop) }}
-        
-        {{ if or $imgMobile $imgDesktop }}
-            <picture class="w-full h-full flex items-center justify-center text-center">
-                <!-- 電腦版 (>= 768px)：顯示橫圖 -->
-                {{ if $imgDesktop }}
-                    <source media="(min-width: 768px)" srcset="{{ $imgDesktop.RelPermalink }}">
-                {{ end }}
+        <!-- ========================================== -->
+        <!-- 1. 廣宣圖 Banner (全面滿版設計：移除圓角與內距，完美貼齊選單與視窗) -->
+        <!-- ========================================== -->
+        <section class="w-full h-[calc(100dvh-108px)] md:h-[calc(100dvh-116px)] bg-[#6eade3] flex flex-col justify-center items-center relative shrink-0 p-0 overflow-hidden">
+            <div class="w-full h-full flex justify-center items-center my-auto">
+                <!-- 預設值與變數讀取 -->
+                {{ $imgMobile := .Resources.GetMatch (default "banner_mobile.webp" .Params.hero_image_mobile) }}
+                {{ $imgDesktop := .Resources.GetMatch (default "banner_desktop.webp" .Params.hero_image_desktop) }}
                 
-                <!-- 手機版 (預設)：顯示直圖 -->
-                {{ if $imgMobile }}
-                    <img src="{{ $imgMobile.RelPermalink }}" alt="{{ $.Title }}" class="w-full h-full object-cover mx-auto block">
-                {{ else if $imgDesktop }}
-                    <img src="{{ $imgDesktop.RelPermalink }}" alt="{{ $.Title }}" class="w-full h-full object-cover mx-auto block">
+                {{ if or $imgMobile $imgDesktop }}
+                    <picture class="w-full h-full flex items-center justify-center text-center">
+                        <!-- 電腦版 (>= 768px)：顯示橫圖 -->
+                        {{ if $imgDesktop }}
+                            <source media="(min-width: 768px)" srcset="{{ $imgDesktop.RelPermalink }}">
+                        {{ end }}
+                        
+                        <!-- 手機版 (預設)：顯示直圖 -->
+                        {{ if $imgMobile }}
+                            <img src="{{ $imgMobile.RelPermalink }}" alt="{{ $.Title }}" class="w-full h-full object-cover mx-auto block">
+                        {{ else if $imgDesktop }}
+                            <img src="{{ $imgDesktop.RelPermalink }}" alt="{{ $.Title }}" class="w-full h-full object-cover mx-auto block">
+                        {{ end }}
+                    </picture>
+                {{ else }}
+                    <div class="w-full py-24 flex flex-col justify-center items-center text-white text-center">
+                        <span class="text-xs bg-white/20 px-3 py-1 rounded-full mb-3 uppercase tracking-widest">eMOVING 主打專案</span>
+                        <h1 class="text-3xl md:text-5xl font-black tracking-wider">{{ .Title }}</h1>
+                    </div>
                 {{ end }}
-            </picture>
-        {{ else }}
-            <div class="w-full py-24 flex flex-col justify-center items-center text-white text-center">
-                <span class="text-xs bg-white/20 px-3 py-1 rounded-full mb-3 uppercase tracking-widest">eMOVING 主打專案</span>
-                <h1 class="text-3xl md:text-5xl font-black tracking-wider">{{ .Title }}</h1>
             </div>
-        {{ end }}
-    </div>
-</section>
+        </section>
 
         <!-- ========================================== -->
         <!-- 2. 各車款橫式錨點選單 (手機與電腦版皆平均分配寬度 + 置中對齊) -->
@@ -109,7 +109,7 @@
                             </div>
 
                             <div>
-                                <a href="{{ $model.store_cta_link | default "store/" | relURL }}" 
+                                <a href="{{ $model.store_cta_link | relURL }}" 
                                    class="inline-flex items-center gap-2 bg-[#1155CC] hover:bg-blue-700 text-white font-semibold text-[18px] py-3.5 px-6 rounded-xl shadow-md transition-all">
                                     {{ $model.store_cta_text | default "📍 查詢附近門市" }}
                                 </a>
@@ -172,20 +172,20 @@
                     </div>
 
                     <!-- YouTube 影片 -->
-{{ if $model.youtube_id }}
-<div class="space-y-6 pt-2">
-    <h3 class="text-[24px] font-black text-[#1C1C1C] text-left border-l-4 border-[#1155CC] pl-3 leading-none">
-        影音介紹
-    </h3>
-    <div class="w-full aspect-video rounded-2xl overflow-hidden shadow-md border border-gray-200">
-        <iframe class="w-full h-full" src="https://www.youtube.com/embed/{{ $model.youtube_id }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    </div>
-</div>
-{{ end }}
+                    {{ if $model.youtube_id }}
+                    <div class="space-y-6 pt-2">
+                        <h3 class="text-[24px] font-black text-[#1C1C1C] text-left border-l-4 border-[#1155CC] pl-3 leading-none">
+                            影音介紹
+                        </h3>
+                        <div class="w-full aspect-video rounded-2xl overflow-hidden shadow-md border border-gray-200">
+                            <iframe class="w-full h-full" src="https://www.youtube.com/embed/{{ $model.youtube_id }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                    {{ end }}
 
                     <!-- 三個 CTA 按鈕 -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 pt-6">
-                        <a href="{{ $model.car_page_link | relURL}}" 
+                        <a href="{{ $model.car_page_link | relURL }}" 
                            class="flex items-center justify-center gap-2 bg-[#f9fcff] hover:bg-blue-50 text-[#1C1C1C] font-bold text-[18px] py-4 px-6 rounded-xl border-2 border-[#1155CC] shadow-sm transition-all text-center">
                             🏍️ 車款介紹主頁
                         </a>
@@ -195,7 +195,7 @@
                             💬 加入官方 LINE 諮詢
                         </a>
 
-                        <a href="{{ $model.store_cta_link | default "store/" | relURL }}"
+                        <a href="{{ $model.store_cta_link | relURL }}"
                            class="flex items-center justify-center gap-2 bg-[#FFFE4F] hover:bg-yellow-300 text-[#1C1C1C] font-black text-[18px] py-4 px-6 rounded-xl border-2 border-[#FFFE4F] shadow-md transition-all text-center">
                             🏢 前往門市據點
                         </a>
@@ -232,7 +232,7 @@
         <div class="max-w-5xl mx-auto flex flex-col items-center text-center space-y-6">
             
             <div class="text-[18px] md:text-xl font-bold tracking-wider text-white">
-                eMOVING 電動二輪 台中山西店 <BR> 精輪車業有限公司
+                eMOVING 電動二輪 台中山西店 <br> 精輪車業有限公司
             </div>
 
             <div class="flex items-center justify-center gap-5">
