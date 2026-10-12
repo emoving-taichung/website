@@ -77,50 +77,84 @@
 </script>
 
 <!-- ========================================== -->
+<!-- 區塊 1：首頁主視覺 (支援桌面/手機獨立圖片與文字智慧切換) -->
+<!-- ========================================== -->
+<!-- ========================================== -->
 <!-- 區塊 1：首頁主視覺 -->
 <!-- ========================================== -->
-<section id="hero" class="w-full min-h-screen flex items-start md:items-center bg-gradient-to-br from-brandBlue to-brandDarkBlue text-white p-6 pt-2 md:p-16 relative overflow-hidden box-border scroll-mt-16">
+<section id="hero" class="w-full min-h-screen flex items-start md:items-center bg-gradient-to-br from-brandBlue to-brandDarkBlue text-white p-6 pt-2 md:p-16 relative overflow-hidden box-border scroll-mt-20">
     <div class="absolute inset-0 opacity-15 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
     
-    <!-- 手機版取消 my-auto，改用 mt-2 置頂對齊；桌機版維持 md:my-auto 置中 -->
-    <div class="max-w-3xl w-full relative z-10 text-left space-y-6 md:space-y-8 mt-2 md:my-auto">
-        <div>
-            <span class="text-small font-bold tracking-widest text-blue-200 uppercase bg-white/10 px-3 py-1 rounded-full">EMOVING 精輪山西店</span>
-            <h1 class="text-main-title font-bold mt-2.5 md:mt-6 leading-tight tracking-wide md:text-[32px]">
-                電 動 機 車 怎 麼 選？<br>精 輪 幫 你 想 清 楚。
-            </h1>
-            <p class="text-regular text-blue-100 max-w-xl mt-2.5 md:mt-6 leading-relaxed opacity-90">
-                eMOVING 台中山西店 提供最專業的「 電動機車販售 」與「 補助試算 」，依據你的騎乘習慣，量身推薦最適合的車款！
-            </p>
-        </div>
+    {{/* 獨立解析手機版與電腦版廣宣圖片 */}}
+    {{ $imgMobileUrl := "" }}
+    {{ $imgDesktopUrl := "" }}
 
-        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 max-w-2xl mr-auto ml-0 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6">
-            <div class="space-y-2 flex-1">
-                <div class="flex items-center gap-2 text-yellow-300 font-extrabold text-subtitle uppercase tracking-wider">
-                    <span class="w-2 h-2 rounded-full bg-yellow-300 animate-ping"></span>
-                    10 月主打限定優惠
-                </div>
-                <p class="text-regular text-white/90 leading-relaxed">
-                    免照雙姬 EZ1 / 微型電動車 現正優惠中！<br>
-                    持任一駕照購免照雙機任一車款，即折扣$３,０００元！<br>
-                    選購 EZ1　再享＄５,９００元優惠！
-                    限時優惠錯過不再有！<br>
+    {{/* 1. 手機版圖片抓取 (優先對應 promo_banner_mb.webp) */}}
+    {{ $mobRes := .Resources.GetMatch "promo_banner_mb.webp" }}
+    {{ if $mobRes }}
+        {{ $imgMobileUrl = $mobRes.RelPermalink }}
+    {{ end }}
+
+    {{/* 2. 電腦版圖片抓取 (優先對應 promo_banner_pc.webp) */}}
+    {{ $deskRes := .Resources.GetMatch "promo_banner_pc.webp" }}
+    {{ if $deskRes }}
+        {{ $imgDesktopUrl = $deskRes.RelPermalink }}
+    {{ end }}
+
+    <!-- 情況 A：只要手機版或電腦版其中之一有圖片，就渲染圖片容器 -->
+    {{ if or $imgMobileUrl $imgDesktopUrl }}
+        <div class="max-w-5xl w-full relative z-10 mx-auto my-auto text-center">
+            <a href="{{ "promotions/" | relURL }}" class="block w-full h-full rounded-2xl overflow-hidden shadow-2xl hover:opacity-95 transition-all group">
+                <picture class="w-full h-full block">
+                    {{/* 電腦版有圖就顯示電腦圖，沒圖則自動用手機圖替代（或反之） */}}
+                    {{ if $imgDesktopUrl }}
+                        <source media="(min-width: 768px)" srcset="{{ $imgDesktopUrl }}">
+                    {{ end }}
+                    <img src="{{ default $imgDesktopUrl $imgMobileUrl }}" alt="{{ .Title }}" class="w-full h-auto object-cover rounded-2xl mx-auto block shadow-lg">
+                </picture>
+            </a>
+        </div>
+    {{ else }}
+        <!-- 情況 B：兩者皆無圖片時，呈現原本的文字排版 -->
+        <div class="max-w-3xl w-full relative z-10 text-left space-y-6 md:space-y-8 mt-2 md:my-auto">
+            <div>
+                <span class="text-small font-bold tracking-widest text-blue-200 uppercase bg-white/10 px-3 py-1 rounded-full">EMOVING 精輪山西店</span>
+                <h1 class="text-main-title font-bold mt-2.5 md:mt-6 leading-tight tracking-wide md:text-[32px]">
+                    電 動 機 車 怎 麼 選？<br>精 輪 幫 你 想 清 楚。
+                </h1>
+                <p class="text-regular text-blue-100 max-w-xl mt-2.5 md:mt-6 leading-relaxed opacity-90">
+                    eMOVING 台中山西店 提供最專業的「 電動機車販售 」與「 補助試算 」，依據你的騎乘習慣，量身推薦最適合的車款！
                 </p>
             </div>
-            
-            <div class="shrink-0">
-                <a href="{{ "promotions/" | relURL }}" class="inline-block bg-white text-brandBlue hover:bg-blue-50 font-normal text-[16px] py-3 px-6 rounded-lg shadow transition-all whitespace-nowrap">
-                    獲取優惠資訊 ➔
-                </a>
+
+            <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 max-w-2xl mr-auto ml-0 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6">
+                <div class="space-y-2 flex-1">
+                    <div class="flex items-center gap-2 text-yellow-300 font-extrabold text-subtitle uppercase tracking-wider">
+                        <span class="w-2 h-2 rounded-full bg-yellow-300 animate-ping"></span>
+                        10 月主打限定優惠
+                    </div>
+                    <p class="text-regular text-white/90 leading-relaxed">
+                        免照雙姬 EZ1 / 微型電動車 現正優惠中！<br>
+                        持任一駕照購免照雙機任一車款，即折扣$３,０００元！<br>
+                        選購 EZ1 再享＄５,９00元優惠！<br>
+                        限時優惠錯過不再有！<br>
+                    </p>
+                </div>
+                
+                <div class="shrink-0">
+                    <a href="{{ "promotions/" | relURL }}" class="inline-block bg-white text-brandBlue hover:bg-blue-50 font-normal text-[16px] py-3 px-6 rounded-lg shadow transition-all whitespace-nowrap">
+                        獲取優惠資訊 ➔
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
+    {{ end }}
 </section>
 
 <!-- ========================================== -->
 <!-- 區塊 2：專業、貼心、完善 -->
 <!-- ========================================== -->
-<section id="features" class="w-full min-h-screen bg-white flex flex-col justify-center px-6 py-16 md:p-16 box-border scroll-mt-16">
+<section id="features" class="w-full min-h-screen bg-white flex flex-col justify-center px-6 py-16 md:p-16 box-border scroll-mt-0">
     <div class="max-w-7xl mx-auto w-full">
         
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-12">
@@ -181,7 +215,7 @@
 <!-- ========================================== -->
 <!-- 區塊 3：車款介紹 -->
 <!-- ========================================== -->
-<section id="models" class="w-full flex flex-col bg-gray-50 scroll-mt-16">
+<section id="models" class="w-full flex flex-col bg-gray-50 scroll-mt-0">
     
     <!-- 車款 1：免駕照 Shine / Bobe -->
     <div id="model-shine-bobe" class="w-full flex flex-col md:flex-row min-h-[450px] border-b border-gray-200">
@@ -287,7 +321,7 @@
 <!-- ========================================== -->
 <!-- 區塊 4：聯絡我們 -->
 <!-- ========================================== -->
-<section id="contact" class="scroll-mt-16">
+<section id="contact" class="scroll-mt-0">
     {{ partial "contact.html" . }}
 </section>
 
