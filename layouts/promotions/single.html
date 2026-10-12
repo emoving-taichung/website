@@ -5,26 +5,26 @@
 
     <div>
         <!-- ========================================== -->
-        <!-- 1. 廣宣圖 Banner (完美適應手機與電腦比例，無縫接合選單) -->
+        <!-- 1. 廣宣圖 Banner (全面滿版設計：移除圓角與內距，完美貼齊選單與視窗) -->
         <!-- ========================================== -->
-        <section class="w-full bg-[#6eade3] relative shrink-0 p-0 m-0 overflow-hidden leading-none">
-            <div class="w-full h-full flex justify-center items-center m-0 p-0">
+        <section class="w-full h-[calc(100dvh-108px)] md:h-[calc(100dvh-116px)] bg-[#6eade3] flex flex-col justify-center items-center relative shrink-0 p-0 overflow-hidden">
+            <div class="w-full h-full flex justify-center items-center my-auto">
                 <!-- 預設值與變數讀取 -->
                 {{ $imgMobile := .Resources.GetMatch (default "banner_mobile.webp" .Params.hero_image_mobile) }}
                 {{ $imgDesktop := .Resources.GetMatch (default "banner_desktop.webp" .Params.hero_image_desktop) }}
                 
                 {{ if or $imgMobile $imgDesktop }}
-                    <picture class="w-full block leading-none m-0 p-0">
+                    <picture class="w-full h-full flex items-center justify-center text-center">
                         <!-- 電腦版 (>= 768px)：顯示橫圖 -->
                         {{ if $imgDesktop }}
                             <source media="(min-width: 768px)" srcset="{{ $imgDesktop.RelPermalink }}">
                         {{ end }}
                         
-                        <!-- 手機版 (預設)：顯示直圖 (使用 w-full h-auto 保持原始比例完美呈現) -->
+                        <!-- 手機版 (預設)：顯示直圖 -->
                         {{ if $imgMobile }}
-                            <img src="{{ $imgMobile.RelPermalink }}" alt="{{ $.Title }}" class="w-full h-auto block m-0 p-0">
+                            <img src="{{ $imgMobile.RelPermalink }}" alt="{{ $.Title }}" class="w-full h-full object-cover mx-auto block">
                         {{ else if $imgDesktop }}
-                            <img src="{{ $imgDesktop.RelPermalink }}" alt="{{ $.Title }}" class="w-full h-auto block m-0 p-0">
+                            <img src="{{ $imgDesktop.RelPermalink }}" alt="{{ $.Title }}" class="w-full h-full object-cover mx-auto block">
                         {{ end }}
                     </picture>
                 {{ else }}
@@ -190,7 +190,7 @@
                             🏍️ 車款介紹主頁
                         </a>
 
-                        <a href='{{ $model.line_link | default "https://lihi1.me/8LpPy?ref=line_join" }}' target="_blank" 
+                        <a href="{{ $model.line_link | default "https://lihi1.me/8LpPy?ref=line_join" }}" target="_blank" 
                            class="flex items-center justify-center gap-2 bg-[#f9fcff] hover:bg-blue-50 text-[#1C1C1C] font-bold text-[18px] py-4 px-6 rounded-xl border-2 border-[#1155CC] shadow-sm transition-all text-center">
                             💬 加入官方 LINE 諮詢
                         </a>
@@ -207,11 +207,11 @@
 
             <!-- 主打優惠頁面最下方雙按鈕（預約試乘 / 其他車款優惠） -->
             <div class="pt-10 flex flex-col sm:flex-row gap-5 justify-center items-center max-w-2xl mx-auto">
-                <a href='{{ "booking/" | relURL }}'
+                <a href="{{ "booking/" | relURL }}"
                    class="w-full sm:w-1/2 flex items-center justify-center gap-2 bg-[#1155CC] hover:bg-blue-700 text-white font-semibold text-[18px] py-4 px-6 rounded-2xl shadow-lg border-2 border-[#1155CC] transition-all text-center transform hover:-translate-y-0.5">
                     🛵 預約試乘
                 </a>
-                <a href='{{ "customer-service/" | relURL }}'
+                <a href="{{ "customer-service/" | relURL }}"
                    class="w-full sm:w-1/2 flex items-center justify-center gap-2 bg-[#1155CC] hover:bg-blue-700 text-white font-semibold text-[18px] py-4 px-6 rounded-2xl shadow-lg border-2 border-[#1155CC] transition-all text-center transform hover:-translate-y-0.5">
                     🤖 其他車款優惠
                 </a>
@@ -281,7 +281,7 @@
         font-weight: 900 !important;
         display: inline-block;
         margin: 0 2px;
-        text-shadow: none;
+        text-shadow: none; /* 移除陰影 */
     }
 
     .promo-tab-btn.active {
