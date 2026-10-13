@@ -151,13 +151,11 @@
                 <nav class="hidden lg:flex items-center gap-5 text-regular font-medium">
                     <a href='{{ site.Home.RelPermalink }}' class="hover:text-blue-200 transition-colors">首頁</a>
                     <a href='{{ "promotions/" | relURL }}' class="hover:text-blue-200 transition-colors">🎉 主打優惠</a>
-                    <a href='{{ "news/" | relURL }}' class="hover:text-blue-200 transition-colors">最新消息</a>
-                    <a href='{{ "customer-service/" | relURL }}' class="hover:text-blue-200 transition-colors">💁‍♀️ 智慧客服</a>
-                    
+
                     <!-- 電腦版下拉選單：車款介紹 -->
                     <div class="relative group">
                         <button class="flex items-center gap-1 hover:text-blue-200 transition-colors py-2 focus:outline-none">
-                            <span>車款介紹</span>
+                            <span>⚡ 車款介紹</span>
                             <span class="text-xs">▼</span>
                         </button>
                         <div class="absolute right-0 top-full hidden group-hover:flex flex-col bg-brandDarkBlue rounded-lg shadow-xl py-2 w-48 border border-white/10 text-sm">
@@ -169,9 +167,12 @@
                         </div>
                     </div>
 
-                    <a href='{{ "subsidies/" | relURL }}' class="hover:text-blue-200 transition-colors">補助查詢</a>
+                    <a href='{{ "customer-service/" | relURL }}' class="hover:text-blue-200 transition-colors">💁‍♀️ 智慧客服</a>
                     <a href='{{ "booking/" | relURL }}' class="hover:text-blue-200 transition-colors">🛵 預約試乘</a>
                     <a href='{{ "store/" | relURL }}' class="hover:text-blue-200 transition-colors">🏠 服務據點</a>
+                    <a href='{{ "news/" | relURL }}' class="hover:text-blue-200 transition-colors">最新消息</a>
+                    <a href='{{ "subsidies/" | relURL }}' class="hover:text-blue-200 transition-colors">補助查詢</a>
+
 
                     <!-- 電腦版下拉選單：更多資訊 -->
                     <div class="relative group">
@@ -210,12 +211,11 @@
             <nav class="flex flex-col gap-4 text-subtitle  font-semibold">
                 <a href='{{ site.Home.RelPermalink }}#hero' class="menu-close-trigger hover:opacity-70 transition-opacity">首頁</a>
                 <a href='{{ "promotions/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">🎉 主打優惠</a>
-                <a href='{{ "news/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">最新消息</a>
                 <a href='{{ "customer-service/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">💁‍♀️ 智慧客服</a>
                 
                 <div class="relative px-2">
                     <button id="menu-dropdown-btn" class="w-full flex justify-center items-center gap-2 hover:opacity-70 transition-opacity focus:outline-none py-1">
-                        <span>車款介紹</span>
+                        <span>⭐ 車款介紹</span>
                         <span id="dropdown-arrow" class="text-xs transition-transform duration-200">▼</span>
                     </button>
                     <div id="menu-dropdown-content" class="hidden my-2 py-2 bg-white/20 rounded-xl flex flex-col gap-2 text-regular  border border-white/30">
@@ -227,9 +227,10 @@
                     </div>
                 </div>
 
-                <a href='{{ "subsidies/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">補助查詢</a>
                 <a href='{{ "booking/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">🛵 預約試乘</a>
                 <a href='{{ "store/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">🏠 服務據點</a>
+                <a href='{{ "news/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">最新消息</a>
+                <a href='{{ "subsidies/" | relURL }}' class="menu-close-trigger hover:opacity-70 transition-opacity">補助查詢</a>
                 <a href='{{ site.Home.RelPermalink }}#contact' class="menu-close-trigger hover:opacity-70 transition-opacity">聯絡我們</a>
             </nav>
             
