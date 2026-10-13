@@ -174,9 +174,11 @@ manual_url: "manual/fun.pdf"
 # 1. 視差車色去背圖、名稱與背景色配對
 parallax_slides:
   - image: "fun-black.webp"
+    image_mb: "fun-black-mb.webp"
     color_name: "夜鈦黑"
     bg_color: "#383A3B"
   - image: "fun-white.webp"
+    image_mb: "fun-white-mb.webp"
     color_name: "帕瑪森白"
     bg_color: "#F7F7F7"
 

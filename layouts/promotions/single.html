@@ -7,7 +7,7 @@
         <!-- ========================================== -->
         <!-- 1. 廣宣圖 Banner (全面滿版設計：移除圓角與內距，完美貼齊選單與視窗) -->
         <!-- ========================================== -->
-        <section class="w-full h-[calc(100dvh-108px)] md:h-[calc(100dvh-116px)] bg-[#6eade3] flex flex-col justify-center items-center relative shrink-0 p-0 overflow-hidden">
+        <section class="w-full h-[calc(100dvh-108px)] md:h-[calc(100dvh-116px)] bg-[#F9FCFF] flex flex-col justify-center items-center relative shrink-0 p-0 overflow-hidden">
             <div class="w-full h-full flex justify-center items-center my-auto">
                 <!-- 預設值與變數讀取 -->
                 {{ $imgMobile := .Resources.GetMatch (default "banner_mobile.webp" .Params.hero_image_mobile) }}
@@ -110,7 +110,7 @@
 
                             <div>
                                 <a href="{{ $model.store_cta_link | relURL }}" 
-                                   class="inline-flex items-center gap-2 bg-[#1155CC] hover:bg-blue-700 text-white font-semibold text-[18px] py-3.5 px-6 rounded-xl shadow-md transition-all">
+                                   class="inline-flex items-center gap-2 bg-[#2A6ADB] hover:bg-blue-700 text-white font-semibold text-[18px] py-3.5 px-6 rounded-xl shadow-md transition-all">
                                     {{ $model.store_cta_text | default "📍 查詢附近門市" }}
                                 </a>
                             </div>
@@ -186,18 +186,18 @@
                     <!-- 三個 CTA 按鈕 -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-5 pt-6">
                         <a href="{{ $model.car_page_link | relURL }}" 
-                           class="flex items-center justify-center gap-2 bg-[#f9fcff] hover:bg-blue-50 text-[#1C1C1C] font-bold text-[18px] py-4 px-6 rounded-xl border-2 border-[#1155CC] shadow-sm transition-all text-center">
-                            🏍️ 車款介紹主頁
+                           class="flex items-center justify-center gap-2 bg-[#f9fcff] hover:bg-blue-50 text-[#1C1C1C] font-medium text-[18px] py-4 px-6 rounded-xl border-2 border-[#1155CC] shadow-sm transition-all text-center">
+                            🏍️ 車 款 介 紹
                         </a>
 
                         <a href="{{ $model.line_link | default "https://lihi1.me/8LpPy?ref=line_join" }}" target="_blank" 
-                           class="flex items-center justify-center gap-2 bg-[#f9fcff] hover:bg-blue-50 text-[#1C1C1C] font-bold text-[18px] py-4 px-6 rounded-xl border-2 border-[#1155CC] shadow-sm transition-all text-center">
+                           class="flex items-center justify-center gap-2 bg-[#f9fcff] hover:bg-blue-50 text-[#1C1C1C] font-medium text-[18px] py-4 px-6 rounded-xl border-2 border-[#1155CC] shadow-sm transition-all text-center">
                             💬 加入官方 LINE 諮詢
                         </a>
 
                         <a href="{{ $model.store_cta_link | relURL }}"
-                           class="flex items-center justify-center gap-2 bg-[#FFFE4F] hover:bg-yellow-300 text-[#1C1C1C] font-black text-[18px] py-4 px-6 rounded-xl border-2 border-[#FFFE4F] shadow-md transition-all text-center">
-                            🏢 前往門市據點
+                           class="flex items-center justify-center gap-2 bg-[#FFFE4F] hover:bg-yellow-300 text-[#1C1C1C] font-semibold text-[18px] py-4 px-6 rounded-xl border-2 border-[#FFFE4F] shadow-md transition-all text-center">
+                           📍 查詢附近門市
                         </a>
                     </div>
 
@@ -208,11 +208,11 @@
             <!-- 主打優惠頁面最下方雙按鈕（預約試乘 / 其他車款優惠） -->
             <div class="pt-10 flex flex-col sm:flex-row gap-5 justify-center items-center max-w-2xl mx-auto">
                 <a href="{{ "booking/" | relURL }}"
-                   class="w-full sm:w-1/2 flex items-center justify-center gap-2 bg-[#1155CC] hover:bg-blue-700 text-white font-semibold text-[18px] py-4 px-6 rounded-2xl shadow-lg border-2 border-[#1155CC] transition-all text-center transform hover:-translate-y-0.5">
+                   class="w-full sm:w-1/2 flex items-center justify-center gap-2 bg-[#2A6ADB] hover:bg-blue-700 text-white font-semibold text-[18px] py-4 px-6 rounded-2xl shadow-lg border-2 border-[#1155CC] transition-all text-center transform hover:-translate-y-0.5">
                     🛵 預約試乘
                 </a>
                 <a href="{{ "customer-service/" | relURL }}"
-                   class="w-full sm:w-1/2 flex items-center justify-center gap-2 bg-[#1155CC] hover:bg-blue-700 text-white font-semibold text-[18px] py-4 px-6 rounded-2xl shadow-lg border-2 border-[#1155CC] transition-all text-center transform hover:-translate-y-0.5">
+                   class="w-full sm:w-1/2 flex items-center justify-center gap-2 bg-[#2A6ADB] hover:bg-blue-700 text-white font-semibold text-[18px] py-4 px-6 rounded-2xl shadow-lg border-2 border-[#1155CC] transition-all text-center transform hover:-translate-y-0.5">
                     🤖 其他車款優惠
                 </a>
             </div>
@@ -221,14 +221,14 @@
     </div>
 
     <!-- 正圓形「回頂端」圖示 -->
-    <button id="back-to-top-btn" class="fixed bottom-6 right-6 z-50 w-11 h-11 md:w-12 md:h-12 rounded-full border-2 border-[#1155CC] bg-white text-[#1155CC] shadow-lg flex items-center justify-center hover:bg-[#1155CC] hover:text-white transition-all transform hover:scale-110 focus:outline-none" title="回到頂端">
+    <button id="back-to-top-btn" class="fixed bottom-6 right-6 z-50 w-11 h-11 md:w-12 md:h-12 rounded-full border-2 border-[#2A6ADB] bg-white text-[#2A6ADB] shadow-lg flex items-center justify-center hover:bg-[#1155CC] hover:text-white transition-all transform hover:scale-110 focus:outline-none" title="回到頂端">
         <svg class="w-6 h-6 stroke-current" fill="none" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 15l7-7 7 7"/>
         </svg>
     </button>
 
     <!-- 頁尾區塊 -->
-    <footer class="w-full bg-[#1155CC] text-white shrink-0 mt-20 py-10 px-4 md:px-8 shadow-inner">
+    <footer class="w-full bg-[#2A6ADB] text-white shrink-0 mt-20 py-10 px-4 md:px-8 shadow-inner">
         <div class="max-w-5xl mx-auto flex flex-col items-center text-center space-y-6">
             
             <div class="text-[18px] md:text-xl font-bold tracking-wider text-white">

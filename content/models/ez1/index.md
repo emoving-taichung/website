@@ -197,9 +197,11 @@ manual_url: "manual/ez1.pdf"
 # 1. 視差車色去背圖、名稱與背景色配對
 parallax_slides:
   - image: "ez1-blue.webp"
+    image_mb: "ez1-blue-mb.webp"
     color_name: "神秘霧藍"
     bg_color: "#4378ea"
   - image: "ez1-yellow.webp"
+    image_mb: "ez1-yellow-mb.webp"
     color_name: "芒果雪酪"
     bg_color: "#F4D934"
 

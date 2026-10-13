@@ -197,9 +197,11 @@ manual_url: "manual/kg.pdf"
 # 1. 視差車色去背圖、名稱與背景色配對
 parallax_slides:
   - image: "kg-gray.webp"
+    image_mb: "kg-gray-mb.webp"
     color_name: "風馳灰"
     bg_color: "#BFBFBF"
   - image: "kg-white.webp"
+    image_mb: "kg-white-mb.webp"
     color_name: "電光白"
     bg_color: "#F7F7F7"
 

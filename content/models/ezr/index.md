@@ -272,12 +272,15 @@ manual_url: "manual/ezr.pdf"
 # 1. 視差車色去背圖、名稱與背景色配對
 parallax_slides:
   - image: "ezr-blue.webp"
+    image_mb: "ezr-blue-mb.webp"
     color_name: "青釉藍"
     bg_color: "#1875C7"
   - image: "ezr-black.webp"
+    image_mb: "ezr-black-mb.webp"
     color_name: "曜石黑"
     bg_color: "#112F4A"
   - image: "ezr-white.webp"
+    image_mb: "ezr-white-mb.webp"
     color_name: "鈦金白"
     bg_color: "#F7F7F7"
 
