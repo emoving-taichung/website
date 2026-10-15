@@ -19,7 +19,7 @@ models:
     description: "EZ1 採用 Gogoro Network 智慧換電系統，全台數千座電池交換站一換就走！超輕量化車身搭配軟Q舒適座墊，前置雙杯架與 USB 充電孔。"
     # 本月優惠亮點（重點數字突顯強調）
     highlights:
-      - '持任一駕照，送 <span class="highlight-num">$3,000</span> 購車金'
+      - '臺中市民限定，送 <span class="highlight-num">$3,000</span> 購車金'
       - '加碼優惠：再折 <span class="highlight-num">$5,900</span> '
       - '分期購車享 <span class="highlight-num">12</span> 期 <span class="highlight-num">0</span> 利率'
     car_page_link: "models/ez1/"
@@ -131,7 +131,7 @@ models:
     cover_image: "em25-cover.webp"
     description: "eMoving 微型電動二輪車系列專為短途代步與輕鬆騎乘設計。免考照即可騎乘，車身極致輕巧且座高親民，踩地極具安全感。搭配可抽拔充電的輕量化鋰電池，在家用 110V 插座即可輕鬆充電，是日常購物與接送的最實用代步工具。"
     highlights:
-      - '持任一駕照，送 <span class="highlight-num">$3,000</span> 購車金'
+      - '臺中市民限定，送 <span class="highlight-num">$3,000</span> 購車金'
       - '可分 <span class="highlight-num">24</span> 期'
     car_page_link: "models/shine-bobe/"
     line_link: "https://lihi1.me/8LpPy?ref=line_join"

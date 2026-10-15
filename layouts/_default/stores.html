@@ -36,7 +36,7 @@
         </div>
 
         <!-- 3. 區域選擇按鈕網格 -->
-        <div id="region-container" class="w-full max-w-3xl mx-auto mb-10 hidden">
+        <div id="region-container" class="w-full max-w-3xl mx-auto mb-6 hidden">
             <div class="grid grid-cols-3 md:grid-cols-5 gap-2.5 md:gap-4">
                 {{ $regions := slice "北區" "北屯區" "潭子區" "西區" "西屯區" "南區" "南屯區" "神岡區" "東區" "霧峰區" "太平區" "大雅區" "大里區" "沙鹿區" "大甲區" "彰化縣" "南投縣" }}
                 {{ range $region := $regions }}
@@ -47,6 +47,11 @@
                 </button>
                 {{ end }}
             </div>
+        </div>
+
+        <!-- 手機版專屬：左右滑動提示文字 -->
+        <div id="scroll-hint" class="hidden md:hidden text-center text-[#1155CC] font-bold text-[15px] mb-4 animate-pulse select-none">
+            【左右滑看更多據點→】
         </div>
 
         <!-- 取得所有 YAML 據點資料 -->
@@ -163,10 +168,11 @@ document.addEventListener("DOMContentLoaded", function () {
     const storeCards = document.querySelectorAll(".store-card");
     const grid = document.getElementById("store-list-grid");
     const noResults = document.getElementById("no-results");
+    const scrollHint = document.getElementById("scroll-hint");
 
     // 儲存門市偏好的函式 (寫入 Cookie 30 天)
     function setStorePreference(storeName) {
-        document.cookie = `preferred_store=${encodeURIComponent(storeName)}; max-age=${30 * 24 * 60 * 60}; path=/`;
+        document.cookie = "preferred_store=" + encodeURIComponent(storeName) + "; max-age=" + (30 * 24 * 60 * 60) + "; path=/";
     }
 
     // 點擊據點卡片時紀錄偏好
@@ -247,6 +253,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!currentType || !currentRegion) {
             storeCards.forEach(card => card.classList.add("hidden"));
             noResults.classList.add("hidden");
+            if (scrollHint) scrollHint.classList.add("hidden");
             return;
         }
 
@@ -277,8 +284,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (visibleCount === 0) {
             noResults.classList.remove("hidden");
+            if (scrollHint) scrollHint.classList.add("hidden");
         } else {
             noResults.classList.add("hidden");
+            if (scrollHint) scrollHint.classList.remove("hidden");
         }
 
         grid.scrollLeft = 0;
