@@ -54,7 +54,7 @@
   address: "台中市北屯區興安路一段305號"
   phone: "04-2243-0080"
   hours: "周一至周六 10:00 ~ 21:30"
-  sales_models: []
+  sales_models: ["微電"]
   repair_models: ["微電/EM50/80"]
   store_type: ["charge-store"]
 

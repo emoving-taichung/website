@@ -18,7 +18,7 @@
         </div>
     </div>
 
-    <!-- 2. 據點卡片展示區 (網格直接列出所有據點) -->
+    <!-- 2. 據點卡片展示區 (網格列出 sales_models 含有 ez1 或 EZ1 的據點) -->
     <div class="w-full max-w-7xl mx-auto px-4 py-8 text-[#1C1C1C]">
 
         <!-- 取得所有 YAML 據點資料 -->
@@ -47,7 +47,8 @@
                 {{ $hasEZ1 := false }}
                 {{ if $store.sales_models }}
                     {{ range $model := $store.sales_models }}
-                        {{ if or (eq $model "ez1") (eq $model "EZ1") }}
+                        {{ $lowerModel := lower $model }}
+                        {{ if strings.Contains $lowerModel "ez1" }}
                             {{ $hasEZ1 = true }}
                         {{ end }}
                     {{ end }}
@@ -71,7 +72,8 @@
                         {{ if $store.sales_models }}
                         <div class="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 pt-2">
                             {{ range $model := $store.sales_models }}
-                            <span class="inline-flex items-center gap-1 text-[15px] font-normal {{ if or (eq $model "ez1") (eq $model "EZ1") }}text-[#1155CC] font-bold{{ else }}text-[#1C1C1C]{{ end }}">
+                            {{ $isThisEZ1 := strings.Contains (lower $model) "ez1" }}
+                            <span class="inline-flex items-center gap-1 text-[15px] font-normal text-[#1C1C1C]">
                                 <span class="text-green-600 font-bold text-[12px]">✅</span>{{ $model }}
                             </span>
                             {{ end }}
@@ -95,7 +97,7 @@
                         <div class="w-[350px] h-[300px] max-w-full rounded-xl overflow-hidden border border-gray-100 shadow-inner">
                             <iframe 
                                 title="{{ $store.title }} 地圖"
-                                src="https://maps.google.com/maps?q={{ $store.address }}&output=embed" 
+                                src="https://maps.google.com/maps?q={{ $store.address | urlquery }}&output=embed" 
                                 width="100%" 
                                 height="100%" 
                                 style="border:0;" 
@@ -117,15 +119,16 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    // 儲存門市偏好的函式 (寫入 Cookie 30 天)
+    // 儲存門市偏好的函式 (寫入 Cookie 30 天，採用字串相加避開 Hugo Template 誤判)
     function setStorePreference(storeName) {
-        document.cookie = `preferred_store=${encodeURIComponent(storeName)}; max-age=${30 * 24 * 60 * 60}; path=/`;
+        document.cookie = "preferred_store=" + encodeURIComponent(storeName) + "; max-age=" + (30 * 24 * 60 * 60) + "; path=/";
     }
 
     // 監聽門市卡片點擊事件
-    document.querySelectorAll(".store-card").forEach(card => {
+    document.querySelectorAll(".store-card").forEach(function(card) {
         card.addEventListener("click", function() {
-            const storeName = this.querySelector("h3") ? this.querySelector("h3").innerText : "";
+            var titleEl = this.querySelector("h3");
+            var storeName = titleEl ? titleEl.innerText.trim() : "";
             if (storeName) setStorePreference(storeName);
         });
     });

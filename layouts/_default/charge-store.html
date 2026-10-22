@@ -18,7 +18,7 @@
         </div>
     </div>
 
-    <!-- 2. 據點卡片展示區 (網格直接列出 store_type 含有 charge-store 的據點) -->
+    <!-- 2. 據點卡片展示區 (網格列出 sales_models 含有「微電」的據點) -->
     <div class="w-full max-w-7xl mx-auto px-4 py-8 text-[#1C1C1C]">
 
         <!-- 取得所有 YAML 據點資料 -->
@@ -43,17 +43,17 @@
 
         <div class="w-full grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-stretch">
             {{ range $store := $allStores }}
-                <!-- 判斷 store_type 是否包含 "charge-store" -->
-                {{ $isChargeStore := false }}
-                {{ if $store.store_type }}
-                    {{ range $t := $store.store_type }}
-                        {{ if eq $t "charge-store" }}
-                            {{ $isChargeStore = true }}
+                <!-- 判斷 sales_models 是否含有「微電」 -->
+                {{ $hasMicroElectric := false }}
+                {{ if $store.sales_models }}
+                    {{ range $model := $store.sales_models }}
+                        {{ if strings.Contains $model "微電" }}
+                            {{ $hasMicroElectric = true }}
                         {{ end }}
                     {{ end }}
                 {{ end }}
 
-                {{ if $isChargeStore }}
+                {{ if $hasMicroElectric }}
                 <div class="store-card w-full bg-white border border-gray-200 rounded-2xl px-4 py-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between text-center">
                     
                     <div class="space-y-3">
@@ -117,7 +117,7 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-    // 儲存門市偏好的函式 (寫入 Cookie 30 天，採用標準字串拼接避免 VS Code Linter 誤判)
+    // 儲存門市偏好的函式 (寫入 Cookie 30 天)
     function setStorePreference(storeName) {
         document.cookie = "preferred_store=" + encodeURIComponent(storeName) + "; max-age=" + (30 * 24 * 60 * 60) + "; path=/";
     }
