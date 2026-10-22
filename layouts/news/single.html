@@ -10,7 +10,7 @@
                     {{ .Title | default "最新消息" }}
                 </h1>
                 <p class="text-gray-600 text-sm md:text-base">
-                    掌握 eMOVING 台中山西店最新活動與優惠資訊
+                    掌握 eMOVING 台中 最新活動與優惠資訊
                 </p>
             </div>
 
@@ -62,7 +62,7 @@
     </div>
 </div>
 
-<!-- ⚡ 前端即時抓取 (JSONP 避開 CORS)、搜尋與單頁渲染 JavaScript -->
+<!-- ⚡ 前端即時抓取 (JSONP 避開 CORS)、搜尋與網址狀態控制 JavaScript -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         const listView = document.getElementById('news-list-view');
@@ -77,7 +77,8 @@
         const detailContent = document.getElementById('detail-content');
         const backBtn = document.getElementById('back-to-list-btn');
 
-        let postsMap = new Map(); // 儲存所有文章資料
+        let postsMap = new Map(); // 儲存所有文章資料 (Key: postId 或 Date)
+        let dateMap = new Map();  // 儲存以日期為 Key 的文章，方便依網址日期快速查找
 
         // 1. 全域 JSONP 回呼函數 (掛載在 window 下供 Blogger 回傳呼叫)
         window.handleBloggerFeed = function (data) {
@@ -93,14 +94,21 @@
                 const postId = 'post-' + index;
                 const title = entry.title ? entry.title.$t : '';
                 const publishedRaw = entry.published ? entry.published.$t : '';
-                const published = publishedRaw.split('T')[0];
+                const published = publishedRaw.split('T')[0]; // 取得 YYYY-MM-DD
                 const fullContent = entry.content ? entry.content.$t : (entry.summary ? entry.summary.$t : '');
 
-                postsMap.set(postId, {
+                const postData = {
+                    id: postId,
                     title: title,
                     date: published,
                     content: fullContent
-                });
+                };
+
+                postsMap.set(postId, postData);
+                // 若同日期有多篇，優先保留第一篇（或可作陣列處理）
+                if (!dateMap.has(published)) {
+                    dateMap.set(published, postData);
+                }
 
                 // 圖片解析 (自動替換高清 s1600)
                 let imgSrc = '';
@@ -145,14 +153,17 @@
                 `;
 
                 card.addEventListener('click', function () {
-                    openPostDetail(postId);
+                    openPostDetail(postData, true);
                 });
 
                 newsGrid.appendChild(card);
             });
+
+            // 資料載入完成後，檢查網址是否有 date 參數 (支援重新整理直接開文章)
+            checkUrlAndRender();
         };
 
-        // 2. 動態注入 Script 標籤 (JSONP)，徹底避免 CORS 阻擋
+        // 2. 動態注入 Script 標籤 (JSONP)
         const script = document.createElement('script');
         script.src = 'https://emoving-taichung.blogspot.com/feeds/posts/default?alt=json-in-script&callback=handleBloggerFeed&max-results=500';
         script.onerror = function () {
@@ -161,9 +172,8 @@
         };
         document.body.appendChild(script);
 
-        // 顯示文章內頁
-        function openPostDetail(postId) {
-            const post = postsMap.get(postId);
+        // 顯示文章內頁 (updateHistory 表示是否寫入瀏覽器網址紀錄)
+        function openPostDetail(post, updateHistory = true) {
             if (!post) return;
 
             detailTitle.textContent = post.title;
@@ -173,17 +183,50 @@
             listView.classList.add('hidden');
             detailView.classList.remove('hidden');
 
+            if (updateHistory) {
+                const newUrl = window.location.pathname + '?date=' + post.date;
+                history.pushState({ date: post.date }, '', newUrl);
+            }
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // 返回列表頁
+        function showListView(updateHistory = true) {
+            detailView.classList.add('hidden');
+            listView.classList.remove('hidden');
+
+            if (updateHistory) {
+                history.pushState(null, '', window.location.pathname);
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 綁定返回按鈕事件
         if (backBtn) {
             backBtn.addEventListener('click', function () {
-                detailView.classList.add('hidden');
-                listView.classList.remove('hidden');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                showListView(true);
             });
         }
+
+        // 檢查 URL 參數並開啟對應文章
+        function checkUrlAndRender() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const dateParam = urlParams.get('date');
+
+            if (dateParam && dateMap.has(dateParam)) {
+                const post = dateMap.get(dateParam);
+                openPostDetail(post, false);
+            } else {
+                showListView(false);
+            }
+        }
+
+        // 監聽瀏覽器「上一頁/下一頁」按鈕事件
+        window.addEventListener('popstate', function () {
+            checkUrlAndRender();
+        });
 
         // 搜尋功能
         if (searchInput) {
