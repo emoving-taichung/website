@@ -5,12 +5,56 @@
 {{ $carTitle := $page.Title }}
 {{ $carDesc := $page.Params.description | default "電動機車" }}
 
-{{/* 取得檔名並自動拼接 static/catalog/ 與 static/manual/ 的 PDF 路徑 */}}
+{{/* 穩健取得車款代號：從 RelPermalink 抓取最後一層路徑（完美支援 index.md 與單一 md 檔） */}}
 {{ $baseName := "" }}
-{{ with $page.File }}
-  {{ $baseName = .BaseFileName }}
-{{ else }}
-  {{ $baseName = $page.Slug }}
+{{ $segments := split (strings.TrimSuffix "/" $page.RelPermalink) "/" }}
+{{ if gt (len $segments) 0 }}
+  {{ $baseName = index $segments (sub (len $segments) 1) }}
+{{ end }}
+{{ if or (eq $baseName "") (eq $baseName "models") }}
+  {{ with $page.File }}
+    {{ if ne .BaseFileName "index" }}
+      {{ $baseName = .BaseFileName }}
+    {{ else }}
+      {{ $parts := split (strings.TrimSuffix "/" .Dir) "/" }}
+      {{ $baseName = index $parts (sub (len $parts) 1) }}
+    {{ end }}
+  {{ else }}
+    {{ $baseName = $page.Slug }}
+  {{ end }}
+{{ end }}
+
+{{/* 穩健抓取 promotions 資料：結合 GetPage 與全站尋找備用機制，確保 100% 抓到 models 資料 */}}
+{{ $promoUrl := "promotions/" | relURL }}
+{{ $promoText := "前往主打優惠 ➔" }}
+{{ $promoBg := "bg-yellow-400 hover:bg-yellow-500 text-black" }}
+
+{{ $promoPage := site.GetPage "promotions" }}
+{{ if not $promoPage }}{{ $promoPage = site.GetPage "/promotions" }}{{ end }}
+{{ if not $promoPage }}
+  {{ range site.Pages }}
+    {{ if and .Params.models (not $promoPage) }}
+      {{ $promoPage = . }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ if and $promoPage $promoPage.Params.models }}
+  {{ range $promoPage.Params.models }}
+    {{ $matchId := false }}
+    {{ if and .id (eq .id $baseName) }}
+      {{ $matchId = true }}
+    {{ else if and .car_page_link (strings.Contains .car_page_link $baseName) }}
+      {{ $matchId = true }}
+    {{ end }}
+
+    {{ if $matchId }}
+      {{ if eq .enable false }}
+        {{ $promoUrl = "customer-service" | relURL }}
+        {{ $promoText = "前往智慧客服 ➔" }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
 {{ end }}
 
 {{ $catalogPdf := (printf "catalog/%s.pdf" $baseName) | absURL }}
@@ -413,9 +457,20 @@
 </section>
 
 <!-- ========================================== -->
-<!-- 4. 好騎推推區塊 (自動 PNG 轉 WebP) -->
+<!-- 🔹 視差滾動與好騎推推之間的按鈕區塊 -->
 <!-- ========================================== -->
-<section id="reviews" class="anchor-section relative z-20 py-12 md:py-16 px-2 sm:px-6 bg-[#F9FCFF] text-gray-800 shadow-[0_-10px_30px_rgba(0,0,0,0.15)]">
+<section class="min-h-[320px] md:min-h-[420px] py-16 md:py-24 flex items-center justify-center bg-[#F9FCFF] text-white px-6 relative z-20">
+    <div class="max-w-5xl mx-auto w-full flex flex-col sm:flex-row justify-center items-center gap-5 md:gap-4">
+        <a href="{{ $promoUrl }}" class="w-full sm:w-auto px-8 py-4 {{ $promoBg }} font-bold text-center rounded-xl transition-all hover:scale-105 shadow-md">{{ $promoText }}</a>
+        <a href="{{ "booking/" | absURL }}" class="w-full sm:w-auto px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold text-center rounded-xl transition-all hover:scale-105 shadow-md">預約現場試乘 ➔</a>
+    </div>
+</section>
+
+
+<!-- ========================================== -->
+<!-- 4. 好騎推推區塊 -->
+<!-- ========================================== -->
+<section id="reviews" class="anchor-section relative z-20 py-12 md:py-16 px-2 sm:px-6 bg-[#F9FCFF] text-gray-800">
     <div class="max-w-5xl mx-auto space-y-12 md:space-y-16">
         <div class="text-center space-y-2">
             <h2 class="text-4xl md:text-4xl font-black text-blue-900 tracking-wide">【好騎推推】</h2>
@@ -485,11 +540,6 @@
             </div>
         </div>
         {{ end }}
-
-        <div class="pt-8 pb-4 flex flex-col sm:flex-row justify-center gap-4">
-            <a href="{{ "promotions/" | relURL }}" class="px-8 py-3.5 bg-yellow-400 hover:bg-yellow-500 text-black font-bold text-center rounded-xl transition-all shadow-xl hover:scale-105">前往主打優惠 ➔</a>
-            <a href="{{ "booking/" | absURL }}" class="px-8 py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-center rounded-xl transition-all shadow-xl hover:scale-105">預約現場試乘 ➔</a>
-        </div>
     </div>
 </section>
 
@@ -610,7 +660,7 @@
     <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4">
         <a href="{{ $catalogPdf }}" target="_blank" rel="noopener noreferrer" class="py-4 px-3 bg-[#112D5C] hover:bg-[gray-700] border border-gray-700 text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap"><span>電子型錄</span></a>
         <a href="{{ $manualPdf }}" target="_blank" rel="noopener noreferrer" class="py-4 px-3 bg-[#112D5C] hover:bg-gray-700 border border-gray-700 text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap"><span>使用手冊</span></a>
-        <a href="{{ "promotions/" | relURL }}" class="py-4 px-3 bg-yellow-400 hover:bg-yellow-300 text-black text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap"><span>🎁</span> <span>獲取優惠</span></a>
+        <a href="{{ $promoUrl }}" class="py-4 px-3 {{ $promoBg }} text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap"><span>🎁</span> <span>{{ if eq $promoText "前往智慧客服 ➔" }}智慧客服{{ else }}獲取優惠{{ end }}</span></a>
         <a href="{{ "booking/" | relURL }}" class="py-4 px-3 bg-blue-600 hover:bg-blue-500 text-center rounded-xl text-sm md:text-base font-bold transition-all flex items-center justify-center gap-1.5 whitespace-nowrap"><span>預約試乘</span></a>
     </div>
 </section>
