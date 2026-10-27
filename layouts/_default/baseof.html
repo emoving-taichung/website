@@ -147,8 +147,8 @@
 
             <!-- 右側區域：電腦版選單 + 手機與平板版漢堡鈕 -->
             <div class="flex items-center gap-6">
-                <!-- 【電腦版導覽列】加入 tracking-wider 讓字元間距拉開 -->
-                <nav class="hidden lg:flex items-center gap-5 text-regular font-medium tracking-wider">
+                     <!-- 【修改後】字間距設為 normal (緊湊)，選項間距改為 gap-8 (寬鬆) -->
+                    <nav class="hidden lg:flex items-center gap-8 text-regular font-medium tracking-normal">
                     <a href='{{ site.Home.RelPermalink }}' class="hover:opacity-70 transition-opacity">首頁</a>
                     <a href='{{ "promotions/" | relURL }}' class="hover:opacity-70 transition-opacity">🎉 主打優惠</a>
 
