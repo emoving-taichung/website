@@ -18,8 +18,27 @@
         </div>
     </div>
 
-    <!-- 2. 據點卡片展示區 (網格列出 sales_models 含有「微電」的據點) -->
+    <!-- 外層容器 -->
     <div class="w-full max-w-7xl mx-auto px-4 py-8 text-[#1C1C1C]">
+
+        <!-- 2. 區域選擇按鈕網格 -->
+        <div id="region-container" class="w-full max-w-3xl mx-auto mb-6">
+            <div class="grid grid-cols-3 md:grid-cols-5 gap-2.5 md:gap-4">
+                {{ $regions := slice "北區" "北屯區" "潭子區" "西區" "西屯區" "南區" "南屯區" "神岡區" "東區" "霧峰區" "太平區" "大雅區" "大里區" "沙鹿區" "大甲區" "彰化縣" "南投縣" }}
+                {{ range $region := $regions }}
+                <button type="button"
+                        data-region="{{ $region }}"
+                        class="region-btn hidden w-full py-2.5 px-1 bg-white border border-[#1155CC] text-[#1C1C1C] text-[18px] font-bold rounded-2xl text-center hover:bg-blue-50 transition-all duration-200 shadow-sm active:scale-95">
+                    {{ $region }}
+                </button>
+                {{ end }}
+            </div>
+        </div>
+
+        <!-- 手機版專屬：左右滑動提示文字 -->
+        <div id="scroll-hint" class="hidden md:hidden text-center text-[#1155CC] font-bold text-[15px] mb-4 animate-pulse select-none">
+            【左右滑看更多據點→】
+        </div>
 
         <!-- 取得所有 YAML 據點資料 -->
         {{ $allStores := slice }}
@@ -41,9 +60,9 @@
             {{ end }}
         {{ end }}
 
-        <div class="w-full grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 items-stretch">
+        <!-- 3. 據點卡片展示區 -->
+        <div id="store-list-grid" class="w-full flex overflow-x-auto snap-x snap-mandatory pb-4 md:pb-0 md:grid md:grid-cols-3 gap-6 md:gap-8 items-stretch scroll-mt-10">
             {{ range $store := $allStores }}
-                <!-- 判斷 sales_models 是否含有「微電」 -->
                 {{ $hasMicroElectric := false }}
                 {{ if $store.sales_models }}
                     {{ range $model := $store.sales_models }}
@@ -53,8 +72,10 @@
                     {{ end }}
                 {{ end }}
 
-                {{ if $hasMicroElectric }}
-                <div class="store-card w-full bg-white border border-gray-200 rounded-2xl px-4 py-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between text-center">
+                <div class="store-card hidden shrink-0 w-[85vw] max-w-[340px] md:w-auto md:max-w-none snap-center bg-white border border-gray-200 rounded-2xl px-3 py-6 shadow-sm hover:shadow-md transition-all flex flex-col justify-between text-center"
+                     data-district="{{ $store.district }}"
+                     data-address="{{ $store.address }}"
+                     data-is-match="{{ if $hasMicroElectric }}true{{ else }}false{{ end }}">
                     
                     <div class="space-y-3">
                         <!-- 店名 -->
@@ -84,7 +105,7 @@
                     <div class="mt-5 pt-2 flex flex-col items-center gap-3">
                         <!-- 前往門市按鈕 -->
                         <a href="https://www.google.com/maps/search/?api=1&query={{ $store.address | urlquery }}"
-                           data-store-name="{{ $store.title }}"   
+                           data-store-name="{{ $store.title }}"
                            target="_blank"
                            rel="noopener noreferrer"
                            class="w-[350px] max-w-full py-2.5 px-4 bg-[#FFFE4F] text-[#1C1C1C] font-bold text-[16px] rounded-xl shadow-sm hover:opacity-90 transition-opacity text-center block">
@@ -95,7 +116,7 @@
                         <div class="w-[350px] h-[300px] max-w-full rounded-xl overflow-hidden border border-gray-100 shadow-inner">
                             <iframe 
                                 title="{{ $store.title }} 地圖"
-                                src="https://maps.google.com/maps?q={{ $store.address | urlquery }}&output=embed" 
+                                src="https://maps.google.com/maps?q={{ $store.address }}&output=embed" 
                                 width="100%" 
                                 height="100%" 
                                 style="border:0;" 
@@ -108,8 +129,12 @@
                     {{ end }}
                     
                 </div>
-                {{ end }}
             {{ end }}
+        </div>
+
+        <!-- 無結果提示 -->
+        <div id="no-results" class="hidden text-center text-[#999999] py-12 text-[15px] font-normal scroll-mt-10">
+            該區域目前暫無微電據點資料
         </div>
 
     </div>
@@ -117,19 +142,115 @@
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
+    const regionBtns = document.querySelectorAll(".region-btn");
+    const storeCards = document.querySelectorAll(".store-card");
+    const grid = document.getElementById("store-list-grid");
+    const noResults = document.getElementById("no-results");
+    const scrollHint = document.getElementById("scroll-hint");
+
     // 儲存門市偏好的函式 (寫入 Cookie 30 天)
     function setStorePreference(storeName) {
         document.cookie = "preferred_store=" + encodeURIComponent(storeName) + "; max-age=" + (30 * 24 * 60 * 60) + "; path=/";
     }
 
-    // 監聽門市卡片點擊事件
-    document.querySelectorAll(".store-card").forEach(function(card) {
+    // 點擊據點卡片時紀錄偏好
+    storeCards.forEach(card => {
         card.addEventListener("click", function() {
-            var titleEl = this.querySelector("h3");
-            var storeName = titleEl ? titleEl.innerText.trim() : "";
+            const storeName = this.querySelector("h3") ? this.querySelector("h3").innerText : "";
             if (storeName) setStorePreference(storeName);
         });
     });
+
+    // 解析 URL 參數
+    const urlParams = new URLSearchParams(window.location.search);
+    let currentRegion = urlParams.get("region") || null;
+
+    // 1. 初始化與計算有資料的區域按鈕
+    function updateRegions() {
+        const availableRegions = new Set();
+        storeCards.forEach(card => {
+            const isMatch = card.getAttribute("data-is-match") === "true";
+            const district = card.getAttribute("data-district") || "";
+            const address = card.getAttribute("data-address") || "";
+
+            if (isMatch) {
+                regionBtns.forEach(btn => {
+                    const reg = btn.getAttribute("data-region");
+                    if (district.includes(reg) || address.includes(reg)) {
+                        availableRegions.add(reg);
+                    }
+                });
+            }
+        });
+
+        regionBtns.forEach(btn => {
+            const region = btn.getAttribute("data-region");
+            if (availableRegions.has(region)) {
+                btn.classList.remove("hidden");
+            } else {
+                btn.classList.add("hidden");
+            }
+
+            if (currentRegion && region === currentRegion) {
+                btn.classList.remove("bg-white", "text-[#1C1C1C]", "hover:bg-blue-50");
+                btn.classList.add("bg-[#1155CC]", "text-white");
+            } else {
+                btn.classList.remove("bg-[#1155CC]", "text-white");
+                btn.classList.add("bg-white", "text-[#1C1C1C]", "hover:bg-blue-50");
+            }
+        });
+    }
+
+    // 2. 篩選顯示據點小卡
+    function filterStores() {
+        if (!currentRegion) {
+            storeCards.forEach(card => card.classList.add("hidden"));
+            noResults.classList.add("hidden");
+            if (scrollHint) scrollHint.classList.add("hidden");
+            return;
+        }
+
+        let visibleCount = 0;
+
+        storeCards.forEach(card => {
+            const isMatch = card.getAttribute("data-is-match") === "true";
+            const district = card.getAttribute("data-district") || "";
+            const address = card.getAttribute("data-address") || "";
+
+            const matchesRegion = district.includes(currentRegion) || address.includes(currentRegion);
+
+            if (isMatch && matchesRegion) {
+                card.classList.remove("hidden");
+                visibleCount++;
+            } else {
+                card.classList.add("hidden");
+            }
+        });
+
+        if (visibleCount === 0) {
+            noResults.classList.remove("hidden");
+            if (scrollHint) scrollHint.classList.add("hidden");
+        } else {
+            noResults.classList.add("hidden");
+            if (scrollHint) scrollHint.classList.remove("hidden");
+        }
+
+        grid.scrollLeft = 0;
+    }
+
+    // 3. 綁定按鈕事件
+    regionBtns.forEach(btn => {
+        btn.addEventListener("click", function () {
+            const selected = this.getAttribute("data-region");
+            currentRegion = (currentRegion === selected) ? null : selected;
+            updateRegions();
+            filterStores();
+        });
+    });
+
+    // 初始化狀態渲染
+    updateRegions();
+    filterStores();
 });
 </script>
 {{ end }}
