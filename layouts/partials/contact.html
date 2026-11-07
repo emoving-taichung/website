@@ -272,7 +272,7 @@ EZ1獨家特色→
         fetch(WEB_APP_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ option: selected.name }) });
 
         setTimeout(() => {
-            const botReplyHtml = '<div class="msg bot">' + selected.reply + '<a href="' + LINE_URL + '" target="_blank" class="inner-line-btn">💬 點此加入官方LINE諮詢</a></div>';
+            const botReplyHtml = '<div class="msg bot">' + selected.reply + '<a href="' + LINE_URL + '" target="_blank" class="inner-line-btn">💬 加入官方LINE 取得價格</a></div>';
             chatBox.innerHTML += botReplyHtml;
             chatBox.scrollTop = chatBox.scrollHeight;
         }, 500);
