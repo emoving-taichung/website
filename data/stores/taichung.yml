@@ -148,7 +148,7 @@
   phone: "0965-405-835"
   hours: "周一至周日 10:00 ~ 18:30"
   sales_models: ["微電", "ez1", "勁炫125", "EZR"]
-  repair_models: ["微電/EM50/80", "ez1", "勁炫125", "EZR"]
+  repair_models: [""]
   store_type: ["charge-store", "pbgn-store"]
 
 - title: "展丞機車行"
