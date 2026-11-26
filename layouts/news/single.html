@@ -189,13 +189,13 @@
             }
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
-            // 💡 主動向 GA4 發送文章瀏覽事件
-            if (typeof gtag === 'function') {
-                gtag('event', 'view_news_detail', {
-                    'news_title': post.title,
-                    'news_date': post.date
-                });
-            }
+            // 💡 改為推送事件與參數給 GTM dataLayer
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+                'event': 'view_news_detail',
+                'news_title': post.title,
+                'news_date': post.date
+            });
         } // 👈 這裡要確實關閉 openPostDetail 函式
         
 
